@@ -1,0 +1,76 @@
+
+API SccGetVersion @ Fri Jul 02 10:54:45 2010
+
+
+API SccInitialize @ Fri Jul 02 10:54:45 2010
+
+API SccInitialize --> lpCallerName= Microsoft Visual Basic
+API SccInitialize --> lpSccName= 
+API SccInitialize --> lpSccCaps= 
+API SccInitialize --> lpAuxPathLabel= 
+
+API SccSetOption @ Fri Jul 02 10:54:45 2010
+
+API SccSetOption --> nOption= 4
+API SccSetOption --> dwVal= 1619620896
+
+API SccSetOption @ Fri Jul 02 10:54:45 2010
+
+API SccSetOption --> nOption= 2
+API SccSetOption --> dwVal= 0
+
+API SccSetOption @ Fri Jul 02 10:54:45 2010
+
+API SccSetOption --> nOption= 3
+API SccSetOption --> dwVal= 1
+
+API SccGetVersion @ Fri Jul 02 10:54:50 2010
+
+
+API SccInitialize @ Fri Jul 02 10:54:50 2010
+
+API SccInitialize --> lpCallerName= Microsoft Visual Basic
+API SccInitialize --> lpSccName= 
+API SccInitialize --> lpSccCaps= 
+API SccInitialize --> lpAuxPathLabel= 
+
+API SccSetOption @ Fri Jul 02 10:54:50 2010
+
+API SccSetOption --> nOption= 4
+API SccSetOption --> dwVal= 1619620896
+
+API SccSetOption @ Fri Jul 02 10:54:50 2010
+
+API SccSetOption --> nOption= 2
+API SccSetOption --> dwVal= 60517160
+
+API SccSetOption @ Fri Jul 02 10:54:50 2010
+
+API SccSetOption --> nOption= 3
+API SccSetOption --> dwVal= 1
+
+API SccOpenProject @ Fri Jul 02 10:54:50 2010
+
+API SccOpenProject --> lpUser= 
+API SccOpenProject --> lpProjName= "$/Dominique/Astronomie", VDGAAAAA
+API SccOpenProject --> lpLocalProjPath= \\vbprow16\vbprow16.USR\Moled02\DM\astro\vsop87
+API SccOpenProject --> lpAuxProjPath= \\pc.belastingdienst.nl\EDF\APPROW56\CICT_CO_HeffingLabR&s\OP@Y\LAB-RenS\0030 Bouw\007 Applicaties\Osc\Versiebeheer-sources\SourceSafe,
+API SccOpenProject --> lpComment= 
+API SccOpenProject --> lpTextOutProc= U‹ìjÿhÐÀŠ`d¡
+API SccOpenProject --> dwFlags= 0
+
+API SccSetOption @ Fri Jul 02 11:29:10 2010
+
+API SccSetOption --> nOption= 4
+API SccSetOption --> dwVal= 0
+
+API SccUninitialize @ Fri Jul 02 11:29:10 2010
+
+
+API SccSetOption @ Fri Jul 02 11:29:10 2010
+
+API SccSetOption --> nOption= 4
+API SccSetOption --> dwVal= 0
+
+API SccUninitialize @ Fri Jul 02 11:29:10 2010
+

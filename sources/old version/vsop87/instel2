@@ -1,0 +1,313 @@
+date
+time
+deltat
+juldat
+
+l_helio
+b_helio
+r_helio
+l_geoc
+b_geoc
+r_geoc
+l_geom
+b_geom
+r_geom
+
+a_equ2000
+d_equ2000
+a_equm
+d_equm
+a_equt
+d_equt
+a_top
+d_top
+
+l_eclt
+b_eclt
+l_olib
+b_olib
+l_plib
+b_plib
+l_tlib
+b_tlib
+
+az
+hoogte
+hoogteatm
+maxhoogte
+
+rts_r1
+rts_t1
+rts_s1
+rts_r2
+rts_t2
+rts_s2
+rts_r3
+rts_t3
+rts_s3
+
+l0
+b0
+p
+
+fase
+fase_corr
+fasehoek
+magnitude
+elongatie
+parhoek
+
+semidiam
+semiequ
+semipol
+top_diam
+geoc_diam
+par
+afstand
+term
+
+de
+ds
+qq
+deff_ill
+pos_h
+posh_p
+posh_limb
+posh_q
+psh_p
+
+om
+om1
+om2
+c
+
+ring_p
+ring_p1
+ring_u
+ring_u1
+ring_b
+ring_b1
+ring_semiasbinnen
+ring_semiasbuiten
+ring_ioasbinnen
+ring_ioasbuiten
+ring_oiasbinnen
+ring_oiasbuiten
+ring_iiasbinnen
+ring_iiasbuiten
+ring_idasbinnen
+ring_idasbuiten
+
+sterrenbeeld
+
+[EINDE INDEX-INSTELLINGEN]
+
+[ZON]
+date 1
+time 1 0 2 h
+rts_r3 3 0 3 h -18
+rts_r2 3 0 3 h -6
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+rts_s2 3 0 3 h -6
+rts_s3 3 0 3 h -18
+p 1 1 5 g k90
+b0 1 1 5 g k90
+l0 1 1 5 g k90
+maxhoogte 1 1 5 g k90
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+r_geoc n 06 4 
+sterrenbeeld 1 20
+
+[MERCURIUS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g
+semipol 4 1 4 g nt 
+fase n 05 3
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+maxhoogte 1 1 5 g k90
+sterrenbeeld 1 20
+
+[VENUS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g
+semipol 4 1 4 g nt 
+fase n 05 3
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+maxhoogte 1 1 5 g k90
+sterrenbeeld 1 20
+
+[MARS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g
+semipol 4 1 4 g nt
+fase n 05 3
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[JUPITER]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semiequ 4 1 4 g
+semipol 4 1 4 g
+fase n 05 3 nt
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g
+om1 1 1 5 g
+om2 1 1 5 g
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[SATURNUS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g
+ring_semiasbuiten 4 1 4 g
+semiequ 4 1 4 g
+semipol 4 1 4 g
+fase n 05 3 nt
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[URANUS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g
+semipol 4 1 4 g nt
+fase n 05 3 nt
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[NEPTUNUS]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g
+semipol 4 1 4 g nt
+fase n 05 3 nt
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[PLUTO]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+elongatie 1 0 4 k180
+magnitude n 05 1
+r_geom n 06 3
+ring_semiasbinnen 4 1 4 g nt
+ring_semiasbuiten 4 1 4 g nt
+semidiam 4 1 4 g nt
+semipol 4 1 4 g nt
+fase n 05 3 nt
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+de 1 1 5 g nt
+om1 1 1 5 g nt
+om2 1 1 5 g nt
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90
+
+[MAAN]
+date 1
+time 1 0 2 h
+rts_r1 3 0 3 h
+rts_t1 3 0 3 h
+rts_s1 3 0 3 h
+fase n 05 2
+a_equ2000 7 2 3 h
+d_equ2000 7 2 3 g k90
+term 1 1 5 g k90
+l_tlib 1 1 4 g k90
+b_tlib 1 1 4 g k90
+sterrenbeeld 1 20
+maxhoogte 1 1 5 g k90

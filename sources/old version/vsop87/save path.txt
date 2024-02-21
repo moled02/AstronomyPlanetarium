@@ -1,0 +1,31 @@
+MODULE OR FORM NOT FOUND ???  DON'T PANIC!
+
+
+On my system, the path where the files are located is:
+
+D:\PROGRAM FILES\DevStudio\VB\VSOP87VB\
+
+This may have to be accounted for on your system for the files to be found and 
+loaded and run properly.  Each planet's directory should contain all the files
+required to run the included template base program.
+
+If you get messages saying modules can't be found, then from the PROJECT MENU, 
+select ADD MODULE and load the EXISTING module(s) from the same directory as the 
+Planet.VBP file you're trying to load.  When you relocate the directory with the 
+VB files, Visual BASIC still looks in the former location for any attached 
+modules.  This will generate an error until the modules are reloaded and the
+VB source code re-saved.  This is what will happen if your path to the VSOP87VB 
+files is different than my original save path, which is very likely, but simple 
+to correct as indicated.  You may also have to do the same with the VB project
+form also.
+
+Each planet template uses 3 modules.
+For example, the Earth template has the modules:
+
+Ephem101.bas
+Earth_Header.bas
+Earth_LBR.bas
+
+For the rest of the planets, the same format holds.
+
+

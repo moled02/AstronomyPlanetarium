@@ -1,0 +1,52 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>VSOP87 data files for use with Visual BASIC</TITLE>
+</HEAD>
+<BODY>
+
+<FONT SIZE=2><P>VSOP87 data files for use with Visual BASIC</P>
+<P>(c) Jay Tanner 2000 AD</P>
+
+<P>These files were used to generate the VB Source code</P>
+<P>in the planetary LBR function modules.</P>
+
+<P>They are the data required to compute the heliocentric,</P>
+<P>ecliptical coordinates L, B and R for each of the planets</P>
+<P>from Mercury to Neptune according to the VSOP87 theory.</P>
+
+<P>They give a theoretical, heliocentric accuracy to within</P>
+<P>about 1 arc second over the period from:</P>
+<P>2000 BC to 6000 AD for the planets Mercury to Mars.  </P>
+<P>1 BC to 4000 AD for Jupiter and Saturn.</P>
+<P>4000 BC to 8000 AD for Uranus and Neptune. </P>
+
+<P>L = Heliocentric, ecliptical longitude in radians</P>
+<P>B = Heliocentric, ecliptical latitude in radians</P>
+<P>R = Distance from the Sun in AU</P>
+
+<P>Radians are used because the trig functions require arguments in radians. Having to convert thousands of degree values into radians before performing trig functions can consume quite a bit of time.</P>
+<P>These data tables use radians to avoid the need for converting from degrees into radians first, making series summations faster.  It is a trivial matter to convert the final computed results into degrees or other units for more convenient use afterwards.</P>
+
+<P>Each  L, B and R value is found by summing a series of terms.  Some of these series contain  over 2800 terms.  There may be up to 5 series involved in computing L, B and R for a given planet, but sometimes there are less than five, such as in the case of Earth, there is no B5 series only B0 to B4.  In such cases, the null series is equated to zero.</P>
+
+<P>L  =  L0  +  L1  +  L2  +  L3  +  L4  +  L5</P>
+
+<P>B  =  B0  +  B1  +  B2  +  B3  +  B4  +  B5</P>
+
+<P>R  =  R0  +  R1  +  R2  +  R3  +  R4  +  R5</P>
+
+<P>Each line of data consists of three separate values referred to as A, B and C.</P>
+
+<P>These constants are applied according to the general formula:</P>
+
+<P>Q = A * Cos(B + C * T)</P>
+
+<P>and the values of Q summed for each of the L, B and R series terms.</P>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P></FONT></BODY>
+</HTML>
