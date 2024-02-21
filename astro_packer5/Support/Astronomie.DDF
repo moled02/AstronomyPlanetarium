@@ -1,0 +1,47 @@
+.OPTION EXPLICIT
+.Set Cabinet=off
+.Set Compress=off
+.Set MaxDiskSize=CDROM
+.Set ReservePerCabinetSize=6144
+.Set DiskDirectoryTemplate=".."
+.Set CompressionType=MSZIP
+.Set CompressionLevel=7
+.Set CompressionMemory=21
+.Set CabinetNameTemplate="Astronomie.CAB"
+"Setup.Lst"
+"setup.exe"
+.Set Cabinet=on
+.Set Compress=on
+"Astronomie.exe"
+"msvbvm60.dll"
+"OLEAUT32.DLL"
+"OLEPRO32.DLL"
+"ASYCFILT.DLL"
+"STDOLE2.TLB"
+"COMCAT.DLL"
+"shfolder.dll"
+"elp82.dll"
+"MSWORD.OLB"
+"scrrun.dll"
+"MSVCRT.DLL"
+"MSCOMCTL.OCX"
+"RICHTX32.OCX"
+"RICHED32.DLL"
+"MSSTDFMT.DLL"
+"TABCTL32.OCX"
+"SETUP1.EXE"
+"VB6STKIT.DLL"
+"ST6UNST.EXE"
+"instel2"
+"instel.robin"
+"instel_ancient"
+"instel_new"
+"jupmanen.doc"
+"messier.bin"
+"rtf_standaards.doc"
+"rtf_standaards.txt"
+"rtf_wordcode.txt"
+"sterlijn.bin"
+"sterren.bin"
+"instel"
+"Astronomie.cfg"
