@@ -1,0 +1,41 @@
+VSOP87VB - By Jay_Tanner@Bigfoot.com
+
+These Visual BASIC program modules form a nucleus around which to build a 
+sophisticated planetary ephemeris program.
+
+
+They compose the essential subroutines to compute the heliocentric, ecliptical 
+coordinates, L, B and R according to the full VSOP87 theory.
+
+They were tested on a few experimental dates and were consistent with the test 
+values.   There may still be a few minor bugs somewhere, but the modules do the
+bulk of the difficult computational tasks.
+
+Variations of these functions are given in books like "Astronomical Algorithms" 
+by Jean Meeus, except that the terms listed in the books are very truncated 
+because it would take far too long to manually enter all the terms into a 
+computer program and would be extremely subject to typographical errors.
+ 
+The VB code is commented to help explain what the programs are doing internally, 
+but the programmer is expected to already understand what the astronomical 
+VSOP87 theory is about in general and be familiar with Visual BASIC programming 
+- and of course, astronomical mathematics.  Fortunately, I designed the modules 
+so that most of the heavy-duty math is performed by the LBR modules.
+
+Along with the VB files are the full series of raw coefficient term tables, some 
+containing nearly 3000 terms.  Since the tables are in ASCII text format, they 
+can be easily read and applied by a creative, astronomy programer without nearly 
+as much effort.  The VB tables were derived by dissecting a FORTRAN program 
+designed to accomplish a similar task of computing the LBR values.  If you wish
+to obtain the original FORTRAN files I used to create this VB implementation of
+the VSOP87 theory, they may currently (as of 1 Dec 1999) be found in Russia at
+the URL:   http://www.kiarchive.ru/pub/unix/astronomy/
+
+The main shortcoming is that, I still haven't located the data I need to compute
+the corrections for nutation.  If I can find that data in a form similar to the
+FORTRAN code I made these modules from, then I'll design similar modules to handle
+those computations also.
+
+If you wish to reach me for any reason regarding these files, my e-mail address
+is:    Jay_Tanner@Bigfoot.com
+

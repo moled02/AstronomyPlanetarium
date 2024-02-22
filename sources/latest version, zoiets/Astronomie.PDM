@@ -1,0 +1,509 @@
+[Root]
+Most Recent Package=Setup Astronomie
+
+
+[Package|Dep File 1|Root]
+SubWizProgID=PDWizard.DepPkgSubWiz
+BuildFolder=w:\0030 Bouw\042 Bouw doorgeef\Dominique\astro\astro_pack
+
+[Package|Dep File 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Dep File 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Dep File 1|Files Found]
+instel=N:\DM\astro\vsop87\instel
+instel.robin=N:\DM\astro\vsop87\instel.robin
+instel_ancient=N:\DM\astro\vsop87\instel_ancient
+jupmanen.doc=N:\DM\astro\vsop87\jupmanen.doc
+
+[Package|Dep File 1|Files Released]
+
+[Package|Dep File 1|Missing Dependency Information]
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=
+N:\DM\astro\vsop87\shfolder.dll=
+C:\Program Files\Common Files\Shared32\RICHTX32.OCX=
+C:\Program Files\Common Files\Shared32\msstdfmt.dll=
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=
+C:\Program Files\Microsoft Office\Office12\MSWORD.OLB=
+
+[Package|Dep File 1|Out-of-Date Dependency Information]
+C:\WINDOWS\system32\scrrun.dll=
+C:\WINDOWS\system32\RICHTX32.OCX=
+C:\WINDOWS\system32\MSCOMCTL.OCX=
+
+[Package|Dep File 1|Files Added]
+n:\dm\astro\vsop87\instel2=
+n:\dm\astro\vsop87\instel.robin=
+n:\dm\astro\vsop87\instel_ancient=
+n:\dm\astro\vsop87\instel_new=
+n:\dm\astro\vsop87\jupmanen.doc=
+n:\dm\astro\vsop87\messier.bin=
+n:\dm\astro\vsop87\rtf_standaards.doc=
+n:\dm\astro\vsop87\rtf_standaards.txt=
+n:\dm\astro\vsop87\rtf_wordcode.txt=
+n:\dm\astro\vsop87\sterlijn.bin=
+n:\dm\astro\vsop87\sterren.bin=
+n:\dm\astro\vsop87\instel=
+
+[Package|Dep File 1|Files In Project]
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\WINDOWS\system32\scrrun.dll=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+N:\DM\astro\vsop87\shfolder.dll=Yes
+N:\DM\astro\vsop87\elp82.dll=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=Yes
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=Yes
+C:\WINDOWS\system32\MSCOMCTL.OCX=Yes
+C:\WINDOWS\system32\RICHTX32.OCX=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=Yes
+N:\DM\astro\vsop87\instel2=Yes
+N:\DM\astro\vsop87\instel.robin=Yes
+N:\DM\astro\vsop87\instel_ancient=Yes
+N:\DM\astro\vsop87\instel_new=Yes
+N:\DM\astro\vsop87\jupmanen.doc=No
+N:\DM\astro\vsop87\messier.bin=Yes
+N:\DM\astro\vsop87\rtf_standaards.doc=No
+N:\DM\astro\vsop87\rtf_standaards.txt=Yes
+N:\DM\astro\vsop87\rtf_wordcode.txt=Yes
+N:\DM\astro\vsop87\sterlijn.bin=Yes
+N:\DM\astro\vsop87\sterren.bin=Yes
+N:\DM\astro\vsop87\instel=Yes
+C:\WINDOWS\system32\MSSTDFMT.DLL=Yes
+N:\DM\astro\vsop87\AstronomieNL.exe=Yes
+
+[Package|Dep File 1|Configure Registry Files]
+Applicable=No
+
+[Package|Dep File 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Dep File 1|Install Locations]
+N:\DM\astro\vsop87\Astronomie.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+N:\DM\astro\vsop87\elp82.dll=$(AppPath)
+C:\WINDOWS\system32\scrrun.dll=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINDOWS\system32\RICHTX32.OCX=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\WINDOWS\system32\shfolder.dll=$(AppPath)
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=$(WinSysPath)
+N:\DM\astro\vsop87\instel=$(AppPath)
+N:\DM\astro\vsop87\messier.bin=$(AppPath)
+N:\DM\astro\vsop87\rtf_standaards.txt=$(AppPath)
+N:\DM\astro\vsop87\sterlijn.bin=$(AppPath)
+N:\DM\astro\vsop87\sterren.bin=$(AppPath)
+N:\DM\astro\vsop87\shfolder.dll=$(AppPath)
+N:\DM\astro\vsop87\rtf_wordcode.txt=$(AppPath)
+N:\DM\astro\vsop87\jupmanen.doc=$(AppPath)
+N:\DM\astro\vsop87\instel_ancient=$(AppPath)
+N:\DM\astro\vsop87\AstronomieNL.exe=$(AppPath)
+C:\Program Files\Common Files\Shared32\RICHTX32.OCX=$(WinSysPath)
+N:\DM\astro\vsop87\instel.robin=$(AppPath)
+C:\Program Files\Common Files\Shared32\msstdfmt.dll=$(WinSysPath)
+C:\WINDOWS\system32\MSSTDFMT.DLL=$(WinSysPath)
+N:\DM\astro\vsop87\AstronomieEN.exe=$(AppPath)
+C:\Program Files\Common Files\designer\MSCDRUN.DLL=$(CommonFiles)\Designer
+C:\WINDOWS\system32\MSRDO20.DLL=$(WinSysPath)
+C:\WINDOWS\system32\RDOCURS.DLL=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+K:\Programmatuur\Astronomie\astro-Visual Basic\source\AstronomieNL.exe=$(AppPath)
+C:\WINDOWS\system32\oleaut32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\olepro32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\asycfilt.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msvcrt.dll=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Office\Office12\MSWORD.OLB=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Program Files\Astronomie\MSCOMCTL.OCX=$(WinSysPath)
+C:\Program Files\Astronomie\RICHTX32.OCX=$(WinSysPath)
+N:\DM\astro\vsop87\instel2=$(AppPath)
+N:\DM\astro\vsop87\instel_new=$(AppPath)
+N:\DM\astro\vsop87\rtf_standaards.doc=$(AppPath)
+
+[Package|Dep File 1|Configure Shared Files]
+Applicable=Yes
+N:\DM\astro\vsop87\Astronomie.exe=No
+N:\DM\astro\vsop87\elp82.dll=No
+N:\DM\astro\vsop87\instel=No
+N:\DM\astro\vsop87\messier.bin=No
+N:\DM\astro\vsop87\rtf_standaards.txt=No
+N:\DM\astro\vsop87\sterlijn.bin=No
+N:\DM\astro\vsop87\sterren.bin=No
+C:\WINDOWS\system32\shfolder.dll=Yes
+N:\DM\astro\vsop87\rtf_wordcode.txt=No
+N:\DM\astro\vsop87\shfolder.dll=No
+N:\DM\astro\vsop87\jupmanen.doc=No
+N:\DM\astro\vsop87\instel_ancient=No
+N:\DM\astro\vsop87\AstronomieNL.exe=No
+N:\DM\astro\vsop87\instel.robin=No
+N:\DM\astro\vsop87\AstronomieEN.exe=No
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=No
+C:\WINDOWS\system32\scrrun.dll=Yes
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=Yes
+C:\WINDOWS\system32\MSCOMCTL.OCX=Yes
+C:\WINDOWS\system32\RICHTX32.OCX=Yes
+N:\DM\astro\vsop87\instel2=No
+N:\DM\astro\vsop87\instel_new=No
+N:\DM\astro\vsop87\rtf_standaards.doc=No
+
+[Package|Dep File 1|Distribution]
+Type=single
+Size=
+Title=Astronomie
+
+[Package|Dep File 1|Files Removed]
+n:\dm\astro\vsop87\jupmanen.doc=
+n:\dm\astro\vsop87\rtf_standaards.doc=
+
+[Package|Dep File 1|IconGroups]
+Group0=Astronomie
+PrivateGroup0=0
+Parent0=$(Programs)
+
+[Package|Dep File 1|Astronomie]
+Icon1=AstronomieNL.exe
+Title1=Astronomie
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Dep File 1|DepFile]
+DepCabFile=AstronomieNL.CAB
+DepCabRun=AstronomieNL.INF
+
+[Package|Dep File 1|Package]
+PackageFolder=w:\0030 Bouw\042 Bouw doorgeef\Dominique\astro\astro_pack
+ProjectFolder=N:\DM\astro\vsop87
+ServerSideCab=
+File1=w:\0030 Bouw\042 Bouw doorgeef\Dominique\astro\astro_pack\AstronomieNL.DEP
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+
+[Package|Setup Astronomie|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\astro_packer5
+
+[Package|Setup Astronomie|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Setup Astronomie|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Setup Astronomie|Files Found]
+instel2=C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel2
+jupmanen.doc=C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\jupmanen.doc
+Astronomie.cfg=C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\Astronomie.cfg
+
+[Package|Setup Astronomie|Files Released]
+
+[Package|Setup Astronomie|Missing Dependency Information]
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=
+N:\DM\astro\vsop87\shfolder.dll=
+C:\Program Files\Common Files\Shared32\RICHTX32.OCX=
+C:\Program Files\Common Files\Shared32\msstdfmt.dll=
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=
+C:\Program Files\Microsoft Office\Office12\MSWORD.OLB=
+E:\vsop87XX\shfolder.dll=
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\shfolder.dll=
+C:\Program Files\Microsoft Office\root\Office16\MSWORD.OLB=
+C:\vsop87XX\shfolder.dll=
+
+[Package|Setup Astronomie|Out-of-Date Dependency Information]
+C:\WINDOWS\system32\scrrun.dll=
+C:\WINDOWS\system32\RICHTX32.OCX=
+C:\WINDOWS\system32\MSCOMCTL.OCX=
+C:\Windows\System32\MSSTDFMT.DLL=
+
+[Package|Setup Astronomie|Files Added]
+c:\vsop87xx\instel2=
+c:\vsop87xx\instel.robin=
+c:\vsop87xx\instel_ancient=
+c:\vsop87xx\instel_new=
+c:\vsop87xx\jupmanen.doc=
+c:\vsop87xx\messier.bin=
+c:\vsop87xx\rtf_standaards.doc=
+c:\vsop87xx\rtf_standaards.txt=
+c:\vsop87xx\rtf_wordcode.txt=
+c:\vsop87xx\sterlijn.bin=
+c:\vsop87xx\sterren.bin=
+c:\vsop87xx\instel=
+c:\vsop87xx\astronomie.cfg=
+
+[Package|Setup Astronomie|Files In Project]
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\WINDOWS\system32\scrrun.dll=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\WINDOWS\system32\MSCOMCTL.OCX=Yes
+C:\WINDOWS\system32\RICHTX32.OCX=Yes
+C:\WINDOWS\system32\MSSTDFMT.DLL=Yes
+C:\WINDOWS\system32\TABCTL32.OCX=Yes
+C:\vsop87XX\Astronomie.exe=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\vsop87XX\shfolder.dll=Yes
+C:\vsop87XX\elp82.dll=Yes
+C:\Program Files\Microsoft Office\root\Office16\MSWORD.OLB=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\vsop87XX\instel2=Yes
+C:\vsop87XX\instel.robin=Yes
+C:\vsop87XX\instel_ancient=Yes
+C:\vsop87XX\instel_new=Yes
+C:\vsop87XX\jupmanen.doc=Yes
+C:\vsop87XX\messier.bin=Yes
+C:\vsop87XX\rtf_standaards.doc=Yes
+C:\vsop87XX\rtf_standaards.txt=Yes
+C:\vsop87XX\rtf_wordcode.txt=Yes
+C:\vsop87XX\sterlijn.bin=Yes
+C:\vsop87XX\sterren.bin=Yes
+C:\vsop87XX\instel=Yes
+C:\vsop87XX\Astronomie.cfg=Yes
+
+[Package|Setup Astronomie|Configure Registry Files]
+Applicable=No
+
+[Package|Setup Astronomie|Configure Remote Servers]
+Applicable=No
+
+[Package|Setup Astronomie|Install Locations]
+N:\DM\astro\vsop87\Astronomie.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+N:\DM\astro\vsop87\elp82.dll=$(AppPath)
+C:\WINDOWS\system32\scrrun.dll=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSCOMCTL.OCX=$(WinSysPath)
+C:\WINDOWS\system32\RICHTX32.OCX=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\WINDOWS\system32\shfolder.dll=$(AppPath)
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=$(WinSysPath)
+N:\DM\astro\vsop87\instel=$(AppPath)
+N:\DM\astro\vsop87\messier.bin=$(AppPath)
+N:\DM\astro\vsop87\rtf_standaards.txt=$(AppPath)
+N:\DM\astro\vsop87\sterlijn.bin=$(AppPath)
+N:\DM\astro\vsop87\sterren.bin=$(AppPath)
+N:\DM\astro\vsop87\shfolder.dll=$(AppPath)
+N:\DM\astro\vsop87\rtf_wordcode.txt=$(AppPath)
+N:\DM\astro\vsop87\jupmanen.doc=$(AppPath)
+N:\DM\astro\vsop87\instel_ancient=$(AppPath)
+N:\DM\astro\vsop87\AstronomieNL.exe=$(AppPath)
+C:\Program Files\Common Files\Shared32\RICHTX32.OCX=$(WinSysPath)
+N:\DM\astro\vsop87\instel.robin=$(AppPath)
+C:\Program Files\Common Files\Shared32\msstdfmt.dll=$(WinSysPath)
+C:\WINDOWS\system32\MSSTDFMT.DLL=$(WinSysPath)
+N:\DM\astro\vsop87\AstronomieEN.exe=$(AppPath)
+C:\Program Files\Common Files\designer\MSCDRUN.DLL=$(CommonFiles)\Designer
+C:\WINDOWS\system32\MSRDO20.DLL=$(WinSysPath)
+C:\WINDOWS\system32\RDOCURS.DLL=$(WinSysPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+K:\Programmatuur\Astronomie\astro-Visual Basic\source\AstronomieNL.exe=$(AppPath)
+C:\WINDOWS\system32\oleaut32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\olepro32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\asycfilt.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msvcrt.dll=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Office\Office12\MSWORD.OLB=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\RICHED32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Program Files\Astronomie\MSCOMCTL.OCX=$(WinSysPath)
+C:\Program Files\Astronomie\RICHTX32.OCX=$(WinSysPath)
+N:\DM\astro\vsop87\instel2=$(AppPath)
+N:\DM\astro\vsop87\instel_new=$(AppPath)
+N:\DM\astro\vsop87\rtf_standaards.doc=$(AppPath)
+N:\DM\astro\vsop87\Astronomie.cfg=$(AppPath)
+E:\vsop87XX\Astronomie.exe=$(AppPath)
+E:\vsop87XX\shfolder.dll=$(WinSysPath)
+E:\vsop87XX\elp82.dll=$(AppPath)
+C:\WINDOWS\system32\TABCTL32.OCX=$(WinSysPath)
+E:\vsop87XX\instel2=$(AppPath)
+E:\vsop87XX\instel.robin=$(AppPath)
+E:\vsop87XX\instel_ancient=$(AppPath)
+E:\vsop87XX\instel_new=$(AppPath)
+E:\vsop87XX\jupmanen.doc=$(AppPath)
+E:\vsop87XX\messier.bin=$(AppPath)
+E:\vsop87XX\rtf_standaards.doc=$(AppPath)
+E:\vsop87XX\rtf_standaards.txt=$(AppPath)
+E:\vsop87XX\rtf_wordcode.txt=$(AppPath)
+E:\vsop87XX\sterlijn.bin=$(AppPath)
+E:\vsop87XX\sterren.bin=$(AppPath)
+E:\vsop87XX\instel=$(AppPath)
+E:\vsop87XX\Astronomie.cfg=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\Astronomie.exe=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\shfolder.dll=$(WinSysPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\elp82.dll=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel2=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\jupmanen.doc=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\messier.bin=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_standaards.doc=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_standaards.txt=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_wordcode.txt=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\sterlijn.bin=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\sterren.bin=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel.robin=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel_ancient=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel_new=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel=$(AppPath)
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\Astronomie.cfg=$(AppPath)
+C:\vsop87XX\Astronomie.exe=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\vsop87XX\shfolder.dll=$(WinSysPath)
+C:\vsop87XX\elp82.dll=$(AppPath)
+C:\Program Files\Microsoft Office\root\Office16\MSWORD.OLB=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT.DLL=$(WinSysPathSysFile)
+C:\vsop87XX\instel2=$(AppPath)
+C:\vsop87XX\instel.robin=$(AppPath)
+C:\vsop87XX\instel_ancient=$(AppPath)
+C:\vsop87XX\instel_new=$(AppPath)
+C:\vsop87XX\jupmanen.doc=$(AppPath)
+C:\vsop87XX\messier.bin=$(AppPath)
+C:\vsop87XX\rtf_standaards.doc=$(AppPath)
+C:\vsop87XX\rtf_standaards.txt=$(AppPath)
+C:\vsop87XX\rtf_wordcode.txt=$(AppPath)
+C:\vsop87XX\sterlijn.bin=$(AppPath)
+C:\vsop87XX\sterren.bin=$(AppPath)
+C:\vsop87XX\instel=$(AppPath)
+C:\vsop87XX\Astronomie.cfg=$(AppPath)
+
+[Package|Setup Astronomie|Configure Shared Files]
+Applicable=Yes
+N:\DM\astro\vsop87\Astronomie.exe=No
+N:\DM\astro\vsop87\elp82.dll=No
+N:\DM\astro\vsop87\instel=No
+N:\DM\astro\vsop87\messier.bin=No
+N:\DM\astro\vsop87\rtf_standaards.txt=No
+N:\DM\astro\vsop87\sterlijn.bin=No
+N:\DM\astro\vsop87\sterren.bin=No
+C:\WINDOWS\system32\shfolder.dll=Yes
+N:\DM\astro\vsop87\rtf_wordcode.txt=No
+N:\DM\astro\vsop87\shfolder.dll=No
+N:\DM\astro\vsop87\jupmanen.doc=No
+N:\DM\astro\vsop87\instel_ancient=No
+N:\DM\astro\vsop87\AstronomieNL.exe=No
+N:\DM\astro\vsop87\instel.robin=No
+N:\DM\astro\vsop87\AstronomieEN.exe=No
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=No
+C:\WINDOWS\system32\scrrun.dll=Yes
+C:\Program Files\Off97Bld\100\Office\MSWORD8.OLB=Yes
+C:\WINDOWS\system32\MSCOMCTL.OCX=Yes
+C:\WINDOWS\system32\RICHTX32.OCX=Yes
+N:\DM\astro\vsop87\instel2=No
+N:\DM\astro\vsop87\instel_new=No
+N:\DM\astro\vsop87\rtf_standaards.doc=No
+N:\DM\astro\vsop87\Astronomie.cfg=No
+E:\vsop87XX\Astronomie.exe=No
+E:\vsop87XX\elp82.dll=No
+E:\vsop87XX\instel2=No
+E:\vsop87XX\instel.robin=No
+E:\vsop87XX\instel_ancient=No
+E:\vsop87XX\instel_new=No
+E:\vsop87XX\jupmanen.doc=No
+E:\vsop87XX\messier.bin=No
+E:\vsop87XX\rtf_standaards.doc=No
+E:\vsop87XX\rtf_standaards.txt=No
+E:\vsop87XX\rtf_wordcode.txt=No
+E:\vsop87XX\sterlijn.bin=No
+E:\vsop87XX\sterren.bin=No
+E:\vsop87XX\instel=No
+E:\vsop87XX\Astronomie.cfg=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\Astronomie.exe=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\elp82.dll=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel2=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\jupmanen.doc=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\messier.bin=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_standaards.doc=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_standaards.txt=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\rtf_wordcode.txt=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\sterlijn.bin=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\sterren.bin=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel.robin=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel_ancient=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel_new=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\instel=No
+C:\Documents and Settings\moled02.PPC0528069\Bureaublad\vsop87XX\Astronomie.cfg=No
+C:\vsop87XX\Astronomie.exe=No
+C:\vsop87XX\elp82.dll=No
+C:\vsop87XX\instel2=No
+C:\vsop87XX\instel.robin=No
+C:\vsop87XX\instel_ancient=No
+C:\vsop87XX\instel_new=No
+C:\vsop87XX\jupmanen.doc=No
+C:\vsop87XX\messier.bin=No
+C:\vsop87XX\rtf_standaards.doc=No
+C:\vsop87XX\rtf_standaards.txt=No
+C:\vsop87XX\rtf_wordcode.txt=No
+C:\vsop87XX\sterlijn.bin=No
+C:\vsop87XX\sterren.bin=No
+C:\vsop87XX\instel=No
+C:\vsop87XX\Astronomie.cfg=No
+
+[Package|Setup Astronomie|Distribution]
+Type=single
+Size=
+Title=Astronomie
+
+[Package|Setup Astronomie|Files Removed]
+n:\dm\astro\vsop87\jupmanen.doc=
+n:\dm\astro\vsop87\rtf_standaards.doc=
+
+[Package|Setup Astronomie|IconGroups]
+Group0=Astronomie
+PrivateGroup0=0
+Parent0=$(Programs)
+
+[Package|Setup Astronomie|Astronomie]
+Icon1=Astronomie.exe
+Title1=Astronomie
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Setup Astronomie|Package]
+PackageFolder=C:\astro_packer5
+ProjectFolder=C:\vsop87XX
+ServerSideCab=
+File1=C:\astro_packer5\setup.exe
+File2=C:\astro_packer5\Setup.Lst
+File3=C:\astro_packer5\Astronomie.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

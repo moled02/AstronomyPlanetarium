@@ -1,0 +1,93 @@
+[Root]
+Most Recent Package=Standard Setup Package Astro
+
+
+[Package|Standard Setup Package Astro|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=N:\DM\astro\vsop87\Package
+
+[Package|Standard Setup Package Astro|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Standard Setup Package Astro|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Standard Setup Package Astro|Files Found]
+
+[Package|Standard Setup Package Astro|Files Released]
+
+[Package|Standard Setup Package Astro|Missing Dependency Information]
+
+[Package|Standard Setup Package Astro|Out-of-Date Dependency Information]
+
+[Package|Standard Setup Package Astro|Files Added]
+
+[Package|Standard Setup Package Astro|Files Removed]
+
+[Package|Standard Setup Package Astro|Files In Project]
+N:\DM\astro\vsop87\Earth.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+N:\DM\astro\vsop87\elp82.dll=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+
+[Package|Standard Setup Package Astro|Configure Registry Files]
+Applicable=No
+
+[Package|Standard Setup Package Astro|Configure Remote Servers]
+Applicable=No
+
+[Package|Standard Setup Package Astro|Install Locations]
+N:\DM\astro\vsop87\Earth.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+N:\DM\astro\vsop87\elp82.dll=$(AppPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\VBASIC\101\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+
+[Package|Standard Setup Package Astro|Configure Shared Files]
+Applicable=Yes
+N:\DM\astro\vsop87\Earth.exe=No
+N:\DM\astro\vsop87\elp82.dll=No
+
+[Package|Standard Setup Package Astro|Distribution]
+Type=multi
+Size=1.44 MB
+Title=EARTH
+
+[Package|Standard Setup Package Astro|IconGroups]
+Group0=EARTH
+PrivateGroup0=-1
+Parent0=$(Programs)
+
+[Package|Standard Setup Package Astro|EARTH]
+Icon1=Earth.exe
+Title1=EARTH
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Standard Setup Package Astro|Package]
+PackageFolder=N:\DM\astro\vsop87\Package
+ProjectFolder=N:\DM\astro\vsop87
+ServerSideCab=
+File1=N:\DM\astro\vsop87\Package\setup.exe
+File2=N:\DM\astro\vsop87\Package\Setup.Lst
+File3=N:\DM\astro\vsop87\Package\Earth1.CAB
+File4=N:\DM\astro\vsop87\Package\Earth2.CAB
+Handler1=PDWizard.FloppyDplySubWiz
+Handler2=PDWizard.FolderDplySubWiz
+Handler3=PDWizard.WebPostDplySubWiz
