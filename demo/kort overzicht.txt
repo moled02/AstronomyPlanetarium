@@ -1,0 +1,77 @@
+1. Settings
+   in gegeven in ° . ' ''
+   -5.07456  = 5°07'45".6
+
+2. Tijden zijn in WT/ZT, wel rekening mee houden
+
+3. overzicht planeten met alle gegevens. 
+    In tabblad Jupiter kan met + en - worden ingezoomd.
+    Met animate kunnen telkens de gegevens worden geupdate,
+    dat geldt ook voor de maantjes en ringen Saturnus.
+    Ververssnelheid en stapgrootte kunnen worden ingegeven.
+    Bij Saturnus wordt rekening gehouden met de afstand en die zul je dan groter en kleiner zien worden (wel flinke stapgrootte nemen in dat geval)
+
+4. Almanac geeft overzicht van enkele belangrijke gebeurtenissen
+
+5. Survay, zichtbaarheidsoverzichten. Opslaan met Ctrl-S,
+   doorgaan naar volgende/Vorige Ctrl-PgDn/Ctrl-PgUp
+   In het overzicht staan de tijden en de duur waarop de planeet zichtbaar is. Daarvoor geldt (niet instelbaar):
+       binnenplaneten: Zon < 3° onder horizon
+       buitenplaneten: Zon< 6° onder horizon
+       pluto: Zon < 18° onder horizon
+
+       Mercurius en Venus > 3° boven horizon
+       Mars, Jupiter, Saturnus en Uranus > 5° boven horizon
+       Neptunus en Pluto > 10° boven horizon
+
+Via Help, zoek tijdelijk pad, waar de plaatjes worden opgeslagen
+
+6. Jupiter
+    - phenomena: berekeningen van de verschijnselen v/d maantjes van Jupiter
+                         kunnen in Word gezet worden (via een rtf-bestand)
+    - Movements : geeft grafisch overzicht van de maantjes, waar ook heel goed de                             schaduw te volgen is met grote nauwkeurigheid
+                           Met Step kan de stapgrootte worden ingegeven, met + en - gezoomd worden, met <> de stapgrootte met 1 seconden worden verkleind/vergroot
+    - Diagram : plaatjes van overzichten van de bewegingen van de maantjes Worden direct opgeslagen Normaal in C:\Users\<USER>\AppData\Temp\Astronomie
+    - Meridiaan : daarmee kan bepaald worden wanneer deze recht voor staat, handig om
+                         de Rode Vlek te kunnen waarnemen
+7. Saturnus, 
+   Geldt in principe hetzelfde. Voor de maantjes worden de elongaties berekend.
+                                            6 manen worden berekend.
+
+8. Tabels : 
+    n1 = optie °, ', °', ", '", °'"; of
+                     h , m, hm, s, ms, hms
+    n2 = aantal decimalen in de uitkomst
+    n3 = aantal posities eerste getal vanwege uitlijning
+    k90 = kleiner 90 gr.
+   h = in uren, g = in graden
+   n = getal
+   nt = niet tonen, vooral vanwege de gids toen als dat gegeven niet getoond moest of
+          leeg moest blijven, en uitgelijnd moest worden.
+   rts_r1 3 0 2 h
+   elongatie 1 0 4 k180
+   magnitude n 05 1
+   r_geom n 06 3
+  a_equ2000 3 1 2 h
+  d_equ2000 3 0 3 g k90
+  term 1 1 5 g k90
+
+9. StarChart
+    Een sterrenkaart wordt in rft aangemaakt daar diverse mogelijkheden
+    het huidige uur wordt gebruikt zoals die staat op het eerste scherm
+    Voor de planeten kunnen periodes worden ingegeven waardoor de oppositielus heel duidelijk zichtbaar gemaakt kan worden.
+    De Maan kan er ook ingetekend worden. er wordt rekening gehouden met de stand,
+    dus er vindt wat rotatie plaats van de Maan om die netjes in de kaart te plaatsen.
+    Die kan ook in de kaart meerdere malen getekend worden indien gewenst
+   Niet noodzakelijk hoeft de ecliptica getekend te worden etc. Wel aardig is, is dat ook Bayernumbers er bij gezet kunnen worden.
+
+   Daarnaast kan er eventueel de baan van een komeet ingetekend worden
+   die gegevens zijn te berekenen in een andere menu-optie.
+   die gegevens erin plakken is voldoende.
+
+10. Ephemerides.
+     Hiermee kunnen komeet/planetoiden posities worden uitgerekend
+
+11. Eclipse
+      Die is gemaakt op basis van Explanatory Supplement of the Ephemeris,
+     1969 denk ik...
