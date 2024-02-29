@@ -47,7 +47,7 @@ File11=@CHGlobalLib.dll,$(WinSysPath),$(DLLSelfRegister),$(Shared),9/14/05 8:28:
 File12=@MSSTDFMT.DLL,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 3:22:44 PM,129872,6.1.98.16
 File13=@elp82.dll,$(AppPath),,,10/14/99 11:08:40 PM,178688,0.0.0.0
 File14=@shfolder.dll,$(AppPath),$(DLLSelfRegister),$(Shared),12/7/19 10:09:32 AM,8704,6.2.19041.1
-File15=@Astronomie.exe,$(AppPath),,,2/29/24 7:29:14 AM,7401472,3.0.0.72
+File15=@Astronomie.exe,$(AppPath),,,2/29/24 10:25:27 AM,7401472,3.0.0.73
 
 ; The following lines may be deleted in order to obtain extra 
 ; space for customizing this file on a full installation diskette.
