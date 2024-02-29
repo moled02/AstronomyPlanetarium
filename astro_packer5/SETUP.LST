@@ -8,13 +8,13 @@ TmpDir=msftqws.pdw
 Cabs=1
 
 [Bootstrap Files]
-File1=@VB6STKIT.DLL,$(WinSysPathSysFile),,,7/14/00 11:00:00 PM,101888,6.0.84.50
-File2=@COMCAT.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,5/30/98 11:00:00 PM,22288,4.71.1460.1
-File3=@STDOLE2.TLB,$(WinSysPathSysFile),$(TLBRegister),,6/2/99 11:00:00 PM,17920,2.40.4275.1
-File4=@ASYCFILT.DLL,$(WinSysPathSysFile),,,3/7/99 11:00:00 PM,147728,2.40.4275.1
-File5=@OLEPRO32.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,3/7/99 11:00:00 PM,164112,5.0.4275.1
-File6=@OLEAUT32.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,4/11/00 11:00:00 PM,598288,2.40.4275.1
-File7=@msvbvm60.dll,$(WinSysPathSysFile),$(DLLSelfRegister),,7/14/09 2:15:50 AM,1386496,6.0.98.15
+File1=@VB6STKIT.DLL,$(WinSysPathSysFile),,,7/15/00 12:00:00 AM,101888,6.0.84.50
+File2=@COMCAT.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,5/31/98 12:00:00 AM,22288,4.71.1460.1
+File3=@STDOLE2.TLB,$(WinSysPathSysFile),$(TLBRegister),,6/3/99 12:00:00 AM,17920,2.40.4275.1
+File4=@ASYCFILT.DLL,$(WinSysPathSysFile),,,3/8/99 12:00:00 AM,147728,2.40.4275.1
+File5=@OLEPRO32.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,3/8/99 12:00:00 AM,164112,5.0.4275.1
+File6=@OLEAUT32.DLL,$(WinSysPathSysFile),$(DLLSelfRegister),,4/12/00 12:00:00 AM,598288,2.40.4275.1
+File7=@msvbvm60.dll,$(WinSysPathSysFile),$(DLLSelfRegister),,4/3/21 8:36:51 PM,1436032,6.0.98.48
 
 [IconGroups]
 Group0=Astronomie
@@ -33,30 +33,21 @@ AppExe=Astronomie.exe
 AppToUninstall=Astronomie.exe
 
 [Setup1 Files]
-File1=@Astronomie.cfg,$(AppPath),,,3/26/13 12:26:08 PM,56,0.0.0.0
-File2=@instel,$(AppPath),,,1/14/08 12:19:24 PM,4051,0.0.0.0
-File3=@sterren.bin,$(AppPath),,,10/6/06 1:41:54 PM,6179829,0.0.0.0
-File4=@sterlijn.bin,$(AppPath),,,10/3/06 2:50:02 PM,32010,0.0.0.0
-File5=@rtf_wordcode.txt,$(AppPath),,,11/28/06 2:42:26 PM,5481,0.0.0.0
-File6=@rtf_standaards.txt,$(AppPath),,,3/26/13 11:59:56 AM,39865,0.0.0.0
-File7=@rtf_standaards.doc,$(AppPath),,,10/5/06 11:17:08 AM,65024,0.0.0.0
-File8=@messier.bin,$(AppPath),,,10/2/06 12:17:22 PM,2033,0.0.0.0
-File9=@jupmanen.doc,$(AppPath),,,1/14/08 2:18:52 PM,338432,0.0.0.0
-File10=@instel_new,$(AppPath),,,9/26/06 3:32:44 PM,3928,0.0.0.0
-File11=@instel_ancient,$(AppPath),,,1/10/07 10:17:40 AM,4361,0.0.0.0
-File12=@instel.robin,$(AppPath),,,1/14/08 12:20:40 PM,2297,0.0.0.0
-File13=@instel2,$(AppPath),,,12/14/06 3:34:26 PM,4421,0.0.0.0
-File14=@TABCTL32.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 2:22:44 PM,221504,6.1.98.16
-File15=@MSSTDFMT.DLL,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 2:22:44 PM,129872,6.1.98.16
-File16=@RICHED32.DLL,$(WinSysPathSysFile),,,5/6/98 11:00:00 PM,174352,4.0.993.4
-File17=@RICHTX32.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 2:22:44 PM,218432,6.1.98.16
-File18=@MSCOMCTL.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),6/6/12 8:49:52 AM,1070152,6.1.98.34
-File19=@MSVCRT.DLL,$(WinSysPathSysFile),,,2/16/04 11:00:00 PM,278581,6.0.9782.0
-File20=@scrrun.dll,$(WinSysPath),$(DLLSelfRegister),$(Shared),10/12/13 3:03:31 AM,163840,5.8.7601.18283
-File21=@MSWORD.OLB,$(WinSysPath),,$(Shared),11/17/16 5:15:31 PM,937672,16.0.6769.4781
-File22=@elp82.dll,$(AppPath),,,10/15/99 12:08:40 AM,178688,0.0.0.0
-File23=@shfolder.dll,$(WinSysPath),$(DLLSelfRegister),$(Shared),9/10/02 12:08:06 AM,22528,6.0.2800.1106
-File24=@Astronomie.exe,$(AppPath),,,11/22/16 12:41:44 PM,7401472,3.0.0.65
+File1=@VolleMaan.bmp,$(AppPath),,,4/4/12 7:23:36 AM,141538,0.0.0.0
+File2=@Astronomie.cfg,$(AppPath),,,3/26/13 12:26:08 PM,56,0.0.0.0
+File3=@MSCOMCTL.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),5/2/12 12:17:12 PM,1070152,6.1.98.34
+File4=@TABCTL32.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 3:22:44 PM,221504,6.1.98.16
+File5=@RICHED32.DLL,$(WinSysPathSysFile),,,5/7/98 12:00:00 AM,174352,4.0.993.4
+File6=@RICHTX32.OCX,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 3:22:44 PM,218432,6.1.98.16
+File7=@MSVCRT.DLL,$(WinSysPathSysFile),,,2/17/04 12:00:00 AM,278581,6.0.9782.0
+File8=@scrrun.dll,$(WinSysPath),$(DLLSelfRegister),$(Shared),10/11/23 10:48:55 AM,186368,5.812.10240.16384
+File9=@msscript.ocx,$(WinSysPath),$(DLLSelfRegister),$(Shared),12/7/19 10:09:32 AM,100864,1.0.10240.16384
+File10=@MSWORD.OLB,$(WinSysPath),,$(Shared),4/2/09 1:20:12 PM,868712,12.0.6425.1000
+File11=@CHGlobalLib.dll,$(WinSysPath),$(DLLSelfRegister),$(Shared),9/14/05 8:28:28 AM,24576,1.1.0.0
+File12=@MSSTDFMT.DLL,$(WinSysPath),$(DLLSelfRegister),$(Shared),2/16/10 3:22:44 PM,129872,6.1.98.16
+File13=@elp82.dll,$(AppPath),,,10/14/99 11:08:40 PM,178688,0.0.0.0
+File14=@shfolder.dll,$(AppPath),$(DLLSelfRegister),$(Shared),12/7/19 10:09:32 AM,8704,6.2.19041.1
+File15=@Astronomie.exe,$(AppPath),,,2/29/24 7:29:14 AM,7401472,3.0.0.72
 
 ; The following lines may be deleted in order to obtain extra 
 ; space for customizing this file on a full installation diskette.

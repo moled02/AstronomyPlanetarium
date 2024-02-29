@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TabCtl32.Ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Begin VB.Form frmPlanets 
    BackColor       =   &H00C0C0C0&
    BorderStyle     =   1  'Fixed Single
@@ -50,12 +50,11 @@ Begin VB.Form frmPlanets
       _ExtentY        =   13785
       _Version        =   393216
       Tabs            =   10
-      Tab             =   9
       TabsPerRow      =   10
       TabHeight       =   520
       TabCaption(0)   =   "Maan"
       TabPicture(0)   =   "frmPlanets.frx":030A
-      Tab(0).ControlEnabled=   0   'False
+      Tab(0).ControlEnabled=   -1  'True
       Tab(0).Control(0)=   "listInfo(0)"
       Tab(0).Control(0).Enabled=   0   'False
       Tab(0).ControlCount=   1
@@ -86,18 +85,18 @@ Begin VB.Form frmPlanets
       TabCaption(5)   =   "Jupiter"
       TabPicture(5)   =   "frmPlanets.frx":0396
       Tab(5).ControlEnabled=   0   'False
-      Tab(5).Control(0)=   "listInfo(5)"
-      Tab(5).Control(0).Enabled=   0   'False
+      Tab(5).Control(0)=   "picHidden"
       Tab(5).Control(1)=   "lstMoonsJup"
-      Tab(5).Control(2)=   "picHidden"
+      Tab(5).Control(2)=   "listInfo(5)"
+      Tab(5).Control(2).Enabled=   0   'False
       Tab(5).ControlCount=   3
       TabCaption(6)   =   "Saturnus"
       TabPicture(6)   =   "frmPlanets.frx":03B2
       Tab(6).ControlEnabled=   0   'False
-      Tab(6).Control(0)=   "listInfo(6)"
-      Tab(6).Control(0).Enabled=   0   'False
+      Tab(6).Control(0)=   "picHiddenSat"
       Tab(6).Control(1)=   "lstMoonsSat"
-      Tab(6).Control(2)=   "picHiddenSat"
+      Tab(6).Control(2)=   "listInfo(6)"
+      Tab(6).Control(2).Enabled=   0   'False
       Tab(6).ControlCount=   3
       TabCaption(7)   =   "Uranus"
       TabPicture(7)   =   "frmPlanets.frx":03CE
@@ -113,7 +112,7 @@ Begin VB.Form frmPlanets
       Tab(8).ControlCount=   1
       TabCaption(9)   =   "Pluto"
       TabPicture(9)   =   "frmPlanets.frx":0406
-      Tab(9).ControlEnabled=   -1  'True
+      Tab(9).ControlEnabled=   0   'False
       Tab(9).Control(0)=   "listInfo(9)"
       Tab(9).Control(0).Enabled=   0   'False
       Tab(9).ControlCount=   1
@@ -186,7 +185,7 @@ Begin VB.Form frmPlanets
          Height          =   4110
          Index           =   9
          ItemData        =   "frmPlanets.frx":0422
-         Left            =   600
+         Left            =   -74400
          List            =   "frmPlanets.frx":0429
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -411,7 +410,7 @@ Begin VB.Form frmPlanets
          Height          =   4110
          Index           =   0
          ItemData        =   "frmPlanets.frx":04DF
-         Left            =   -74400
+         Left            =   600
          List            =   "frmPlanets.frx":04E1
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -771,7 +770,7 @@ Begin VB.Form frmPlanets
          Width           =   615
       End
    End
-   Begin MSComctlLib.StatusBar statusBar2
+   Begin MSComctlLib.StatusBar statusBar2 
       Align           =   2  'Align Bottom
       Height          =   270
       Left            =   0
@@ -798,7 +797,7 @@ Begin VB.Form frmPlanets
             AutoSize        =   2
             Object.Width           =   1614
             MinWidth        =   1605
-            TextSave        =   "21-4-2015"
+            TextSave        =   "28/02/2024"
          EndProperty
          BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Alignment       =   2
@@ -898,7 +897,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 Option Explicit
-Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
+Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 Private Const MERGEPAINT = &HBB0226
 Private Const SRCAND = &H8800C6
 Private Const SRCCOPY = &HCC0020
@@ -906,10 +905,10 @@ Private schaalJup As Double
 Private Sub schrijfMaan(ByRef pl As tPlaneet_Maan)
 Dim nPlaneet As Long
 listInfo(nPlaneet).AddItem "Maan appearent: " + StrHMS_DMS(pl.RA_app * 180 / Pi, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(pl.Decl_app * 180 / Pi, 7, 2, True, False, "g", 3)
-listInfo(nPlaneet).AddItem "Position Angle: " + StrHMS_DMS(pl.moonPhysData.X * 180 / Pi, 3, 0, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "Position Angle: " + StrHMS_DMS(pl.moonPhysData.x * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Fase          : " + Format(pl.moonPhysData.k, "0.00000")
-listInfo(nPlaneet).AddItem "Bright Limb   : " + StrHMS_DMS(pl.moonPhysData.X * 180 / Pi, 3, 0, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "Bright Limb   : " + StrHMS_DMS(pl.moonPhysData.x * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Terminator    : " + StrHMS_DMS(pl.moonPhysData.T * 180 / Pi, 1, 1, True, False, "g", 5)
 listInfo(nPlaneet).AddItem "Libration in l: " + StrHMS_DMS(-pl.moonPhysData.L * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Libration in b: " + StrHMS_DMS(pl.moonPhysData.B * 180 / Pi, 1, 1, True, False, "g", 4)
@@ -976,7 +975,7 @@ Dim nPlaneet As Long
     End If
     listInfo(nPlaneet).AddItem "Sterrenbeeld  : " + pl.sterbeeld
     listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
-    listInfo(nPlaneet).AddItem "p             : " + StrHMS_DMS(pl.SunPhysData.p * 180 / Pi, 1, 1, True, False, "g", 4)
+    listInfo(nPlaneet).AddItem "p             : " + StrHMS_DMS(pl.SunPhysData.P * 180 / Pi, 1, 1, True, False, "g", 4)
     listInfo(nPlaneet).AddItem "b0            : " + StrHMS_DMS(pl.SunPhysData.b0 * 180 / Pi, 1, 1, True, False, "g", 4)
     listInfo(nPlaneet).AddItem "l0            : " + StrHMS_DMS(pl.SunPhysData.L0 * 180 / Pi, 1, 1, False, False, "g", 4)
 End Sub
@@ -1040,7 +1039,7 @@ listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / P
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "DS            : " + StrHMS_DMS(pl.MarsPhysData.DS * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "DE            : " + StrHMS_DMS(pl.MarsPhysData.DE * 180 / Pi, 1, 2, True, False, "g", 3)
-listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.MarsPhysData.p * 180 / Pi, 1, 2, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.MarsPhysData.P * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "q             : " + StrHMS_DMS(pl.MarsPhysData.qq / 3600, 4, 2, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Q             : " + StrHMS_DMS(pl.MarsPhysData.Q * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Om            : " + StrHMS_DMS(pl.MarsPhysData.Om * 180 / Pi, 1, 2, False, False, "g", 3)
@@ -1071,12 +1070,12 @@ schaal = schaalJup
     
     
     ' teken maantje
-    If (vTemp.Z > 0) And (Abs((vTemp.X * vTemp.X + vTemp.Y * vTemp.Y)) < 1) Then
+    If (vTemp.Z > 0) And (Abs((vTemp.x * vTemp.x + vTemp.Y * vTemp.Y)) < 1) Then
     '  {bedekt}
         'picHidden.PaintPicture imgBedekt, frmJupiterMoons.picHidden.ScaleWidth / 2 - vTemp(i).x * Schaal - 25, frmJupiterMoons.picHidden.ScaleHeight / 2 + vTemp(i).y * Schaal - 25, 50, 50, , , , , vbMergeCopy
         Call TekenCirkelKlein(picHidden, vTemp, schaal, schaal, RGB(150, 150, 150), 15)
     Else   '{niet bedekt}
-        If (vTemp.Z > 0) And (Abs((vsMaan.X * vsMaan.X + vsMaan.Y * vsMaan.Y)) < 1) Then
+        If (vTemp.Z > 0) And (Abs((vsMaan.x * vsMaan.x + vsMaan.Y * vsMaan.Y)) < 1) Then
         '    {verduisterd (schaduw jupiter op maantje)}
             'picHidden.PaintPicture imgVerduisterd, frmJupiterMoons.picHidden.ScaleWidth / 2 - vTemp(i).x * Schaal - 25, frmJupiterMoons.picHidden.ScaleHeight / 2 + vTemp(i).y * Schaal - 25, 50, 50, , , , , vbMergeCopy
             Call TekenCirkelKlein(picHidden, vTemp, schaal, schaal, RGB(0, 0, 255), 15)
@@ -1086,7 +1085,7 @@ schaal = schaalJup
             'picHidden.PaintPicture imgMaan, frmJupiterMoons.picHidden.ScaleWidth / 2 - vTemp(i).x * Schaal - 25, frmJupiterMoons.picHidden.ScaleHeight / 2 + vTemp(i).y * Schaal - 25, 50, 50, , , , , vbMergeCopy
         End If
     End If
-    If (vTemp.Z < 0) And (Abs((vsMaan.X * vsMaan.X + vsMaan.Y * vsMaan.Y)) < 1) Then
+    If (vTemp.Z < 0) And (Abs((vsMaan.x * vsMaan.x + vsMaan.Y * vsMaan.Y)) < 1) Then
            '{schaduw op jupiter}
            'picHidden.PaintPicture imgSchaduw, frmJupiterMoons.picHidden.ScaleWidth / 2 - vSMaan(i).x * Schaal - 25, frmJupiterMoons.picHidden.ScaleHeight / 2 + vSMaan(i).y * Schaal - 25, 50, 50, , , , , vbMergeCopy
            Call TekenCirkelKlein(picHidden, vsMaan, schaal, schaal, RGB(0, 0, 0), 15)
@@ -1120,22 +1119,22 @@ listInfo(nPlaneet).AddItem "DS            : " + StrHMS_DMS(pl.JupiterPhysData.DS
 listInfo(nPlaneet).AddItem "DE            : " + StrHMS_DMS(pl.JupiterPhysData.DE * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Om1           : " + StrHMS_DMS(pl.JupiterPhysData.Om1 * 180 / Pi, 1, 2, False, False, "g", 3)
 listInfo(nPlaneet).AddItem "Om2           : " + StrHMS_DMS(pl.JupiterPhysData.Om2 * 180 / Pi, 1, 2, False, False, "g", 3)
-listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.JupiterPhysData.p * 180 / Pi, 1, 2, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.JupiterPhysData.P * 180 / Pi, 1, 2, True, False, "g", 3)
 Dim MoonName
 Dim sText As String
 Dim ii As Long
 MoonName = Array("", "Io       ", "Europa   ", "Ganymedes", "Callisto ")
 sText = ""
     For ii = 1 To 4
-        sText = "M " + MoonName(ii) + " " + FormatX(pl.vMaan(ii).X, "##0.00000") + " " + _
+        sText = "M " + MoonName(ii) + " " + FormatX(pl.vMaan(ii).x, "##0.00000") + " " + _
                         FormatX(pl.vMaan(ii).Y, "##0.00000") + vbTab + FormatX(pl.vMaan(ii).Z, "##0.00000") + " "
         
-        sText = sText + " " + FormatX(Sqr(pl.vMaan(ii).X * pl.vMaan(ii).X + pl.vMaan(ii).Y * pl.vMaan(ii).Y), "##0.00000")
+        sText = sText + " " + FormatX(Sqr(pl.vMaan(ii).x * pl.vMaan(ii).x + pl.vMaan(ii).Y * pl.vMaan(ii).Y), "##0.00000")
         lstMoonsJup.AddItem (sText)
-        sText = "S " + MoonName(ii) + " " + FormatX(pl.vsMaan(ii).X, "##0.00000") + " " + _
+        sText = "S " + MoonName(ii) + " " + FormatX(pl.vsMaan(ii).x, "##0.00000") + " " + _
                         FormatX(pl.vsMaan(ii).Y, "##0.00000") + vbTab + FormatX(pl.vsMaan(ii).Z, "##0.00000") + vbTab
         
-        sText = sText + " " + FormatX(Sqr(pl.vsMaan(ii).X * pl.vsMaan(ii).X + pl.vsMaan(ii).Y * pl.vsMaan(ii).Y), "##0.00000")
+        sText = sText + " " + FormatX(Sqr(pl.vsMaan(ii).x * pl.vsMaan(ii).x + pl.vsMaan(ii).Y * pl.vsMaan(ii).Y), "##0.00000")
         lstMoonsJup.AddItem (sText)
         If pl.situatieMaan(ii, 1) <> "" Then
             lstMoonsJup.AddItem (pl.situatieMaan(ii, 1))
@@ -1168,12 +1167,12 @@ listInfo(nPlaneet).AddItem "Polardiameter : " + StrHMS_DMS(2 * pl.PolarSemiDiame
 listInfo(nPlaneet).AddItem "B             : " + StrHMS_DMS(pl.SaturnRingData.B * 180 / Pi, 1, 3, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Bd            : " + StrHMS_DMS(pl.SaturnRingData.Bd * 180 / Pi, 1, 3, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "dU            : " + StrHMS_DMS(pl.SaturnRingData.DeltaU * 180 / Pi, 1, 3, True, False, "g", 4)
-listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.SaturnRingData.p * 180 / Pi, 1, 3, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.SaturnRingData.P * 180 / Pi, 1, 3, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "B             : " + StrHMS_DMS(pl.AltSaturnRingData.B * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "B1            : " + StrHMS_DMS(pl.AltSaturnRingData.b1 * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "U             : " + StrHMS_DMS(pl.AltSaturnRingData.u * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "U1            : " + StrHMS_DMS(pl.AltSaturnRingData.u1 * 180 / Pi, 1, 2, True, False, "g", 3)
-listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.AltSaturnRingData.p * 180 / Pi, 1, 2, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.AltSaturnRingData.P * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "P1            : " + StrHMS_DMS(pl.AltSaturnRingData.P1 * 180 / Pi, 1, 2, True, False, "g", 3)
 
 listInfo(nPlaneet).AddItem "A: " & vbTab & "Axis" & vbTab & "ioAxis" & vbTab & "oiAxis" & vbTab & "iiAxis" & vbTab & "idAxis"
@@ -1195,11 +1194,11 @@ MoonName = Array("", "Mimas    ", "Enceladus", "Tethys   ", "Dione    ", _
                      "Rhea     ", "Titan    ", "Hyperion ", "Japetus  ")
 sText = ""
     For ii = 1 To 8
-        sText = "M " + MoonName(ii) + " " + FormatX(pl.satmanen(ii).X, "##0.00000") + " " + _
+        sText = "M " + MoonName(ii) + " " + FormatX(pl.satmanen(ii).x, "##0.00000") + " " + _
                         FormatX(pl.satmanen(ii).Y, "##0.00000") + " " + _
                         FormatX(pl.satmanen(ii).Z, "##0.00000") + vbTab
         
-        sText = sText + FormatX(Sqr(pl.satmanen(ii).X * pl.satmanen(ii).X + pl.satmanen(ii).Y * pl.satmanen(ii).Y), "##0.00000")
+        sText = sText + FormatX(Sqr(pl.satmanen(ii).x * pl.satmanen(ii).x + pl.satmanen(ii).Y * pl.satmanen(ii).Y), "##0.00000")
         lstMoonsSat.AddItem (sText)
     Next
 End Sub
@@ -1276,13 +1275,13 @@ With obl
     Call ObserverCoord(.ObsLat, 0, .RhoCosPhi, .RhoSinPhi)
 End With
 End Sub
-Private Sub calcu_RTS(planet As Long, T0 As Double, height As Double, ByRef RTS As tRiseSetTran)
+Private Sub calcu_RTS(Planet As Long, T0 As Double, height As Double, ByRef RTS As tRiseSetTran)
 Dim alg As tPlaneet_Obl
 Dim t0min1 As Double, t0plus1 As Double
 Dim sAarde As TSVECTOR, sGeo As TSVECTOR, sHelio As TSVECTOR
 Dim RA As Double, Decl As Double, RA1 As Double, Decl1 As Double, RA2 As Double, Decl2 As Double
 
-If planet = 0 Then
+If Planet = 0 Then
    ' bepalen opkomst e.d.
     Call calcu_Obl(T0, alg)
     Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, chkGrootstePrecisie.value = 0)
@@ -1301,9 +1300,9 @@ Else
     ' bepalen opkomst e.d.
     Call calcu_Obl(t0min1, alg)
     Call PlanetPosHi(0, t0min1, sAarde, chkGrootstePrecisie.value = 0)
-    Call PlanetPosHi(planet, t0min1, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, t0min1, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
-    Call PlanetPosHi(planet, t0min1 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, t0min1 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
     Call EclToEqu(sGeo.L + alg.NutLon, sGeo.B, alg.obl + alg.NutObl, RA1, Decl1)
     Call Aberration(t0min1, alg.obl, FK5System, RA1, Decl1)
@@ -1312,18 +1311,18 @@ Else
     t0plus1 = T0 + 1 / 36525
     Call calcu_Obl(t0plus1, alg)
     Call PlanetPosHi(0, t0plus1, sAarde, chkGrootstePrecisie.value = 0)
-    Call PlanetPosHi(planet, t0plus1, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, t0plus1, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
-    Call PlanetPosHi(planet, t0plus1 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, t0plus1 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
     Call EclToEqu(sGeo.L + alg.NutLon, sGeo.B, alg.obl + alg.NutObl, RA2, Decl2)
     Call Aberration(t0plus1, alg.obl, FK5System, RA2, Decl2)
     
     Call calcu_Obl(T0, alg)
     Call PlanetPosHi(0, T0, sAarde, chkGrootstePrecisie.value = 0)
-    Call PlanetPosHi(planet, T0, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, T0, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
-    Call PlanetPosHi(planet, T0 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
+    Call PlanetPosHi(Planet, T0 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(sHelio, sAarde, sGeo)
     Call EclToEqu(sGeo.L + alg.NutLon, sGeo.B, alg.obl + alg.NutObl, RA, Decl)
     Call Aberration(T0, alg.obl, FK5System, RA, Decl)
@@ -1635,17 +1634,17 @@ With jupiter
         vsTemp.Y = vsTemp.Y * 1.071374
     
         If (vTemp.Z > 0) Then
-            If (Abs((vTemp.X * vTemp.X + vTemp.Y * vTemp.Y)) < 1) Then
+            If (Abs((vTemp.x * vTemp.x + vTemp.Y * vTemp.Y)) < 1) Then
                 .situatieMaan(ii, 1) = MoonName(ii) + " : is bedekt"
             End If
-            If (Abs((vsTemp.X * vsTemp.X + vsTemp.Y * vsTemp.Y)) < 1) Then
+            If (Abs((vsTemp.x * vsTemp.x + vsTemp.Y * vsTemp.Y)) < 1) Then
                 .situatieMaan(ii, 2) = MoonName(ii) + " : is verduisterd"
             End If
         Else
-            If (Abs((vTemp.X * vTemp.X + vTemp.Y * vTemp.Y)) < 1) Then
+            If (Abs((vTemp.x * vTemp.x + vTemp.Y * vTemp.Y)) < 1) Then
                 .situatieMaan(ii, 1) = MoonName(ii) + " : trekt voorlangs"
             End If
-            If (Abs((vsTemp.X * vsTemp.X + vsTemp.Y * vsTemp.Y)) < 1) Then
+            If (Abs((vsTemp.x * vsTemp.x + vsTemp.Y * vsTemp.Y)) < 1) Then
                 .situatieMaan(ii, 2) = MoonName(ii) + " : heeft schaduwovergang"
             End If
         End If
@@ -1771,18 +1770,18 @@ With pluto
     Call PrecessFK5(alg.T, 0, .RA2000, .Decl2000)
     Call EquToEcl(.RA2000, .Decl2000, Obliquity(0), .sGeo.L, .sGeo.B)
     Call SphToRect(.sGeo, TAarde)
-    Call EclVSOP2000_equFK52000(TAarde.X, TAarde.Y, TAarde.Z)
+    Call EclVSOP2000_equFK52000(TAarde.x, TAarde.Y, TAarde.Z)
     Call RectToSph(TAarde, sZon)
     .sAarde = .sGeo
     
     Call PlanetPosHi(0, alg.T, .sAarde, chkGrootstePrecisie.value = 0)
     Call PlutoPos(alg.T, .sHelio)
     Call EclToRect(.sHelio, Obliquity(0), TPluto)
-    dist = Sqr((TAarde.X + TPluto.X) * (TAarde.X + TPluto.X) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+    dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
     Call PlutoPos(alg.T - dist * LightTimeConst, .sHelio)
     Call EclToRect(.sHelio, Obliquity(0), TPluto)
-    dist = Sqr((TAarde.X + TPluto.X) * (TAarde.X + TPluto.X) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
-    .RA2000 = atan2(TPluto.Y + TAarde.Y, TPluto.X + TAarde.X)
+    dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+    .RA2000 = atan2(TPluto.Y + TAarde.Y, TPluto.x + TAarde.x)
     If .RA2000 < 0 Then
         .RA2000 = .RA2000 + Pi2
     End If
@@ -1841,10 +1840,10 @@ Dim saturnus As tPlaneet_Saturnus
 Dim uranus As tPlaneet_Uranus
 Dim neptunus As tPlaneet_Neptunus
 Dim pluto As tPlaneet_Pluto
-Dim i As Long
+Dim I As Long
 Call calcu_algemeen(alg)
 If nPlaneet = -1 Then
-    For i = 0 To 9: listInfo(i).Clear: Next
+    For I = 0 To 9: listInfo(I).Clear: Next
 Else
     listInfo(nPlaneet).Clear
 End If
@@ -1895,15 +1894,15 @@ End If
 End Sub
 
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
-Dim i As Long
+Dim I As Long
 Dim sText As String
 Dim nTab As Integer
 If Me.ActiveControl.Name = "listInfo" Then
     If KeyCode = 67 And Shift = 2 Then
         For nTab = 0 To 9
        ' Me.List1.
-        For i = 1 To Me.listInfo(nTab).ListCount
-           sText = sText & vbCrLf & Me.listInfo(nTab).List(i - 1)
+        For I = 1 To Me.listInfo(nTab).ListCount
+           sText = sText & vbCrLf & Me.listInfo(nTab).List(I - 1)
         Next
        Clipboard.Clear
        Clipboard.SetText (sText)
@@ -1923,7 +1922,7 @@ End If
 End Sub
 Private Sub Form_Load()
 ' What to do when this program starts up.
-
+Set g_word = CreateObject("Word.Application")
 #If FRANS Then
     Me.Caption = "Astronomie"
     Me.mnuFile.Caption = "&Fichier"
@@ -1973,8 +1972,8 @@ Next M
 
 ' Set initial default startup date
   SET_INTERFACE_DATE_AND_TIME_TO_NOW
- Dim i As Integer
-For i = 0 To 9: Me.listInfo(i).Clear: Next
+ Dim I As Integer
+For I = 0 To 9: Me.listInfo(I).Clear: Next
 schaalJup = 100
   SSTabPlanets.Tab = 0
   startTimer
@@ -1986,6 +1985,15 @@ End Sub
 Private Sub Form_Terminate()
 ' What to do upon shutting down this program.
   Unload Me
+  On Error GoTo word_einde:
+Dim s As String
+s = g_word.Documents(1).Name
+Set g_word = Nothing
+Exit Sub
+
+word_einde:
+    g_word.Quit
+    Resume Next
 End Sub
 
 Private Sub Hrs_GotFocus()
@@ -2273,7 +2281,7 @@ Private Sub BerekenPositieMaan(maan As Long, JD As Double, bShadow As Boolean, _
 Dim T As Double, deltaT As Double, DtofUT As Double, obl As Double
 Dim NutLon As Double, NutObl As Double, TimeZone As Double
 Dim sHelio As TSVECTOR, ShelioJ As TSVECTOR, SNiks As TSVECTOR, SEarth As TSVECTOR, sGeo As TSVECTOR
-Dim i As Long
+Dim I As Long
 Dim vDummy As TVECTOR, vdummy2 As TVECTOR
 Dim nArg As Double
 
@@ -2290,7 +2298,7 @@ Call HelioToGeo(sHelio, SEarth, sGeo)
 
 '{ Do just one light time iteration }
 
-For i = 1 To 1
+For I = 1 To 1
     Call PlanetPosHi(5, DtofUT - sGeo.r * LightTimeConst, sHelio, True)
     Call HelioToGeo(sHelio, SEarth, sGeo)
 Next

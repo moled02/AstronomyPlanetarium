@@ -14,7 +14,7 @@ Public Const EarthRadius = 6378.14
 Public Const FK4System = 1
 Public Const FK5System = 2
 Public Type TVECTOR '{Rectangular coordinates}
-    X As Double
+    x As Double
     Y As Double
     Z As Double
 End Type
@@ -24,13 +24,13 @@ Public Type TSVECTOR  '{Spherical coordinates}
     r As Double
 End Type
 Public Type T4POLY
-    p(4) As Double
+    P(4) As Double
 End Type
 Public Type T3POLY
-    p(3) As Double
+    P(3) As Double
 End Type
 Public Type T2POLY
-    p(2) As Double
+    P(2) As Double
 End Type
 Public Type TEVENT
     JD As Double
@@ -44,7 +44,7 @@ Public Const Obl2000 = 23.43929111 * DToR
 Type TORBITEL
     T0 As Double      '{ Time of epoch                      }
     M0 As Double        '{ Mean anomaly at T0                 }
-    A As Double         '{ Semi-major axis (if applicable)    }
+    a As Double         '{ Semi-major axis (if applicable)    }
     Q As Double         '{ Perihelion distance                }
     n As Double         '{ DAILY increase in the mean anomaly }
     E As Double         '{ Eccentricity of the orbit          }
@@ -57,7 +57,7 @@ Type TORBITEL
 End Type
 
 Type TORBITCON
-    A As Double
+    a As Double
     B As Double
     C As Double
     aa As Double
@@ -70,7 +70,7 @@ End Type
 ' data.
 Global Q(2500)
 
-Public g_word As New Application
+Public g_word As Object
 
 Type TSINCOSTAB
     W(6) As Double
