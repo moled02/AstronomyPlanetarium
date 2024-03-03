@@ -1,3 +1,6 @@
+Update 03-03-2024, De afhankelijkheid met Word zal eruit gehaald worden.
+er wordt aan gewerkt de rtf-bestanden om te zetten in SVG
+
 # AstronomyPlanetarium
 
 planetarium
