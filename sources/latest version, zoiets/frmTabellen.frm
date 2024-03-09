@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmTabellen 
    Caption         =   "Tabelgenerator"
    ClientHeight    =   8535
@@ -103,6 +103,7 @@ Begin VB.Form frmTabellen
       _ExtentX        =   29236
       _ExtentY        =   9128
       _Version        =   393217
+      Enabled         =   -1  'True
       ScrollBars      =   3
       TextRTF         =   $"frmTabellen.frx":030A
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
@@ -189,13 +190,13 @@ plnaam = Array("Zon      ", "Mercurius", "Venus    ", "Aarde    ", "Mars     ", 
 #End If
 Call objInstellingen.leesopmaakbestand(txtInstellingen.Text)
 Dim ddate As tDatum
-Dim ObsLon As Double, ObsLat As Double, TimeZone As Double, Height As Double
+Dim ObsLon As Double, ObsLat As Double, TimeZone As Double, height As Double
 Dim JD_ZT As Double, JD_WT As Double
 Dim weeknr As Long
 
 txtBeginperiode = Format(txtBeginperiode, "dd-mm-yyyy")
 ddate.jj = Val(Mid(txtBeginperiode, 7, 4))
-ddate.mm = Val(Mid(txtBeginperiode, 4, 2))
+ddate.MM = Val(Mid(txtBeginperiode, 4, 2))
 ddate.DD = Val(Left(txtBeginperiode, 2))
 BeginWeekNr = WeekOfYear(ddate)
 'ddate.jj = frmPlanets.Year
@@ -209,7 +210,7 @@ Call Zomertijd_Wintertijd(frmPlanets.Year, JD_ZT, JD_WT)
 
 txtEindPeriode = Format(txtEindPeriode, "dd-mm-yyyy")
 ddate.jj = Val(Mid(txtEindPeriode, 7, 4))
-ddate.mm = Val(Mid(txtEindPeriode, 4, 2))
+ddate.MM = Val(Mid(txtEindPeriode, 4, 2))
 ddate.DD = Val(Left(txtEindPeriode, 2))
 EindWeekNr = WeekOfYear(ddate)
 
@@ -232,7 +233,7 @@ Do While JD0 <= jde And blnDoorgaan
     #Else
     sUitvoer = sUitvoer + "Zonsopkomsten en ondergangen" + vbCrLf
     #End If
-    Call Calculate(0, ddate, ObsLon, ObsLat, TimeZone, Height, 1, 7, sUitvoer)
+    Call Calculate(0, ddate, ObsLon, ObsLat, TimeZone, height, 1, 7, sUitvoer)
     sUitvoer = sUitvoer + vbCrLf
     #If ENGELS Then
     sUitvoer = sUitvoer + "Moonrising and sets" & vbCrLf
@@ -241,7 +242,7 @@ Do While JD0 <= jde And blnDoorgaan
     #Else
     sUitvoer = sUitvoer + "Maansopkomsten en ondergangen" & vbCrLf
     #End If
-    Call Calculate(10, ddate, ObsLon, ObsLat, TimeZone, Height, 1, 7, sUitvoer)
+    Call Calculate(10, ddate, ObsLon, ObsLat, TimeZone, height, 1, 7, sUitvoer)
     sUitvoer = sUitvoer + vbCrLf
     #If ENGELS Then
     sUitvoer = sUitvoer + "Rising and settings of the planets. (Calculated for the 1st day of the week)" + vbCrLf
@@ -254,18 +255,18 @@ Do While JD0 <= jde And blnDoorgaan
     For I = 1 To 9
         If I <> 3 Then
              sUitvoer = sUitvoer + plnaam(I) + " "
-             Call Calculate(I, ddate, ObsLon, ObsLat, TimeZone, Height, 1, 1, sUitvoer)
+             Call Calculate(I, ddate, ObsLon, ObsLat, TimeZone, height, 1, 1, sUitvoer)
         End If
     Next
     Me.txtTabellen.Text = Me.txtTabellen.Text + sUitvoer + vbCrLf
     DoEvents
-    pgbBereken.Value = Min(j / 53# * 100#, 100#)
+    pgbBereken.value = Min(j / 53# * 100#, 100#)
     'Debug.Print j
     JD0 = JD0 + 7
 Loop
 'Me.txtTabellen.Text = sUitvoer
 
-pgbBereken.Value = 0
+pgbBereken.value = 0
 End Sub
 
 Function Min(x, Y)
@@ -278,10 +279,10 @@ End Function
 
 
 Private Sub Calculate(Planet As Long, ddate As tDatum, _
-                   ObsLon As Double, ObsLat As Double, TimeZone As Double, Height As Double, _
+                   ObsLon As Double, ObsLat As Double, TimeZone As Double, height As Double, _
                    Interval_dagen As Double, Aant_berek As Long, ByRef sUitvoer As String)
 
-Dim SHelio As TSVECTOR, SGeo As TSVECTOR, SSun As TSVECTOR
+Dim sHelio As TSVECTOR, sGeo As TSVECTOR, sSun As TSVECTOR
     'Q1 = SHelio, Q2 = SGeo
 Dim sAarde As TSVECTOR
 Dim RA As Double
@@ -295,7 +296,7 @@ Dim tt As Double
 Dim T As Double
 Dim T0 As Double 'tijdstip op 0h
 Dim DtofUT As Double
-Dim Obl As Double
+Dim obl As Double
 Dim phase As Double
 Dim PhaseAngle As Double
 Dim Elongation As Double
@@ -303,13 +304,13 @@ Dim Magnitude As Double
 Dim Semidiameter As Double
 Dim PolarSemiDiameter As Double
 Dim NutLon As Double, NutObl As Double
-Dim Parallax As Double, MoonHeight As Double
+Dim parallax As Double, moonHeight As Double
 Dim JupiterPhysData As TJUPITERPHYSDATA
 Dim MarsPhysData As TMARSPHYSDATA
 Dim SunPhysData As TSUNPHYSDATA
 Dim SaturnRingData As TSATURNRINGDATA
 Dim AltSaturnRingData As TALTSATURNRINGDATA
-Dim MoonPhysData As TMOONPHYSDATA
+Dim moonPhysData As TMOONPHYSDATA
 Dim C As Long
 Dim JDOfCarr As Double
 Dim deltaT As Double
@@ -322,7 +323,7 @@ Dim sSterbeeld As String
 Dim Az As Double, hg As Double, Alt As Double, dAlt As Double, maxhoogte As Double
 Dim sScheidingsteken As String
 dat.jj = ddate.jj
-dat.mm = ddate.mm
+dat.MM = ddate.MM
 dat.DD = ddate.DD
 'tt = (Hrs + Min / 60 + Sec / 3600) / 24
 'dat.DD = dat.DD + tt
@@ -344,29 +345,29 @@ Do While I < Aant_berek
     't = DtofUT '+ i * Interval_dagen / 36525#
     't = t + secToT * deltaT
     Call NutationConst(T, NutLon, NutObl)
-    Obl = Obliquity(T)
+    obl = Obliquity(T)
     Call objInstellingen.OpslaanGegeven(Planet, "date", JD0, "")
     
-    LAST = SiderealTime(T) + NutLon * Cos(Obl) - ObsLon
-    Call ObserverCoord(ObsLat, Height, RhoCosPhi, RhoSinPhi)
+    LAST = SiderealTime(T) + NutLon * Cos(obl) - ObsLon
+    Call ObserverCoord(ObsLat, height, RhoCosPhi, RhoSinPhi)
     Call objInstellingen.OpslaanGegeven(Planet, "time", I * Pi / 12 * 60, "")
     
     '======================== MAAN =======================
     
-    Dim Dist As Double, dkm As Double, illum As Double, diam As Double
+    Dim dist As Double, dkm As Double, illum As Double, diam As Double
     Dim dist1 As Double, dkm1 As Double
     Dim dist2 As Double, dkm2 As Double
-    Dim l As Double, B As Double
+    Dim L As Double, B As Double
     Dim sMoon As TSVECTOR
     Dim RAx As Double, DeclX As Double
     
     If Planet = 10 Then
         If chkGrootstePrecisie = 0 Then
             Call modMoonPos.MoonPos(T, sMoon)
-            Call EclToEqu(sMoon.l, sMoon.B, Obl, RA, Decl)
+            Call EclToEqu(sMoon.L, sMoon.B, obl, RA, Decl)
         Else
-            Call Lune(TToJD(T), RA, Decl, Dist, dkm, diam, phase, illum)
-            Call Lune(TToJD(T - Dist * LightTimeConst), RA, Decl, Dist, dkm, diam, phase, illum)
+            Call Lune(TToJD(T), RA, Decl, dist, dkm, diam, phase, illum)
+            Call Lune(TToJD(T - dist * LightTimeConst), RA, Decl, dist, dkm, diam, phase, illum)
             RA = RA * Pi / 12
             Decl = Decl * Pi / 180
             'coordinaten zijn voor J2000. Omzetten naar huidige dag, en daarna appearent berekenen
@@ -386,7 +387,7 @@ Do While I < Aant_berek
         Call SterBld(RAx, DeclX, 0#, sSterbeeld)
         Call objInstellingen.OpslaanGegeven(10, "sterrenbeeld", 0, sSterbeeld)
 
-        Call Nutation(NutLon, NutObl, Obl, RA, Decl)
+        Call Nutation(NutLon, NutObl, obl, RA, Decl)
         'List1.AddItem "Maan          : " + StrHMS_DMS(RA * 180 / Pi, 7, 3, False, "h", 2) + vbTab + StrHMS_DMS(Decl * 180 / Pi, 7, 2, True, "g", 3)
         Call objInstellingen.OpslaanGegeven(10, "a_equt", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(10, "d_equt", Decl * RToD, "")
@@ -403,44 +404,45 @@ Do While I < Aant_berek
         End If
 
 
-        Call EquToEcl(RA, Decl, Obl, SGeo.l, SGeo.B)
+        Call EquToEcl(RA, Decl, obl, sGeo.L, sGeo.B)
 
-        SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
+        sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
         Call PlanetPosHi(0, T, sAarde, chkGrootstePrecisie = False)
-        Call HelioToGeo(SHelio, sAarde, SSun)
-        Call PlanetPosHi(0, T - SSun.r * LightTimeConst, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SSun)
-        Call MoonPhysEphemeris(T, SGeo, SSun, Obl, NutLon, NutObl, MoonPhysData)
+        Call HelioToGeo(sHelio, sAarde, sSun)
+        Call PlanetPosHi(0, T - sSun.r * LightTimeConst, sAarde, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sSun)
+        Call MoonPhysEphemeris(T, sGeo, sSun, obl, NutLon, NutObl, moonPhysData)
         
-        Call objInstellingen.OpslaanGegeven(10, "pos_h", MoonPhysData.I * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "fase", MoonPhysData.k, "")
-        Call objInstellingen.OpslaanGegeven(10, "posh_limb", MoonPhysData.x * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "l_olib", -MoonPhysData.ld * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "b_olib", MoonPhysData.Bd * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "l_plib", MoonPhysData.ldd * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "b_plib", MoonPhysData.bdd * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "l_tlib", MoonPhysData.l * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "b_tlib", MoonPhysData.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(10, "term", MoonPhysData.T * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "afstand", sGeo.r, "")
+        Call objInstellingen.OpslaanGegeven(10, "pos_h", moonPhysData.I * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "fase", moonPhysData.k, "")
+        Call objInstellingen.OpslaanGegeven(10, "posh_limb", moonPhysData.x * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "l_olib", -moonPhysData.ld * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "b_olib", moonPhysData.Bd * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "l_plib", moonPhysData.ldd * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "b_plib", moonPhysData.bdd * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "l_tlib", moonPhysData.L * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "b_tlib", moonPhysData.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(10, "term", moonPhysData.T * RToD, "")
 
-        SGeo.r = dkm
-        Call objInstellingen.OpslaanGegeven(10, "afstand", SGeo.r, "")
         If chkGrootstePrecisie = 1 Then
-            Parallax = asin(EarthRadius / dkm)
+            Call objInstellingen.OpslaanGegeven(10, "afstand", dkm, "")
+            parallax = asin(EarthRadius / dkm)
         Else
-            Parallax = asin(EarthRadius / sMoon.r)
+            Call objInstellingen.OpslaanGegeven(10, "afstand", sMoon.r, "")
+            parallax = asin(EarthRadius / sMoon.r)
         End If
-        MoonHeight = MoonSetHeight(Parallax)
-        Call objInstellingen.OpslaanGegeven(10, "par", Parallax, "")
+        moonHeight = MoonSetHeight(parallax)
+        Call objInstellingen.OpslaanGegeven(10, "par", parallax, "")
         If chkGrootstePrecisie = 1 Then
-            Call objInstellingen.OpslaanGegeven(10, "geoc_diam", 2 * MoonSemiDiameter(SGeo.r) * SToR * RToD, "")
+            Call objInstellingen.OpslaanGegeven(10, "geoc_diam", 2 * MoonSemiDiameter(dkm) * SToR * RToD, "")
         Else
             Call objInstellingen.OpslaanGegeven(10, "geoc_diam", 2 * MoonSemiDiameter(sMoon.r) * SToR * RToD, "")
         End If
         
         If chkGrootstePrecisie = 0 Then
             Call modMoonPos.MoonPos(T - 1 / 36525, sMoon)
-            Call EclToEqu(sMoon.l, sMoon.B, Obl, RA1, Decl1)
+            Call EclToEqu(sMoon.L, sMoon.B, obl, RA1, Decl1)
         Else
             Call Lune(TToJD(T - 1 / 36525), RA1, Decl1, dist1, dkm1, diam, phase, illum)
             Call Lune(TToJD(T - dist1 * LightTimeConst - 1 / 36525), RA1, Decl1, dist1, dkm1, diam, phase, illum)
@@ -450,22 +452,22 @@ Do While I < Aant_berek
             Call PrecessFK5(0, T + 1 / 36525, RA1, Decl1)
         End If
 
-        Call Nutation(NutLon, NutObl, Obl, RA1, Decl1)
+        Call Nutation(NutLon, NutObl, obl, RA1, Decl1)
         
         If chkGrootstePrecisie = False Then
             Call modMoonPos.MoonPos(T + 1 / 36525, sMoon)
-            Call EclToEqu(sMoon.l, sMoon.B, Obl, RA2, Decl2)
+            Call EclToEqu(sMoon.L, sMoon.B, obl, RA2, Decl2)
         Else
             Call Lune(TToJD(T + 1 / 36525), RA2, Decl2, dist2, dkm2, diam, phase, illum)
-            Call Lune(TToJD(T - dist2 * LightTimeConst + 1 / 36525), RA2, Decl2, Dist, dkm2, diam, phase, illum)
+            Call Lune(TToJD(T - dist2 * LightTimeConst + 1 / 36525), RA2, Decl2, dist, dkm2, diam, phase, illum)
             RA2 = RA2 * Pi / 12
             Decl2 = Decl2 * Pi / 180
             'coordinaten zijn voor J2000. Omzetten naar huidige dag, en daarna appearent berekenen
             Call PrecessFK5(0, T + 1 / 36525, RA2, Decl2)
         End If
-        Call Nutation(NutLon, NutObl, Obl, RA2, Decl2)
+        Call Nutation(NutLon, NutObl, obl, RA2, Decl2)
         
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, MoonHeight, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, moonHeight, ObsLon, ObsLat, RTS)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS.flags > 0 Then
          RTS.Rise = -1
@@ -481,23 +483,23 @@ Do While I < Aant_berek
     
     '======================== ZON ========================
     If Planet = 0 Then
-        SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
+        sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
         Call objInstellingen.OpslaanGegeven(Planet, "l_helio", 0, "")
         Call objInstellingen.OpslaanGegeven(Planet, "b_helio", 0, "")
         Call objInstellingen.OpslaanGegeven(Planet, "r_helio", 0, "")
     
         Call PlanetPosHi(Planet, T, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call objInstellingen.OpslaanGegeven(Planet, "l_geoc", SGeo.l * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "b_geoc", SGeo.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "r_geoc", SGeo.r, "")
-        Call PlanetPosHi(Planet, T - SGeo.r * LightTimeConst, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call objInstellingen.OpslaanGegeven(Planet, "l_geom", SGeo.l * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "b_geom", SGeo.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", SGeo.r, "")
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call objInstellingen.OpslaanGegeven(Planet, "l_geoc", sGeo.L * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "b_geoc", sGeo.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "r_geoc", sGeo.r, "")
+        Call PlanetPosHi(Planet, T - sGeo.r * LightTimeConst, sAarde, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call objInstellingen.OpslaanGegeven(Planet, "l_geom", sGeo.L * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "b_geom", sGeo.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", sGeo.r, "")
         
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_equm", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_equm", Decl * RToD, "")
         
@@ -510,19 +512,19 @@ Do While I < Aant_berek
         Call SterBld(RA, Decl, 0#, sSterbeeld)
         Call objInstellingen.OpslaanGegeven(Planet, "sterrenbeeld", 0, sSterbeeld)
     
-        Call SunPhysEphemeris(T, SGeo.l, Obl, NutLon, SunPhysData)
+        Call SunPhysEphemeris(T, sGeo.L, obl, NutLon, SunPhysData)
         C = CarringtonRotation(KalenderNaarJD(dat))
         JDOfCarr = JDOfCarringtonRotation(C)
-        Call objInstellingen.OpslaanGegeven(Planet, "l0", SunPhysData.l0 * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "l0", SunPhysData.L0 * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "b0", SunPhysData.b0 * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "p", SunPhysData.P * RToD, "")
         
-        Call ConvertVSOP_FK5(T, SGeo.l, SGeo.B)
-        Call EclToEqu(SGeo.l + NutLon, SGeo.B, Obl + NutObl, RA, Decl)
+        Call ConvertVSOP_FK5(T, sGeo.L, sGeo.B)
+        Call EclToEqu(sGeo.L + NutLon, sGeo.B, obl + NutObl, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_equt", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_equt", Decl * RToD, "")
        
-        Call ParallaxHi(SolarParallax / SGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
+        Call ParallaxHi(SolarParallax / sGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_top", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_top", Decl * RToD, "")
         
@@ -540,30 +542,30 @@ Do While I < Aant_berek
 
         ' bepalen opkomst e.d.
         Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
         
         Call PlanetPosHi(0, T0, sAarde, chkGrootstePrecisie = False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         
         Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
             
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, h0Sun, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, h0Sun, ObsLon, ObsLat, RTS)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS.flags > 0 Then
          RTS.Rise = -1
          RTS.Setting = -1
         End If
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, -6 * DToR, ObsLon, ObsLat, RTS1)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, -6 * DToR, ObsLon, ObsLat, RTS1)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS1.flags > 0 Then
          RTS1.Rise = -1
          RTS1.Setting = -1
         End If
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, -18 * DToR, ObsLon, ObsLat, RTS2)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, -18 * DToR, ObsLon, ObsLat, RTS2)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS2.flags > 0 Then
          RTS2.Rise = -1
@@ -581,23 +583,23 @@ Do While I < Aant_berek
     
     ElseIf Planet > 0 And Planet < 9 Then
         Call PlanetPosHi(0, T, sAarde, chkGrootstePrecisie = 0)
-        Call PlanetPosHi(Planet, T, SHelio, chkGrootstePrecisie = 0)
-        Call objInstellingen.OpslaanGegeven(Planet, "l_helio", (SHelio.l + NutLon) * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "b_helio", SHelio.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "r_helio", SHelio.r, "")
+        Call PlanetPosHi(Planet, T, sHelio, chkGrootstePrecisie = 0)
+        Call objInstellingen.OpslaanGegeven(Planet, "l_helio", (sHelio.L + NutLon) * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "b_helio", sHelio.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "r_helio", sHelio.r, "")
     
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call objInstellingen.OpslaanGegeven(Planet, "l_geoc", SGeo.l * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "b_geoc", SGeo.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "r_geoc", SGeo.r, "")
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call objInstellingen.OpslaanGegeven(Planet, "l_geoc", sGeo.L * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "b_geoc", sGeo.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "r_geoc", sGeo.r, "")
     
-        Call PlanetPosHi(Planet, T - SGeo.r * LightTimeConst, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call objInstellingen.OpslaanGegeven(Planet, "l_geom", SGeo.l * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "b_geom", SGeo.B * RToD, "")
-        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", SGeo.r, "")
+        Call PlanetPosHi(Planet, T - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call objInstellingen.OpslaanGegeven(Planet, "l_geom", sGeo.L * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "b_geom", sGeo.B * RToD, "")
+        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", sGeo.r, "")
     
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         
         maxhoogte = 90 - RToD * (ObsLat - Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "maxhoogte", maxhoogte, "")
@@ -611,13 +613,13 @@ Do While I < Aant_berek
         Call SterBld(RA, Decl, 0#, sSterbeeld)
         Call objInstellingen.OpslaanGegeven(Planet, "sterrenbeeld", 0, sSterbeeld)
         
-        Call ConvertVSOP_FK5(T, SGeo.l, SGeo.B)
-        Call EclToEqu(SGeo.l + NutLon, SGeo.B, Obl + NutObl, RA, Decl)
-        Call Aberration(T, Obl, FK5System, RA, Decl)
+        Call ConvertVSOP_FK5(T, sGeo.L, sGeo.B)
+        Call EclToEqu(sGeo.L + NutLon, sGeo.B, obl + NutObl, RA, Decl)
+        Call Aberration(T, obl, FK5System, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_equt", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_equt", Decl * RToD, "")
        
-        Call ParallaxHi(SolarParallax / SGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
+        Call ParallaxHi(SolarParallax / sGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_top", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_top", Decl * RToD, "")
         
@@ -632,12 +634,12 @@ Do While I < Aant_berek
             Call objInstellingen.OpslaanGegeven(Planet, "hoogteatm", Alt * RToD, "")
         End If
 
-        phase = CalcPhase(SHelio.r, sAarde.r, SGeo.r)
+        phase = CalcPhase(sHelio.r, sAarde.r, sGeo.r)
         PhaseAngle = acos(2 * phase - 1)
-        Elongation = CalcElongation(SHelio.r, sAarde.r, SGeo.r)
-        If modpi(SHelio.l - SGeo.l) > 0 Then Elongation = -Elongation
-        Magnitude = PlanetMagnitude(Planet, SHelio.r, SGeo.r, PhaseAngle, SaturnRingData.DeltaU, SaturnRingData.B)
-        Semidiameter = PlanetSemiDiameter(Planet, SGeo.r, PolarSemiDiameter)
+        Elongation = CalcElongation(sHelio.r, sAarde.r, sGeo.r)
+        If modpi(sHelio.L - sGeo.L) > 0 Then Elongation = -Elongation
+        Magnitude = PlanetMagnitude(Planet, sHelio.r, sGeo.r, PhaseAngle, SaturnRingData.DeltaU, SaturnRingData.B)
+        Semidiameter = PlanetSemiDiameter(Planet, sGeo.r, PolarSemiDiameter)
         Call objInstellingen.OpslaanGegeven(Planet, "semidiam", 2 * Semidiameter * RToD * SToR, "")
         Call objInstellingen.OpslaanGegeven(Planet, "fase", phase, "")
         Call objInstellingen.OpslaanGegeven(Planet, "fasehoek", PhaseAngle * RToD, "")
@@ -646,8 +648,8 @@ Do While I < Aant_berek
     
         Select Case Planet
             Case Is = 4
-                    Call MarsPhysEphemeris(T, SHelio, sAarde, SGeo, _
-                                                Obl, NutLon, NutObl, _
+                    Call MarsPhysEphemeris(T, sHelio, sAarde, sGeo, _
+                                                obl, NutLon, NutObl, _
                                                 MarsPhysData)
                     Call objInstellingen.OpslaanGegeven(Planet, "de", MarsPhysData.DE * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ds", MarsPhysData.DS * RToD, "")
@@ -658,8 +660,8 @@ Do While I < Aant_berek
                     Call objInstellingen.OpslaanGegeven(Planet, "semiequ", 2 * Semidiameter * SToR * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "semipol", 2 * PolarSemiDiameter * SToR * RToD, "")
                     
-                    Call JupiterPhysEphemeris(T + deltaT / 36525 / 86400, SHelio, sAarde, SGeo, _
-                                                   Obl, NutLon, NutObl, _
+                    Call JupiterPhysEphemeris(T + deltaT / 36525 / 86400, sHelio, sAarde, sGeo, _
+                                                   obl, NutLon, NutObl, _
                                                   JupiterPhysData)
                     Call objInstellingen.OpslaanGegeven(Planet, "de", JupiterPhysData.DE * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ds", JupiterPhysData.DS * RToD, "")
@@ -672,12 +674,12 @@ Do While I < Aant_berek
                     Call objInstellingen.OpslaanGegeven(Planet, "semiequ", 2 * Semidiameter * SToR * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "semipol", 2 * PolarSemiDiameter * SToR * RToD, "")
     
-                    Call SaturnRing(T, SHelio, SGeo, Obl, NutLon, NutObl, SaturnRingData)
-                    Call AltSaturnRing(T, SHelio, SGeo, Obl, NutLon, NutObl, AltSaturnRingData)
+                    Call SaturnRing(T, sHelio, sGeo, obl, NutLon, NutObl, SaturnRingData)
+                    Call AltSaturnRing(T, sHelio, sGeo, obl, NutLon, NutObl, AltSaturnRingData)
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_p", AltSaturnRingData.P * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_p1", AltSaturnRingData.P1 * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_u", AltSaturnRingData.u * RToD, "")
-                    Call objInstellingen.OpslaanGegeven(Planet, "ring_u1", AltSaturnRingData.U1 * RToD, "")
+                    Call objInstellingen.OpslaanGegeven(Planet, "ring_u1", AltSaturnRingData.u1 * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_b", AltSaturnRingData.B * RToD, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_semiasbinnen", SaturnRingData.aAxis / 3600, "")
                     Call objInstellingen.OpslaanGegeven(Planet, "ring_ioasbinnen", SaturnRingData.ioaAxis / 3600, "")
@@ -695,27 +697,27 @@ Do While I < Aant_berek
        
         ' bepalen opkomst e.d.
         Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, chkGrootstePrecisie = 0)
-        Call PlanetPosHi(Planet, T0 - 1 / 36525, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 - 1 / 36525 - SGeo.r * LightTimeConst, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+        Call PlanetPosHi(Planet, T0 - 1 / 36525, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 - 1 / 36525 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
         
         Call PlanetPosHi(0, T0, sAarde, chkGrootstePrecisie = 0)
-        Call PlanetPosHi(Planet, T0, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 - SGeo.r * LightTimeConst, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call PlanetPosHi(Planet, T0, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         
         Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, chkGrootstePrecisie = 0)
-        Call PlanetPosHi(Planet, T0 + 1 / 36525, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 + 1 / 36525 - SGeo.r * LightTimeConst, SHelio, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+        Call PlanetPosHi(Planet, T0 + 1 / 36525, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 + 1 / 36525 - sGeo.r * LightTimeConst, sHelio, chkGrootstePrecisie = 0)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
         
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, h0Planet, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, h0Planet, ObsLon, ObsLat, RTS)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS.flags > 0 Then
          RTS.Rise = -1
@@ -732,33 +734,33 @@ Do While I < Aant_berek
         Dim TAarde As TVECTOR
         Dim sZon As TSVECTOR
         Dim TPluto As TVECTOR
-        SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
+        sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
         Call PlanetPosHi(0, T, sAarde, chkGrootstePrecisie = 0)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call SphToRect(SGeo, TAarde)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call SphToRect(sGeo, TAarde)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         ' Call Reduction2000(0, RA, Decl)
         'coordinaten omzetten naar J2000
         Call PrecessFK5(T, 0, RA, Decl)
-        Call EquToEcl(RA, Decl, Obliquity(0), SGeo.l, SGeo.B)
-        Call SphToRect(SGeo, TAarde)
+        Call EquToEcl(RA, Decl, Obliquity(0), sGeo.L, sGeo.B)
+        Call SphToRect(sGeo, TAarde)
         Call EclVSOP2000_equFK52000(TAarde.x, TAarde.Y, TAarde.Z)
         Call RectToSph(TAarde, sZon)
-        sAarde = SGeo
+        sAarde = sGeo
         
         Call PlanetPosHi(0, T, sAarde, chkGrootstePrecisie = 0)
-        Call PlutoPos(T, SHelio)
-        Call EclToRect(SHelio, Obliquity(0), TPluto)
-        Dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
-        Call PlutoPos(T - Dist * LightTimeConst, SHelio)
-        Call EclToRect(SHelio, Obliquity(0), TPluto)
-        Dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
-        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", Dist, "")
+        Call PlutoPos(T, sHelio)
+        Call EclToRect(sHelio, Obliquity(0), TPluto)
+        dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+        Call PlutoPos(T - dist * LightTimeConst, sHelio)
+        Call EclToRect(sHelio, Obliquity(0), TPluto)
+        dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+        Call objInstellingen.OpslaanGegeven(Planet, "r_geom", dist, "")
         RA = atan2(TPluto.Y + TAarde.Y, TPluto.x + TAarde.x)
         If RA < 0 Then
             RA = RA + Pi2
         End If
-        Decl = asin((TPluto.Z + TAarde.Z) / Dist)
+        Decl = asin((TPluto.Z + TAarde.Z) / dist)
                 Call SterBld(RA, Decl, 0#, sSterbeeld)
         Call objInstellingen.OpslaanGegeven(Planet, "sterrenbeeld", 0, sSterbeeld)
         
@@ -767,19 +769,19 @@ Do While I < Aant_berek
         
         Call objInstellingen.OpslaanGegeven(Planet, "a_equ2000", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_equ2000", Decl * RToD, "")
-        Call RiseSet(T0, deltaT, RA, Decl, RA, Decl, RA, Decl, h0Planet, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA, Decl, RA, Decl, RA, Decl, h0Planet, ObsLon, ObsLat, RTS)
         'DMO, 03-07-2008 indien flags aangaf dat
         If RTS.flags > 0 Then
          RTS.Rise = -1
          RTS.Setting = -1
         End If
         
-        Call EclToEqu(SGeo.l + NutLon, SGeo.B, Obl + NutObl, RA, Decl)
-        Call Aberration(T, Obl, FK5System, RA, Decl)
+        Call EclToEqu(sGeo.L + NutLon, sGeo.B, obl + NutObl, RA, Decl)
+        Call Aberration(T, obl, FK5System, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_equt", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_equt", Decl * RToD, "")
        
-        Call ParallaxHi(SolarParallax / SGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
+        Call ParallaxHi(SolarParallax / sGeo.r, LAST, RhoCosPhi, RhoSinPhi, RA, Decl)
         Call objInstellingen.OpslaanGegeven(Planet, "a_top", RA * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "d_top", Decl * RToD, "")
         
@@ -798,11 +800,11 @@ Do While I < Aant_berek
         If RTS.Transit >= 0 Then Call objInstellingen.OpslaanGegeven(Planet, "rts_t1", RTS.Transit * RToD, "") Else Call objInstellingen.OpslaanGegeven(10, "rts_t1", 0, "------")
         If RTS.Setting >= 0 Then Call objInstellingen.OpslaanGegeven(Planet, "rts_s1", RTS.Setting * RToD, "") Else Call objInstellingen.OpslaanGegeven(10, "rts_s1", 0, "------")
     
-        phase = CalcPhase(SHelio.r, sAarde.r, Dist)
+        phase = CalcPhase(sHelio.r, sAarde.r, dist)
         PhaseAngle = acos(2 * phase - 1)
-        Magnitude = PlanetMagnitude(9, SHelio.r, Dist, PhaseAngle, SaturnRingData.DeltaU, SaturnRingData.B)
-        Elongation = CalcElongation(SHelio.r, sAarde.r, Dist)
-        Semidiameter = PlanetSemiDiameter(9, Dist, PolarSemiDiameter)
+        Magnitude = PlanetMagnitude(9, sHelio.r, dist, PhaseAngle, SaturnRingData.DeltaU, SaturnRingData.B)
+        Elongation = CalcElongation(sHelio.r, sAarde.r, dist)
+        Semidiameter = PlanetSemiDiameter(9, dist, PolarSemiDiameter)
         Call objInstellingen.OpslaanGegeven(Planet, "semidiam", 2 * Semidiameter * SToR * RToD, "")
         Call objInstellingen.OpslaanGegeven(Planet, "fase", phase, "")
         Call objInstellingen.OpslaanGegeven(Planet, "fasehoek", PhaseAngle * RToD, "")
@@ -882,7 +884,7 @@ If dStapBerekening = 0 Then dStapBerekening = 1
 
 Call objInstellingen.leesopmaakbestand(txtInstellingen.Text)
 Dim ddate As tDatum
-Dim ObsLon As Double, ObsLat As Double, TimeZone As Double, Height As Double
+Dim ObsLon As Double, ObsLat As Double, TimeZone As Double, height As Double
 Dim JD_ZT As Double, JD_WT As Double
 Dim weeknr As Long
 Dim dNu As tDatum
@@ -894,7 +896,7 @@ Open sTempFile For Output As #nfile
 
 txtBeginperiode = Format(txtBeginperiode, "dd-mm-yyyy")
 ddate.jj = Val(Mid(txtBeginperiode, 7, 4))
-ddate.mm = Val(Mid(txtBeginperiode, 4, 2))
+ddate.MM = Val(Mid(txtBeginperiode, 4, 2))
 ddate.DD = Val(Left(txtBeginperiode, 2))
 JD0 = KalenderNaarJD(ddate)
 'Call Zomertijd_Wintertijd(ddate.jj, JD_ZT, JD_WT)
@@ -903,7 +905,7 @@ dVorig = ddate
 
 txtEindPeriode = Format(txtEindPeriode, "dd-mm-yyyy")
 ddate.jj = Val(Mid(txtEindPeriode, 7, 4))
-ddate.mm = Val(Mid(txtEindPeriode, 4, 2))
+ddate.MM = Val(Mid(txtEindPeriode, 4, 2))
 ddate.DD = Val(Left(txtEindPeriode, 2))
 jde = KalenderNaarJD(ddate)
 
@@ -931,7 +933,7 @@ For I = 0 To 10
         ddate = JDNaarKalender(JD)
         dNu = ddate
         dNu.DD = Int(dNu.DD)
-        If dNu.DD = dVorig.DD And dNu.mm = dVorig.mm And dNu.jj = dVorig.jj Then
+        If dNu.DD = dVorig.DD And dNu.MM = dVorig.MM And dNu.jj = dVorig.jj Then
              Call objInstellingen.InstellingAanUit(I, "rts_r1", False)
              Call objInstellingen.InstellingAanUit(I, "rts_t1", False)
              Call objInstellingen.InstellingAanUit(I, "rts_s1", False)
@@ -954,14 +956,14 @@ For I = 0 To 10
         End If
              dVorig = dNu
              sUitvoer = ""
-             Call Calculate(I, ddate, ObsLon, ObsLat, TimeZone, Height, 1#, 1#, sUitvoer)
+             Call Calculate(I, ddate, ObsLon, ObsLat, TimeZone, height, 1#, 1#, sUitvoer)
              Print #nfile, sUitvoer;
              sUitvoer = ""
              JD = JD0 + j * dStapBerekening
              ddate = JDNaarKalender(JD)
 
          'Me.txtTabellen.Text = Me.txtTabellen.Text + "."
-         pgbBereken.Value = Min(j / ((jde - JD0) / dStapBerekening) * 100#, 100#)
+         pgbBereken.value = Min(j / ((jde - JD0) / dStapBerekening) * 100#, 100#)
          'Me.txtTabellen.Text = Me.txtTabellen.Text + sUitvoer
     Loop
     Me.txtTabellen.Text = Me.txtTabellen.Text & "... ok" & vbCrLf
@@ -976,15 +978,15 @@ Close nfile
 Me.txtTabellen.Text = sUitvoer
 'Me.txtTabellen.Text = sUitvoer
     
-pgbBereken.Value = 0
+pgbBereken.value = 0
 End Sub
 
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
-Dim stext As String
+Dim sText As String
     If KeyCode = 67 And Shift = 2 Then
-       stext = Me.txtTabellen.Text
+       sText = Me.txtTabellen.Text
        Clipboard.Clear
-       Clipboard.SetText (stext)
+       Clipboard.SetText (sText)
     End If
 End Sub
 
@@ -1006,11 +1008,11 @@ Dim JD_eind As Double
 txtInstellingen.Text = App.Path & "\instel"
 
 ddate.jj = frmPlanets.Year
-ddate.mm = 1
+ddate.MM = 1
 ddate.DD = 1
 BeginWeekNr = Int(ddate.jj * 100#) + 1
 Call WeekDate(BeginWeekNr, ddate)
-txtBeginperiode = Format(ddate.DD, "00") & "-" & Format(ddate.mm, "00") & "-" & Format(ddate.jj, "00")
+txtBeginperiode = Format(ddate.DD, "00") & "-" & Format(ddate.MM, "00") & "-" & Format(ddate.jj, "00")
 JD0 = KalenderNaarJD(ddate)
 Call Zomertijd_Wintertijd(ddate.jj, JD_ZT, JD_WT)
 
@@ -1020,7 +1022,7 @@ Call WeekDate(EindWeekNr, ddate)
 JD_eind = KalenderNaarJD(ddate) - 1
 ddate = JDNaarKalender(JD_eind)
 
-Me.txtEindPeriode = Format(ddate.DD, "00") & "-" & Format(ddate.mm, "00") & "-" & Format(ddate.jj, "00")
+Me.txtEindPeriode = Format(ddate.DD, "00") & "-" & Format(ddate.MM, "00") & "-" & Format(ddate.jj, "00")
 
 End Sub
 
@@ -1031,7 +1033,7 @@ End Sub
 Private Sub Form_Resize()
 On Error Resume Next
 txtTabellen.Width = Me.Width - 245
-txtTabellen.Height = Me.Height - 3030
+txtTabellen.height = Me.height - 3030
 Me.pgbBereken.top = StatusBar1.top + 75
 End Sub
 

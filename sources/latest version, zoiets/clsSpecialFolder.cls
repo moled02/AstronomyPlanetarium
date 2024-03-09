@@ -111,19 +111,35 @@ Private Const S_OK = &H0                'Success
 Private Const S_FALSE = &H1             'Folder is valid but does not exist
 Private Const E_INVALIDARG = &H80070057 'Invalid CSIDL value
 
-Private Declare Function SHGetFolderPath Lib "shfolder.dll" _
-   Alias "SHGetFolderPathA" _
-  (ByVal hwndOwner As Long, _
-   ByVal nFolder As Long, _
-   ByVal hToken As Long, _
-   ByVal dwReserved As Long, _
-   ByVal lpszPath As String) As Long
+' Private Declare Function SHGetFolderPath Lib "shfolder.dll" _
+'    Alias "SHGetFolderPathA" _
+'   (ByVal hwndOwner As Long, _
+'    ByVal nFolder As Long, _
+'    ByVal hToken As Long, _
+'    ByVal dwReserved As Long, _
+'    ByVal lpszPath As String) As Long
+
+'DMO 2024, ShFolder eruit... ==> TempDir
+ Private Declare Function GetTempPath Lib "kernel32" Alias _
+  "GetTempPathA" (ByVal nBufferLength As Long, ByVal lpBuffer As String) As Long
+Const MAX_PATH = 255
+ 
+Public Function GetTempDir() As String
+    Dim sRet As String, lngLen As Long
+    
+    'create buffer
+    sRet = String(MAX_PATH, 0)
+ 
+    lngLen = GetTempPath(MAX_PATH, sRet)
+    If lngLen = 0 Then Err.Raise Err.LastDllError
+    GetTempDir = Left$(sRet, lngLen)
+End Function
 
 ' PROPERTIES      PROPERTIES       PROPERTIES      PROPERTIES      PROPERTIES
 '--------------------------------------------------------------------------
-Public Property Let SetWindowHandle(hWnd As Long)
+Public Property Let SetWindowHandle(hwnd As Long)
     ' Might not be neccesary
-    m_hWnd = hWnd
+    m_hWnd = hwnd
 End Property
 
 
@@ -136,7 +152,8 @@ Public Property Get TemporaryFolder() As String
    
     ' try "C:\Documents and Settings\<user>\Local Settings\Temp"
     If sFolder = vbNullString Then
-        sFolder = SpecialFolder(CSIDL_LOCAL_APPDATA)
+        ' sFolder = SpecialFolder(CSIDL_LOCAL_APPDATA)
+        sFolder = GetTempDir()
         If sFolder <> vbNullString Then
             With m_objFSO
                 sFolder = .GetAbsolutePathName(.BuildPath(sFolder, "..\Temp"))
@@ -174,12 +191,12 @@ Private Function SpecialFolder(csidl As Long) As String
     Dim sBuffer As String
     
     sBuffer = Space(MAX_LENGTH)
-    If SHGetFolderPath(m_hWnd, csidl, 0, SHGFP_TYPE_CURRENT, sBuffer) = S_OK Then
+'  If SHGetFolderPath(m_hWnd, csidl, 0, SHGFP_TYPE_CURRENT, sBuffer) = S_OK Then
         'Returned C-string is null terminated
-        SpecialFolder = Left(sBuffer, InStr(1, sBuffer, Chr(0)) - 1)
-    Else
-        SpecialFolder = vbNullString
-    End If
+'        SpecialFolder = Left(sBuffer, InStr(1, sBuffer, Chr(0)) - 1)
+'     Else
+'        SpecialFolder = vbNullString
+'    End If
 End Function
 
 ' Initialize

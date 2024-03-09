@@ -81,7 +81,7 @@ Private Const MERGEPAINT = &HBB0226
 Private Const SRCAND = &H8800C6
 Private Const SRCCOPY = &HCC0020
 
-Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
+Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 Private lDoorgaan As Boolean
 Private nStap As Long
 
@@ -92,7 +92,7 @@ Dim k As Double
 Dim nFactor As Double
 Dim u(6) As Double
 Dim r(6) As Double
-Dim x(6) As Double
+Dim X(6) As Double
 Dim Y(6) As Double
 Dim SaturnB As Double
 Dim Xstart As Double
@@ -105,10 +105,10 @@ picHiddenSat.Line (0, Ystart)-(Xstart * 2, Ystart)
 picHiddenSat.Line (Xstart, 0)-(Xstart, Ystart * 2)
   k = 0
   nFactor = Int(picHiddenSat.ScaleWidth / 350) * schaal
-  Call SaturnusGeg(JD + k, u(), r(), x(), Y(), SaturnB)
+  Call SaturnusGeg(JD + k, u(), r(), X(), Y(), SaturnB)
   If withMoons Then
     For i = 1 To 6
-        x(i) = -x(i)
+        X(i) = -X(i)
         'y(i) = -y(i)
         u(i) = u(i) - 360 * Int(u(i) / 360) - 180 't.b.v. controle voor of achter Saturnus
     Next
@@ -117,11 +117,11 @@ picHiddenSat.Line (Xstart, 0)-(Xstart, Ystart * 2)
      If (i = 1) Or (i = 2) Or (i = 3) Or (i = 4) Or (i = 5) Or (i = 6) Then
         If Abs(u(i)) > 90 Then
             If schaal > 1.5 Then
-                picHiddenSat.Circle (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 2
+                picHiddenSat.Circle (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 2
             ElseIf schaal > 0.7 Then
-                picHiddenSat.Circle (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 1
+                picHiddenSat.Circle (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 1
             Else
-                picHiddenSat.PSet (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 0
+                picHiddenSat.PSet (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 0
             End If
         End If
      End If
@@ -225,11 +225,11 @@ End If
      If (i = 1) Or (i = 2) Or (i = 3) Or (i = 4) Or (i = 5) Or (i = 6) Then
         If Abs(u(i)) <= 90 Then
             If schaal > 1.5 Then
-                picHiddenSat.Circle (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 2
+                picHiddenSat.Circle (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 2
             ElseIf schaal > 0.7 Then
-                picHiddenSat.Circle (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 1
+                picHiddenSat.Circle (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 1
             Else
-                picHiddenSat.PSet (Xstart - Int(nFactor * x(i)), Ystart + Int(nFactor * (Y(i)))), 0
+                picHiddenSat.PSet (Xstart - Int(nFactor * X(i)), Ystart + Int(nFactor * (Y(i)))), 0
             End If
         End If
      End If

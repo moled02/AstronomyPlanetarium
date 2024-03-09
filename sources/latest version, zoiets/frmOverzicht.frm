@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "richtx32.Ocx"
 Begin VB.Form frmOverzicht 
    BackColor       =   &H80000005&
    Caption         =   "Zichtbaarheidsdiagram"
@@ -32,7 +32,6 @@ Begin VB.Form frmOverzicht
       _ExtentX        =   17806
       _ExtentY        =   6588
       _Version        =   393217
-      Enabled         =   -1  'True
       ScrollBars      =   2
       TextRTF         =   $"frmOverzicht.frx":030A
    End
@@ -848,12 +847,12 @@ Private Const MERGEPAINT = &HBB0226
 Private Const SRCAND = &H8800C6
 Private Const SRCCOPY = &HCC0020
 
-Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
+Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 
 Private nPlaneet As Long
 Private Type tgebied
     aantgeb As Long
-    Y(5) As Boolean
+    y(5) As Boolean
     x(5) As Double
 End Type
 Private Type tZonGebied
@@ -877,7 +876,7 @@ Dim res As Long, g1 As Long, g2 As Long
     res = 0
     Do While g1 + g2 <= geb1.aantgeb + geb2.aantgeb
          res = res + 1
-         resgeb.Y(res) = (geb1.Y(g1)) And (geb2.Y(g2))
+         resgeb.y(res) = (geb1.y(g1)) And (geb2.y(g2))
          If geb1.x(g1) = geb2.x(g2) Then
               resgeb.x(res) = geb1.x(g1)
               g1 = g1 + 1
@@ -899,38 +898,38 @@ Private Sub MaakGebied(T0 As Double, t1 As Double, ByRef geb As tgebied)
 
      If T0 < t1 Then  '{|   ---   |}
           geb.x(1) = T0
-          geb.Y(1) = False
+          geb.y(1) = False
           geb.x(2) = t1
-          geb.Y(2) = True
+          geb.y(2) = True
           geb.x(3) = 24
-          geb.Y(3) = False
+          geb.y(3) = False
           geb.aantgeb = 3
      Else
           geb.x(1) = t1
-          geb.Y(1) = True
+          geb.y(1) = True
           geb.x(2) = T0
-          geb.Y(2) = False
+          geb.y(2) = False
           geb.x(3) = 24
-          geb.Y(3) = True
+          geb.y(3) = True
           geb.aantgeb = 3
      End If
 End Sub
 
 Private Sub Inverse(ByRef geb1 As tgebied)
 
-Dim i As Long
+Dim I As Long
 
-    For i = 1 To geb1.aantgeb
-        geb1.Y(i) = Not (geb1.Y(i))
+    For I = 1 To geb1.aantgeb
+        geb1.y(I) = Not (geb1.y(I))
     Next
         
 End Sub
 
 Private Sub ov(Planet As Long, ddate As tDatum, _
-                   ObsLon As Double, ObsLat As Double, TimeZone As Double, Height As Double, _
+                   ObsLon As Double, ObsLat As Double, TimeZone As Double, height As Double, _
                    ByRef Opk As Double, ByRef Ond As Double)
 
-Dim SHelio As TSVECTOR, SGeo As TSVECTOR, SSun As TSVECTOR
+Dim sHelio As TSVECTOR, sGeo As TSVECTOR, sSun As TSVECTOR
     'Q1 = SHelio, Q2 = SGeo
 Dim sAarde As TSVECTOR
 Dim RA As Double
@@ -941,10 +940,10 @@ Dim RA2 As Double
 Dim Decl2 As Double
 Dim dat As tDatum
 Dim tt As Double
-Dim t As Double
+Dim T As Double
 Dim T0 As Double 'tijdstip op 0h
 Dim DtofUT As Double
-Dim Obl As Double
+Dim obl As Double
 Dim phase As Double
 Dim PhaseAngle As Double
 Dim Elongation As Double
@@ -952,13 +951,13 @@ Dim Magnitude As Double
 Dim Semidiameter As Double
 Dim PolarSemiDiameter As Double
 Dim NutLon As Double, NutObl As Double
-Dim Parallax As Double, MoonHeight As Double
+Dim parallax As Double, moonHeight As Double
 Dim JupiterPhysData As TJUPITERPHYSDATA
 Dim MarsPhysData As TMARSPHYSDATA
 Dim SunPhysData As TSUNPHYSDATA
 Dim SaturnRingData As TSATURNRINGDATA
 Dim AltSaturnRingData As TALTSATURNRINGDATA
-Dim MoonPhysData As TMOONPHYSDATA
+Dim moonPhysData As TMOONPHYSDATA
 Dim C As Long
 Dim JDOfCarr As Double
 Dim deltaT As Double
@@ -970,70 +969,70 @@ Dim JD0 As Double
 Dim sSterbeeld As String
 Dim Az As Double, hg As Double, Alt As Double, dAlt As Double, maxhoogte As Double
 dat.jj = ddate.jj
-dat.mm = ddate.mm
+dat.MM = ddate.MM
 dat.DD = ddate.DD
 'tt = (Hrs + Min / 60 + Sec / 3600) / 24
 'dat.DD = dat.DD + tt
 
 
 JD0 = KalenderNaarJD(dat)
-    t = JDToT(JD0 + TimeZone) '+ i * Interval_dagen)
-    deltaT = ApproxDeltaT(t)
-    T0 = (floor(t * 36525 + 0.50001 - TimeZone) - 0.5 + TimeZone) / 36525#
+    T = JDToT(JD0 + TimeZone) '+ i * Interval_dagen)
+    deltaT = ApproxDeltaT(T)
+    T0 = (floor(T * 36525 + 0.50001 - TimeZone) - 0.5 + TimeZone) / 36525#
     DtofUT = T0 + secToT * deltaT
     't = DtofUT '+ i * Interval_dagen / 36525#
     't = t + secToT * deltaT
-    Call NutationConst(t, NutLon, NutObl)
-    Obl = Obliquity(t)
+    Call NutationConst(T, NutLon, NutObl)
+    obl = Obliquity(T)
     
-    LAST = SiderealTime(t) + NutLon * Cos(Obl) - ObsLon
+    LAST = SiderealTime(T) + NutLon * Cos(obl) - ObsLon
     Call ObserverCoord(ObsLat, 0, RhoCosPhi, RhoSinPhi)
 '    Call ObserverCoord(ObsLat, Height, RhoCosPhi, RhoSinPhi)
    
     '======================== ZON ========================
     If Planet = 0 Then
-        SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
+        sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
     
         ' bepalen opkomst e.d.
         Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
         
         Call PlanetPosHi(0, T0, sAarde, chkGrootstePrecisie = False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         
         Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
             
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, Height, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, height, ObsLon, ObsLat, RTS)
     
     ElseIf Planet > 0 And Planet < 9 Then
       
         ' bepalen opkomst e.d.
         Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, False)
-        Call PlanetPosHi(Planet, T0 - 1 / 36525, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 - 1 / 36525 - SGeo.r * LightTimeConst, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+        Call PlanetPosHi(Planet, T0 - 1 / 36525, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 - 1 / 36525 - sGeo.r * LightTimeConst, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
         
         Call PlanetPosHi(0, T0, sAarde, False)
-        Call PlanetPosHi(Planet, T0, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 - SGeo.r * LightTimeConst, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        Call PlanetPosHi(Planet, T0, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 - sGeo.r * LightTimeConst, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         
         Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, False)
-        Call PlanetPosHi(Planet, T0 + 1 / 36525, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call PlanetPosHi(Planet, T0 + 1 / 36525 - SGeo.r * LightTimeConst, SHelio, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+        Call PlanetPosHi(Planet, T0 + 1 / 36525, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call PlanetPosHi(Planet, T0 + 1 / 36525 - sGeo.r * LightTimeConst, sHelio, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
         
-        Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, Height, ObsLon, ObsLat, RTS)
+        Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, height, ObsLon, ObsLat, RTS)
     ElseIf Planet = 9 Then ', dus Pluto
         'Dit is een speciaal geval. Coordinaten zijn voor 2000. Deze moeten voor de Zon worden berekend.
         'Dat is: bereken positie voor vandaag. De coordinaten omzetten naar J2000
@@ -1042,33 +1041,33 @@ JD0 = KalenderNaarJD(dat)
         Dim TAarde As TVECTOR
         Dim sZon As TSVECTOR
         Dim TPluto As TVECTOR
-        SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
-        Call PlanetPosHi(0, t, sAarde, False)
-        Call HelioToGeo(SHelio, sAarde, SGeo)
-        Call SphToRect(SGeo, TAarde)
-        Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+        sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
+        Call PlanetPosHi(0, T, sAarde, False)
+        Call HelioToGeo(sHelio, sAarde, sGeo)
+        Call SphToRect(sGeo, TAarde)
+        Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
         ' Call Reduction2000(0, RA, Decl)
         'coordinaten omzetten naar J2000
-        Call PrecessFK5(t, 0, RA, Decl)
-        Call EquToEcl(RA, Decl, Obliquity(0), SGeo.l, SGeo.B)
-        Call SphToRect(SGeo, TAarde)
-        Call EclVSOP2000_equFK52000(TAarde.x, TAarde.Y, TAarde.Z)
+        Call PrecessFK5(T, 0, RA, Decl)
+        Call EquToEcl(RA, Decl, Obliquity(0), sGeo.L, sGeo.B)
+        Call SphToRect(sGeo, TAarde)
+        Call EclVSOP2000_equFK52000(TAarde.x, TAarde.y, TAarde.Z)
         Call RectToSph(TAarde, sZon)
-        sAarde = SGeo
+        sAarde = sGeo
         
-        Call PlanetPosHi(0, t, sAarde, False)
-        Call PlutoPos(t, SHelio)
-        Call EclToRect(SHelio, Obliquity(0), TPluto)
-        Dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
-        Call PlutoPos(t - Dist * LightTimeConst, SHelio)
-        Call EclToRect(SHelio, Obliquity(0), TPluto)
-        Dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.Y + TPluto.Y) * (TAarde.Y + TPluto.Y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
-        RA = atan2(TPluto.Y + TAarde.Y, TPluto.x + TAarde.x)
+        Call PlanetPosHi(0, T, sAarde, False)
+        Call PlutoPos(T, sHelio)
+        Call EclToRect(sHelio, Obliquity(0), TPluto)
+        dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.y + TPluto.y) * (TAarde.y + TPluto.y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+        Call PlutoPos(T - dist * LightTimeConst, sHelio)
+        Call EclToRect(sHelio, Obliquity(0), TPluto)
+        dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.y + TPluto.y) * (TAarde.y + TPluto.y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+        RA = atan2(TPluto.y + TAarde.y, TPluto.x + TAarde.x)
         If RA < 0 Then
             RA = RA + Pi2
         End If
-        Decl = asin((TPluto.Z + TAarde.Z) / Dist)
-        Call RiseSet(T0, deltaT, RA, Decl, RA, Decl, RA, Decl, Height, ObsLon, ObsLat, RTS)
+        Decl = asin((TPluto.Z + TAarde.Z) / dist)
+        Call riseSet(T0, deltaT, RA, Decl, RA, Decl, RA, Decl, height, ObsLon, ObsLat, RTS)
         
     End If
     
@@ -1091,7 +1090,7 @@ Dim zonopk As Double, zonond As Double
 Dim Opk As Double, Ond As Double
 Dim geb1 As tgebied, geb2 As tgebied
 Dim gebied As tgebied, resgeb As tgebied
-Dim i As Long
+Dim I As Long
 Dim oldgebied As tgebied
 Dim holdgebied As tgebied
 Dim hstr As String
@@ -1102,7 +1101,7 @@ Dim weeknr As Long
 Dim BeginWeekNr As Long, EindWeekNr As Long
 Dim fNaam
 Dim oZichtbaar As Boolean, nAantweken As Long
-Dim Y As Long
+Dim y As Long
 
 Me.rtfResultaat.Text = ""
 
@@ -1110,7 +1109,7 @@ Me.rtfResultaat.Text = ""
 fNaam = Array("", "Mercurius", "Venus", "", "Mars", "Jupiter", "Saturnus", "Uranus", "Neptunus", "Pluto")
 
 ddate.jj = frmPlanets.Year
-ddate.mm = 1
+ddate.MM = 1
 ddate.DD = 1
 sUitvoer = ""
 BeginWeekNr = Int(ddate.jj * 100#) + 1
@@ -1139,7 +1138,7 @@ TimeZone = 24 '{een start waarde}
 For zonteller = 1 To 7 * (EindWeekNr - BeginWeekNr + 1)
   ZonGebieden(zonteller).gevuld = False
 Next
-For i = nPlaneet To nPlaneet
+For I = nPlaneet To nPlaneet
 Me.AutoRedraw = True
 Cls
 Me.Refresh
@@ -1147,16 +1146,16 @@ Me.AutoRedraw = False
 
 Call TekenKader(True, nAantweken)
 
-If i <> 3 Then
+If I <> 3 Then
 '    rtfResultaat.Text = rtfResultaat.Text + "============================================================" + vbCrLf
 '    rtfResultaat.Text = rtfResultaat.Text + fNaam(i) + vbCrLf
 '    rtfResultaat.Text = rtfResultaat.Text + "-----------------" + vbCrLf
-    lbPlaneten.Caption = "Zichtbaarheidsdiagram van " & fNaam(i) & " voor het jaar " & Format(frmPlanets.Year, "0")
+    lbPlaneten.Caption = "Zichtbaarheidsdiagram van " & fNaam(I) & " voor het jaar " & Format(frmPlanets.Year, "0")
     oZichtbaar = False
     hstr = ""
   oldgebied.aantgeb = 0
   TimeZone = 24
-  Y = y0 + 15
+  y = y0 + 15
   JD = KalenderNaarJD(ddate)
   Call WeekDate(BeginWeekNr, ddate)
 '  Date = StartDate
@@ -1172,11 +1171,11 @@ If i <> 3 Then
      End If
      With ZonGebieden(zonteller)
          If Not gevuld Then Call ov(0, ddate, ObsLon, ObsLat, TimeZone, 0, zonopk, zonond)
-         If i < 4 Then
+         If I < 4 Then
             Call ov(0, ddate, ObsLon, ObsLat, TimeZone, -3 * DToR, Opk, Ond)
-         ElseIf i < 9 Then
+         ElseIf I < 9 Then
            Call ov(0, ddate, ObsLon, ObsLat, TimeZone, -6 * DToR, Opk, Ond)
-         ElseIf i = 9 Then
+         ElseIf I = 9 Then
            Call ov(0, ddate, ObsLon, ObsLat, TimeZone, -18 * DToR, Opk, Ond)
          End If
 '         If (i = 1) Or (i = 4) Or (i = 9) Then
@@ -1186,13 +1185,13 @@ If i <> 3 Then
              ZonGebieden(zonteller).gebied = geb1
 '         End If
      End With
-     If i <= 2 Then
-       Call ov(i, ddate, ObsLon, ObsLat, TimeZone, 3 * DToR, Opk, Ond)
+     If I <= 2 Then
+       Call ov(I, ddate, ObsLon, ObsLat, TimeZone, 3 * DToR, Opk, Ond)
      Else
-       If i <= 7 Then
-         Call ov(i, ddate, ObsLon, ObsLat, TimeZone, 5 * DToR, Opk, Ond)
+       If I <= 7 Then
+         Call ov(I, ddate, ObsLon, ObsLat, TimeZone, 5 * DToR, Opk, Ond)
        Else
-         Call ov(i, ddate, ObsLon, ObsLat, TimeZone, 10 * DToR, Opk, Ond)
+         Call ov(I, ddate, ObsLon, ObsLat, TimeZone, 10 * DToR, Opk, Ond)
        End If
      End If
      
@@ -1211,10 +1210,10 @@ If i <> 3 Then
        oZichtbaar = IsZichtbaar(resgeb)
        Call DrukafRes(ddate, resgeb, hstr)
        holdgebied = oldgebied
-       Call DrukGrafRes(resgeb, oldgebied, Y, zonopk, zonond)
+       Call DrukGrafRes(resgeb, oldgebied, y, zonopk, zonond)
        oldgebied = holdgebied
      End With
-     Y = Y + 15
+     y = y + 15
      JD = KalenderNaarJD(ddate)
      ddate = JDNaarKalender(JD + 1)
      weeknr = WeekOfYear(ddate)
@@ -1228,34 +1227,34 @@ End Sub
 
 Private Sub DrukafRes(ddate As tDatum, geb As tgebied, hstr As String)
 
-Dim i As Long
+Dim I As Long
 Dim AantZichtUur As Double
 Dim blnZichtbaar As Boolean
 
 blnZichtbaar = False
-For i = 1 To geb.aantgeb
-    If geb.Y(i) = True Then blnZichtbaar = True
+For I = 1 To geb.aantgeb
+    If geb.y(I) = True Then blnZichtbaar = True
 Next
 
 If Not blnZichtbaar Then
     Exit Sub
 End If
-    hstr = hstr + Format(ddate.DD, "00") + "-" + Format(ddate.mm, "00") + "-" + Format(ddate.jj, "0000") + " : " & vbTab
+    hstr = hstr + Format(ddate.DD, "00") + "-" + Format(ddate.MM, "00") + "-" + Format(ddate.jj, "0000") + " : " & vbTab
    AantZichtUur = 0
-   If geb.Y(1) = True Then
+   If geb.y(1) = True Then
        hstr = hstr + "00h00m -- "
        hstr = hstr + StrHMS(geb.x(1) * 15 * DToR, 2) + "  "
        AantZichtUur = geb.x(1)
    End If
-   For i = 2 To geb.aantgeb
-     If geb.Y(i) = True Then
-         hstr = hstr + StrHMS(geb.x(i - 1) * 15 * DToR, 2) + " -- "
-         If i = geb.aantgeb Then
+   For I = 2 To geb.aantgeb
+     If geb.y(I) = True Then
+         hstr = hstr + StrHMS(geb.x(I - 1) * 15 * DToR, 2) + " -- "
+         If I = geb.aantgeb Then
              hstr = hstr + "24h00m  "
-             AantZichtUur = AantZichtUur + 24 - geb.x(i - 1)
+             AantZichtUur = AantZichtUur + 24 - geb.x(I - 1)
          Else
-             hstr = hstr + StrHMS(geb.x(i) * 15 * DToR, 2) + "  "
-             AantZichtUur = AantZichtUur + geb.x(i) - geb.x(i - 1)
+             hstr = hstr + StrHMS(geb.x(I) * 15 * DToR, 2) + "  "
+             AantZichtUur = AantZichtUur + geb.x(I) - geb.x(I - 1)
          End If
      End If
   Next
@@ -1263,11 +1262,11 @@ End If
 End Sub
 
 Private Function IsZichtbaar(geb As tgebied)
-Dim i As Long
+Dim I As Long
 
 IsZichtbaar = False
-For i = 1 To geb.aantgeb
-    If geb.Y(i) = True Then IsZichtbaar = True
+For I = 1 To geb.aantgeb
+    If geb.y(I) = True Then IsZichtbaar = True
 Next
 End Function
 Private Sub Form_Activate()
@@ -1277,10 +1276,10 @@ Call Uitvoeren(nPlaneet)
 End Sub
 
 
-Private Sub DrukGrafRes(resgeb As tgebied, oldgebied As tgebied, Y As Long, zonopk As Double, zonond As Double)
+Private Sub DrukGrafRes(resgeb As tgebied, oldgebied As tgebied, y As Long, zonopk As Double, zonond As Double)
 
 
-Dim i As Long, j As Long, k As Long
+Dim I As Long, j As Long, k As Long
 Dim hGeb As tgebied
 Dim hresgeb As tgebied
 Dim holdgebied As tgebied
@@ -1301,28 +1300,28 @@ Dim holdgebied As tgebied
 
   picDiagram.Refresh
    j = 99
-   For i = 1 To hresgeb.aantgeb
-        If hresgeb.x(i) > 12 Then
-           If i < j Then
-              j = i
+   For I = 1 To hresgeb.aantgeb
+        If hresgeb.x(I) > 12 Then
+           If I < j Then
+              j = I
            End If
         End If
     Next
-   i = j
-   Do While i <= hresgeb.aantgeb
-        hGeb.x(i - j + 1) = hresgeb.x(i) + 12
-        hGeb.x(i - j + 1) = hGeb.x(i - j + 1) - 24 * Int(hGeb.x(i - j + 1) / 24)
-        hGeb.Y(i - j + 1) = hresgeb.Y(i)
-        i = i + 1
+   I = j
+   Do While I <= hresgeb.aantgeb
+        hGeb.x(I - j + 1) = hresgeb.x(I) + 12
+        hGeb.x(I - j + 1) = hGeb.x(I - j + 1) - 24 * Int(hGeb.x(I - j + 1) / 24)
+        hGeb.y(I - j + 1) = hresgeb.y(I)
+        I = I + 1
    Loop
    If j = 99 Then j = 0
-   k = i - j
-   i = 1
-   Do While i < j
-        hGeb.x(i + k) = hresgeb.x(i) + 12
-        hGeb.x(i + k) = hGeb.x(i + k) - 24 * Int(hGeb.x(i + k) / 24)
-        hGeb.Y(i + k) = hresgeb.Y(i)
-        i = i + 1
+   k = I - j
+   I = 1
+   Do While I < j
+        hGeb.x(I + k) = hresgeb.x(I) + 12
+        hGeb.x(I + k) = hGeb.x(I + k) - 24 * Int(hGeb.x(I + k) / 24)
+        hGeb.y(I + k) = hresgeb.y(I)
+        I = I + 1
    Loop
    hGeb.aantgeb = hresgeb.aantgeb
    hresgeb = hGeb
@@ -1331,28 +1330,28 @@ Dim holdgebied As tgebied
 '   Next
 
    j = 99
-   For i = 1 To holdgebied.aantgeb
-        If holdgebied.x(i) > 12 Then
-           If i < j Then
-              j = i
+   For I = 1 To holdgebied.aantgeb
+        If holdgebied.x(I) > 12 Then
+           If I < j Then
+              j = I
            End If
         End If
    Next
-   i = j
-   Do While i <= holdgebied.aantgeb
-        hGeb.x(i - j + 1) = holdgebied.x(i) + 12
-        hGeb.x(i - j + 1) = hGeb.x(i - j + 1) - 24 * Int(hGeb.x(i - j + 1) / 24)
-        hGeb.Y(i - j + 1) = holdgebied.Y(i)
-        i = i + 1
+   I = j
+   Do While I <= holdgebied.aantgeb
+        hGeb.x(I - j + 1) = holdgebied.x(I) + 12
+        hGeb.x(I - j + 1) = hGeb.x(I - j + 1) - 24 * Int(hGeb.x(I - j + 1) / 24)
+        hGeb.y(I - j + 1) = holdgebied.y(I)
+        I = I + 1
    Loop
    If j = 99 Then j = 0
-   k = i - j
-   i = 1
-   Do While i < j
-        hGeb.x(i + k) = holdgebied.x(i) + 12
-        hGeb.x(i + k) = hGeb.x(i + k) - 24 * Int(hGeb.x(i + k) / 24)
-        hGeb.Y(i + k) = holdgebied.Y(i)
-        i = i + 1
+   k = I - j
+   I = 1
+   Do While I < j
+        hGeb.x(I + k) = holdgebied.x(I) + 12
+        hGeb.x(I + k) = hGeb.x(I + k) - 24 * Int(hGeb.x(I + k) / 24)
+        hGeb.y(I + k) = holdgebied.y(I)
+        I = I + 1
    Loop
    If j <> 0 Then
       hGeb.aantgeb = holdgebied.aantgeb
@@ -1369,10 +1368,10 @@ Dim holdgebied As tgebied
    zonond = zonond - 24 * Int(zonond / 24)
 '   zonond = zonond * 15 / 24
 
-   If hresgeb.Y(1) = True Then
+   If hresgeb.y(1) = True Then
         DrawStyle = vbSolid
         ForeColor = RGB(200, 100, 100)
-        Line (x0, Y)-(x0 + Int(nC * hresgeb.x(1)), Y)
+        Line (x0, y)-(x0 + Int(nC * hresgeb.x(1)), y)
 '       If (holdgebied.aantgeb > 0) And (holdgebied.y(1) = True) Then
 '        ForeColor = RGB(255, 0, 0)
 '        DrawStyle = vbSolid
@@ -1382,14 +1381,14 @@ Dim holdgebied As tgebied
 '       End If
    End If
 
-   For i = 2 To hresgeb.aantgeb
-     If hresgeb.Y(i) = True Then
+   For I = 2 To hresgeb.aantgeb
+     If hresgeb.y(I) = True Then
       DrawStyle = vbSolid
       ForeColor = RGB(50, 50, 155)
-      If i = hresgeb.aantgeb Then
-           Line (x0 + (nC * hresgeb.x(i - 1)), Y)-(x0 + (nC * hresgeb.x(i)), Y)
+      If I = hresgeb.aantgeb Then
+           Line (x0 + (nC * hresgeb.x(I - 1)), y)-(x0 + (nC * hresgeb.x(I)), y)
        Else
-           Line (x0 + (nC * hresgeb.x(i - 1)), Y)-(x0 + (nC * hresgeb.x(i)), Y)
+           Line (x0 + (nC * hresgeb.x(I - 1)), y)-(x0 + (nC * hresgeb.x(I)), y)
        End If
       ' If (holdgebied.aantgeb > 0) And (holdgebied.y(i) = True) Then
       '   ForeColor = RGB(0, 0, 0)
@@ -1402,25 +1401,25 @@ Dim holdgebied As tgebied
    Next
     ForeColor = RGB(0, 0, 0)
     DrawStyle = vbSolid
-   PSet (x0 + Int(nC * zonopk), Y), RGB(0, 0, 0)
-   PSet (x0 + Int(nC * zonond), Y), RGB(0, 0, 0)
+   PSet (x0 + Int(nC * zonopk), y), RGB(0, 0, 0)
+   PSet (x0 + Int(nC * zonond), y), RGB(0, 0, 0)
 
 '   picDiagram.Refresh
 '   picDiagram.Cls
 End Sub
 
-Private Sub DrukGrafRes2(resgeb As tgebied, oldgebied As tgebied, Y As Long, zonopk As Double, zonond As Double)
+Private Sub DrukGrafRes2(resgeb As tgebied, oldgebied As tgebied, y As Long, zonopk As Double, zonond As Double)
 
-Dim i As Long
+Dim I As Long
 
-   If resgeb.Y(1) = True Then
+   If resgeb.y(1) = True Then
 '       Pixels(x0, y) = clblack
 '       Pixels(x0 + Int(40 * resgeb.x(1)), y) = clblack
    End If
 
-   For i = 2 To resgeb.aantgeb
-     If resgeb.Y(i) = True Then
-       If i = resgeb.aantgeb Then
+   For I = 2 To resgeb.aantgeb
+     If resgeb.y(I) = True Then
+       If I = resgeb.aantgeb Then
 '           Pixels(x0 + Int(40 * resgeb.x(i - 1)), y) = clblack
 '           Pixels(x0 + 40 * 15, y) = clblack
        Else
@@ -1442,23 +1441,23 @@ End Sub
 
 Sub TekenKader(lTotaal As Boolean, Aantweken As Long)
 
-Dim i As Long, k As Long, a1 As Long, a2 As Long, x As Long, Y As Long
+Dim I As Long, k As Long, a1 As Long, a2 As Long, x As Long, y As Long
 Const nStapY As Long = 105
 If lTotaal Then
-    Y = y0 + nStapY * Aantweken
+    y = y0 + nStapY * Aantweken
     x = x0 + nC * 24
-    For i = 1 To Aantweken
-      Y = y0 + nStapY * i
-      If i - 4 * Int(i / 4) = 0 Then
-          a1 = Int(i / 4)
-          Labelv1(a1 - 1).top = Y - 100 - nC
+    For I = 1 To Aantweken
+      y = y0 + nStapY * I
+      If I - 4 * Int(I / 4) = 0 Then
+          a1 = Int(I / 4)
+          Labelv1(a1 - 1).top = y - 100 - nC
           Labelv1(a1 - 1).Left = x0 - 400
-          Labelv1(a1 - 1).Caption = Format(i - 3, "00")
+          Labelv1(a1 - 1).Caption = Format(I - 3, "00")
       End If
     Next
     'a1 = a1 + 1
-    Y = y0 + nStapY * 56
-    Labelv1(a1).top = Y - 100 - nC
+    y = y0 + nStapY * 56
+    Labelv1(a1).top = y - 100 - nC
     Labelv1(a1).Left = x0 - 400
     If Aantweken = 53 Then
         Labelv1(a1).Caption = Format(53, "00")
@@ -1469,15 +1468,15 @@ If lTotaal Then
     a1 = Int(nC / 3)
     a2 = 2 * a1
     '5473/53
-    Y = y0 + nStapY * (Aantweken)
-    For i = 0 To 24 - 1
-      x = x0 + (i * nC)
-      k = i + 12
-      k = k - 24 * Int(i / 12)
+    y = y0 + nStapY * (Aantweken)
+    For I = 0 To 24 - 1
+      x = x0 + (I * nC)
+      k = I + 12
+      k = k - 24 * Int(I / 12)
       'Labelh1(i).BackStyle = 0
-      Labelh1(i).top = y0 - 300
-      Labelh1(i).Left = x0 - 100 + i * nC
-      Labelh1(i).Caption = Format(k, "00")
+      Labelh1(I).top = y0 - 300
+      Labelh1(I).Left = x0 - 100 + I * nC
+      Labelh1(I).Caption = Format(k, "00")
     Next
     'Labelh1(24).BackStyle = 0
     Labelh1(24).top = y0 - 300
@@ -1487,19 +1486,19 @@ If lTotaal Then
 End If
     DrawStyle = vbSolid
     FillStyle = 1
-    Y = y0 + nStapY * (Aantweken)
+    y = y0 + nStapY * (Aantweken)
     x = x0 + nC * 24
     If lTotaal Then
-        Call TekenRechthoek(x0, y0 - 1, x + 1, Y + 1)
+        Call TekenRechthoek(x0, y0 - 1, x + 1, y + 1)
     Else
-        Call TekenRechthoek(x0, y0 - 1, x, Y)
+        Call TekenRechthoek(x0, y0 - 1, x, y)
     End If
     
-    For i = 1 To Aantweken
-      Y = y0 + nStapY * i
-      If i - 4 * Int(i / 4) = 0 Then
-          a1 = Int(i / 4)
-          Line (x0, Y)-(x, Y)
+    For I = 1 To Aantweken
+      y = y0 + nStapY * I
+      If I - 4 * Int(I / 4) = 0 Then
+          a1 = Int(I / 4)
+          Line (x0, y)-(x, y)
       Else
 '        Line (x0, Y)-(x0 + 5, Y)
 '        Line (x - 5, Y)-(x, Y)
@@ -1507,14 +1506,14 @@ End If
     Next
     a1 = Int(nC / 3)
     a2 = 2 * a1
-    Y = y0 + nStapY * (Aantweken)
-    For i = 0 To 24 - 1
-      x = x0 + (i * nC)
+    y = y0 + nStapY * (Aantweken)
+    For I = 0 To 24 - 1
+      x = x0 + (I * nC)
       Line (x + a1, y0)-(x + a1, y0 + 5)
       Line (x + a2, y0)-(x + a2, y0 + 5)
-      Line (x + a1, Y - 1)-(x + a1, Y - 5)
-      Line (x + a2, Y - 1)-(x + a2, Y - 5)
-      Line (x, y0)-(x, Y)
+      Line (x + a1, y - 1)-(x + a1, y - 5)
+      Line (x + a2, y - 1)-(x + a2, y - 5)
+      Line (x, y0)-(x, y)
     Next
 End Sub
 

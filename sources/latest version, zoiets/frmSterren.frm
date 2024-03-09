@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "richtx32.Ocx"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmSterren 
    AutoRedraw      =   -1  'True
    Caption         =   "Stars"
@@ -139,6 +139,7 @@ Begin VB.Form frmSterren
          _ExtentX        =   4048
          _ExtentY        =   2990
          _Version        =   393217
+         Enabled         =   -1  'True
          TextRTF         =   $"frmSterren.frx":22BF8
       End
       Begin VB.TextBox txtMarkPerPositions 
@@ -553,7 +554,7 @@ Private g_Grote_cirkel_vulkleur As Long
 Private Const MERGEPAINT = &HBB0226
 Private Const SRCAND = &H8800C6
 Private Const SRCCOPY = &HCC0020
-Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
+Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 ' Private Declare Function RotateBitmap Lib "gdiplus" (ByVal hBitmapDC As Long, _
 '      ByVal lWidth As Long, _
 '      ByVal lHeight As Long, _
@@ -579,12 +580,14 @@ Private Type tlijn
     ster2 As tSter
 End Type
 Private rtf_code(15) As String
+Private svg_code(16) As String
 Private Const schuif As Long = 1600
 Private Const schaalfactor As Double = 2.6
 Private objspecialfolder As New clsSpecialFolder
 Private sTempName As String
 Private nfile
 Private nShplId As Long
+Public totBayers As String
 
 Private Sub chkMetPlaneten_Click()
     fraPlaneten.Enabled = chkMetPlaneten
@@ -608,6 +611,8 @@ Dim jdB As Double, jde As Double, JD_ZT As Double, JD_WT As Double
 Dim JD0 As Double
 Dim I As Long
 Dim jdBM As Double, jdeM As Double
+totBayers = ","
+
 dat.jj = frmPlanets.Year
 dat.MM = frmPlanets.MonthSelect.ListIndex + 1
 dat.DD = frmPlanets.DaySelect
@@ -619,9 +624,12 @@ Call GetKeyValue(HKEY_CURRENT_USER, "Software\Belastingdienst\Astronomie", "Lati
 For I = 1 To UBound(rtf_code)
     rtf_code(I) = ""
 Next
+For I = 1 To UBound(svg_code)
+    svg_code(I) = ""
+Next
 
 sTempName = objspecialfolder.TemporaryFolder + "\test_" + Format(Now(), "yyyy-mm-dd_hh.mm.ss") + ".rtf"
-
+sTempNamesvg = objspecialfolder.TemporaryFolder + "\test_" + Format(Now(), "yyyy-mm-dd_hh.mm.ss") + ".svg"
 nShplId = 1025 'startwaarde
 Open App.Path + "\rtf_standaards.txt" For Input As #2
 Do While Not EOF(2)
@@ -676,9 +684,68 @@ Do While Not EOF(2)
   If sRegel <> "" Then rtf_code(lrtf_code) = rtf_code(lrtf_code) + sRegel + vbCrLf
 Loop
 Close #2
+Open App.Path + "\svg_standaards.txt" For Input As #2
+Do While Not EOF(2)
+  Line Input #2, sRegel
+  Select Case sRegel
+      Case Is = "[TEKSTVAK]"
+          lsvg_code = 1
+          sRegel = ""
+      Case Is = "[CIRKEL-KLEUR]"
+          lsvg_code = 2
+          sRegel = ""
+      Case Is = "[CIRKEL-GEWOON]"
+          lsvg_code = 3
+          sRegel = ""
+      Case Is = "[EINDE]"
+          lsvg_code = 4
+          sRegel = ""
+      Case Is = "[BEGIN]"
+          lsvg_code = 5
+          sRegel = ""
+      Case Is = "[LIJN]"
+          lsvg_code = 6
+          sRegel = ""
+      Case Is = "[GEBOGEN-LIJN]"
+          lsvg_code = 7
+          sRegel = ""
+      Case Is = "[CIRKEL-GRIJS]"
+          lsvg_code = 8
+          sRegel = ""
+      Case Is = "[BOOG]"
+          lsvg_code = 9
+          sRegel = ""
+      Case Is = "[TEKSTVAK-MET-LIJN-ZWARTE-TEKST]"
+          lsvg_code = 10
+          sRegel = ""
+      Case Is = "[NIEUWE-PAGINA]"
+          lsvg_code = 11
+          sRegel = ""
+      Case Is = "[NIEUW-KLEUR-LIJN]"
+          lsvg_code = 12
+          sRegel = ""
+      Case Is = "[TEKSTVAK-ZONDER-LIJN-TEKST]"
+          lsvg_code = 13
+          sRegel = ""
+      Case Is = "[JUPITER-IMAGE]"
+          lsvg_code = 14
+          sRegel = ""
+      Case Is = "[POLYGON]"
+          lsvg_code = 15
+          sRegel = ""
+      Case Is = "[GRIEKS]"
+          lsvg_code = 16
+          sRegel = ""
+    End Select
+  If sRegel <> "" Then svg_code(lsvg_code) = svg_code(lsvg_code) + sRegel + vbCrLf
+Loop
+Close #2
 nfile = 2
+nfile_svg = 12
 Open sTempName For Output As #nfile
+Open sTempNamesvg For Output As #nfile_svg
 Print #nfile, rtf_code(5);
+Print #nfile_svg, Replace(svg_code(5), "<SCALE>", "0.1");
 
 pgbVoortgang.value = 0
 If optHorizon Then
@@ -687,6 +754,7 @@ If optHorizon Then
     dStraal = 90
     If cmbHorizon.ListIndex = -1 Then
         Close #2
+        Close #nfile_svg
         Exit Sub
     End If
     Call stertekHorizon(24# * PlaatselijkeSterrentijd(dat), ReadDMS(sLatitude), cmbHorizon.ItemData(cmbHorizon.ListIndex), Val(txtGrensmagnitude))
@@ -768,6 +836,9 @@ If Not Trim(Me.txtInvoerPosities) = vbNullString Then
 End If
 Print #nfile, rtf_code(4); 'het einde toevoegen
 Close #nfile
+Print #nfile_svg, svg_code(4); 'het einde toevoegen
+Close #nfile_svg
+
 
 On Error GoTo word_open:
 g_word.Visible = True
@@ -808,7 +879,7 @@ End Sub
 Sub stertek(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal Mag As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -818,6 +889,7 @@ Dim aantal_sterren As Long
   midx = 19140 / schaalfactor: midy = 14595 / schaalfactor
   Open App.Path + "\sterren.bin" For Random As #1 Len = LenB(ster)
   Call print_rtf_circle(2, rtf_code(8), midx, midy, midy, g_Grote_cirkel_vulkleur) 'grote cirkel
+  Call print_svg_circle(12, svg_code(8), midx, midy, midy, g_Grote_cirkel_vulkleur) 'grote cirkel
 '          Call TekenenGrid(dRechteKlimming, dDecinatie, dStraal, Val(txtGrensmagnitude))
   If Me.chkGrid Then
     Call TekenenGrid(RK, Dec, r, Mag)
@@ -844,13 +916,15 @@ Dim aantal_sterren As Long
      
             hg = PI_2 - hg
             If (r > hg) Then
-                x = Int(midx + midy * Sin(Az) * hg / r)
-                y = Int(midy + midy * Cos(Az) * hg / r)
-                If (x > 0) And (y > 0) And (x < 2 * midx) And (y < 2 * midy) Then
+                X = Int(midx + midy * Sin(Az) * hg / r)
+                Y = Int(midy + midy * Cos(Az) * hg / r)
+                If (X > 0) And (Y > 0) And (X < 2 * midx) And (Y < 2 * midy) Then
 '                    Teken_ster x, Y, Straal(0.1 * ster.M, mag)
-                    Call print_rtf_circle(2, rtf_code(2), x, y, Straal(0.1 * ster.M, Mag), 0)
+                    Call print_rtf_circle(2, rtf_code(2), X, Y, Straal(0.1 * ster.M, Mag), 0)
+                    Call print_svg_circle(12, svg_code(2), X, Y, Straal(0.1 * ster.M, Mag), 0)
                     If Me.chkMetBayer And ster.M < Mag - 30 Then 'alleen als Bayer gevraagd
-                        Call print_rtf_textbox(2, rtf_code(1), x + Straal(0.1 * ster.M, Mag), y, ster.bayer)
+                        Call print_rtf_textbox(2, rtf_code(1), X + Straal(0.1 * ster.M, Mag), Y, ster.bayer)
+                        Call print_svg_textbox(12, svg_code(16), X + 0.7071 * Straal(0.1 * ster.M, Mag) + 20, Y - 0.7071 * Straal(0.1 * ster.M, Mag) - 20, Straal(0.1 * ster.M, Mag), ster.bayer)
                     End If
                 End If
             End If
@@ -865,7 +939,7 @@ Dim aantal_sterren As Long
  Sub tekEcliptica(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal T As Double, ByVal optHorizon As Boolean)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -889,6 +963,7 @@ Dim posX1 As Double, posX2 As Double, posY1 As Double, posY2 As Double
         Call CalcXY(RK, Dec, r, (k + 1) / nAantPunten * Pi / 12, eps * Sin((k + 1) / nAantPunten * Pi / 12), optHorizon, posX2, posY2)
         If Not (posX1 = -1 Or posY1 = -1 Or posX2 = -1 Or posY2 = -1) Then
             Call print_rtf_lijn(2, rtf_code(6), posX1, posY1, posX2, posY2)
+            Call print_svg_lijn(12, svg_code(6), posX1, posY1, posX2, posY2)
         End If
 '          Call tekpunt(RK, Dec, r, k / nAantPunten * Pi / 12, eps * Sin(k / nAantPunten * Pi / 12), 10, 1, optHorizon)
   Next
@@ -896,7 +971,7 @@ Dim posX1 As Double, posX2 As Double, posY1 As Double, posY2 As Double
 Sub stertekHorizon(ByVal LST As Double, ByVal nb As Double, ByVal Az0 As Double, ByVal Mag As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, Azt As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, Azt As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -906,7 +981,9 @@ Dim aantal_sterren As Long
   midx = 19140 / schaalfactor: midy = 14595 / schaalfactor
   Call print_rtf_boog(2, rtf_code(9), midx - midy / 2, midy / 2, midy / 2, 1, 0) 'grote cirkel
   Call print_rtf_boog(2, rtf_code(9), midx + midy / 2, midy / 2, midy / 2, 0, 0) 'grote cirkel
+  Call print_svg_boog(12, svg_code(9), midx, midy, midy / 2)  'grote cirkel
   Call print_rtf_lijn(2, rtf_code(6), midx - midy, midy, midx + midy, midy)
+  Call print_svg_lijn(12, svg_code(6), midx - midy, midy, midx + midy, midy)
   
 If chkFixedTime Then
     Exit Sub
@@ -936,12 +1013,13 @@ End If
     If Azt < -Pi Then Azt = Azt + 2 * Pi
     
     If (hg > 0) And (Abs(Azt) < PI_2) Then
-        x = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
-        y = Int(midy - midy * hg / PI_2)
+        X = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
+        Y = Int(midy - midy * hg / PI_2)
     '                   Teken_ster x, Y, Straal(0.1 * ster.M, mag)
-            Call print_rtf_circle(2, rtf_code(2), x, y, Straal(0.1 * ster.M, Mag), 0)
+            Call print_rtf_circle(2, rtf_code(2), X, Y, Straal(0.1 * ster.M, Mag), 0)
+            Call print_svg_circle(12, svg_code(2), X, Y, Straal(0.1 * ster.M, Mag), 0)
             If Me.chkMetBayer And ster.M < Mag - 30 Then 'alleen als Bayer gevraagd
-                Call print_rtf_textbox(2, rtf_code(1), x + Straal(0.1 * ster.M, Mag), y, ster.bayer)
+                Call print_rtf_textbox(2, rtf_code(1), X + Straal(0.1 * ster.M, Mag), Y, ster.bayer)
             End If
     End If
     Get #1, , ster
@@ -955,31 +1033,60 @@ End If
 Function Straal(ByVal SterMag As Double, ByVal Mag As Double) As Long
     Straal = 20 * (Mag / 10 - SterMag)
 End Function
-
-Sub print_rtf_circle(nfile As Long, ByVal srtf_code As String, ByVal x As Long, ByVal y As Long, ByVal r As Long, _
+Sub print_svg_circle(nfile As Long, ByVal svg_code As String, ByVal X As Double, ByVal Y As Double, ByVal r As Long, _
+                     Optional ByVal Vul_kleur As Long = 0)
+Dim nPos As Long
+    X = X - schuif
+    Y = Y + schuif / 4
+    X = X / 10
+    Y = Y / 10
+    r = r / 10
+    nPos = InStr(svg_code, "<CIRKEL-X>")
+    Do While InStr(svg_code, "<CIRKEL-X>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(X, "0.0"), ",", ".") + Mid(svg_code, nPos + 10)
+        nPos = InStr(svg_code, "<CIRKEL-X>")
+    Loop
+    nPos = InStr(svg_code, "<CIRKEL-Y>")
+    Do While InStr(svg_code, "<CIRKEL-Y>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(Y, "0.0"), ",", ".") + Mid(svg_code, nPos + 10)
+        nPos = InStr(svg_code, "<CIRKEL-Y>")
+    Loop
+    nPos = InStr(svg_code, "<CIRKEL-R>")
+    Do While InStr(svg_code, "<CIRKEL-R>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(r, "0.0"), ",", ".") + Mid(svg_code, nPos + 10)
+        nPos = InStr(svg_code, "<CIRKEL-R>")
+    Loop
+    nPos = InStr(svg_code, "<VUL-KLEUR>")
+    Do While InStr(svg_code, "<VUL-KLEUR>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Format(Vul_kleur, "0") + Mid(svg_code, nPos + 11)
+        nPos = InStr(svg_code, "<VUL-KLEUR>")
+    Loop
+    Print #nfile, svg_code;
+End Sub
+Sub print_rtf_circle(nfile As Long, ByVal srtf_code As String, ByVal X As Long, ByVal Y As Long, ByVal r As Long, _
                      Optional ByVal Vul_kleur As Long = 0)
 Dim nPos As Long
     nShplId = nShplId + 1
-    x = x - schuif
-    y = y + schuif
+    X = X - schuif
+    Y = Y + schuif
     nPos = InStr(srtf_code, "<LEFT>")
     Do While InStr(srtf_code, "<LEFT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x - r, "0") + Mid(srtf_code, nPos + 6)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X - r, "0") + Mid(srtf_code, nPos + 6)
         nPos = InStr(srtf_code, "<LEFT>")
     Loop
     nPos = InStr(srtf_code, "<TOP>")
     Do While InStr(srtf_code, "<TOP>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y - r, "0") + Mid(srtf_code, nPos + 5)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y - r, "0") + Mid(srtf_code, nPos + 5)
         nPos = InStr(srtf_code, "<TOP>")
     Loop
     nPos = InStr(srtf_code, "<RIGHT>")
     Do While InStr(srtf_code, "<RIGHT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x + r, "0") + Mid(srtf_code, nPos + 7)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X + r, "0") + Mid(srtf_code, nPos + 7)
         nPos = InStr(srtf_code, "<RIGHT>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM>")
     Do While InStr(srtf_code, "<BOTTOM>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y + r, "0") + Mid(srtf_code, nPos + 8)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y + r, "0") + Mid(srtf_code, nPos + 8)
         nPos = InStr(srtf_code, "<BOTTOM>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM-TOP>")
@@ -1004,7 +1111,7 @@ Dim nPos As Long
     Loop
     Print #nfile, srtf_code;
 End Sub
-Sub print_rtf_maanschijf(nfile As Long, ByVal srtf_code As String, ByVal x As Long, ByVal y As Long, ByVal r_maan As Long, _
+Sub print_rtf_maanschijf(nfile As Long, ByVal srtf_code As String, ByVal X As Long, ByVal Y As Long, ByVal r_maan As Long, _
                      ByVal PosAngle As Double, parAngle As Double, fase As Double, Optional ByVal Vul_kleur As Long = 0)
 Dim nPos As Long
     nShplId = nShplId + 1
@@ -1034,8 +1141,8 @@ Dim XH As Long
         End If
         posX1 = PosX * Cos(angle) - PosY * Sin(angle)
         posY1 = PosX * Sin(angle) + PosY * Cos(angle)
-        aPoints(I, 1) = Round(r_maan * posX1) + x - schuif
-        aPoints(I, 2) = Round(r_maan * posY1) + y + schuif
+        aPoints(I, 1) = Round(r_maan * posX1) + X - schuif
+        aPoints(I, 2) = Round(r_maan * posY1) + Y + schuif
     Next
     
     Dim MidPoint(1, 2)   As Double
@@ -1202,8 +1309,8 @@ Dim XH As Long
 '    Me.picCroppedMaan.Width = picCroppedMaan.Width * (xMax - xmin) / (yMax - ymin)
     Me.picCroppedMaan.Cls
     Dim xMin1 As Long, yMin1 As Long
-    xMin1 = (xmin - x + schuif + r_maan) / (r_maan * 2) * 217
-    yMin1 = (ymin - y - schuif + r_maan) / (r_maan * 2) * 217
+    xMin1 = (xmin - X + schuif + r_maan) / (r_maan * 2) * 217
+    yMin1 = (ymin - Y - schuif + r_maan) / (r_maan * 2) * 217
     
     BitBlt Me.picCroppedMaan.hdc, _
         0, 0, Me.picCroppedMaan.Width, Me.picCroppedMaan.height, _
@@ -1255,15 +1362,16 @@ Dim XH As Long
     Dim str As String
     str = Me.RichTextBox1.Text
     nPos = InStr(str, "{\pict")
-    str = Mid(str, nPos)
-    str = Mid(str, 1, Len(str) - 8)
-    sC = "<MAAN-PICT>": nC = Len(sC)
-    nPos = InStr(srtf_code, sC)
-    Do While InStr(srtf_code, sC) > 0
-        srtf_code = Left(srtf_code, nPos - 1) + str + Mid(srtf_code, nPos + nC)
+    If nPos > 0 Then
+        str = Mid(str, nPos)
+        str = Mid(str, 1, Len(str) - 8)
+        sC = "<MAAN-PICT>": nC = Len(sC)
         nPos = InStr(srtf_code, sC)
-    Loop
-    
+        Do While InStr(srtf_code, sC) > 0
+            srtf_code = Left(srtf_code, nPos - 1) + str + Mid(srtf_code, nPos + nC)
+            nPos = InStr(srtf_code, sC)
+        Loop
+    End If
     nPos = InStr(srtf_code, "<SHPLID>")
     Do While InStr(srtf_code, "<SHPLID>") > 0
         srtf_code = Left(srtf_code, nPos - 1) + Format(nShplId, "0") + Mid(srtf_code, nPos + 8)
@@ -1271,29 +1379,67 @@ Dim XH As Long
     Loop
     Print #nfile, srtf_code;
 End Sub
-Sub print_rtf_boog(nfile As Long, ByVal srtf_code As String, ByVal x As Long, ByVal y As Long, ByVal r As Long, ByVal FlipH As Long, FlipV As Long)
+Sub print_svg_boog(nfile As Long, ByVal svg_code As String, ByVal X As Double, ByVal Y As Double, ByVal r As Long)
+Dim nPos As Long
+    X = X - schuif ' / 4
+    Y = Y + schuif / 4
+    X = X / 10: Y = Y / 10: r = r / 10
+    
+    nPos = InStr(svg_code, "<BOOG-X>")
+    Do While InStr(svg_code, "<BOOG-X>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(X - 2 * r, "0.0"), ",", ".") + Mid(svg_code, nPos + 8)
+        nPos = InStr(svg_code, "<BOOG-X>")
+    Loop
+    nPos = InStr(svg_code, "<BOOG-Y>")
+    Do While InStr(svg_code, "<BOOG-Y>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(Y, "0.0"), ",", ".") + Mid(svg_code, nPos + 8)
+        nPos = InStr(svg_code, "<BOOG-Y>")
+    Loop
+    nPos = InStr(svg_code, "<BOOG-RX>")
+    Do While InStr(svg_code, "<BOOG-RX>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(2 * r, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<BOOG-RX>")
+    Loop
+    nPos = InStr(svg_code, "<BOOG-RY>")
+    Do While InStr(svg_code, "<BOOG-RY>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(2 * r, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<BOOG-RY>")
+    Loop
+    nPos = InStr(svg_code, "<EIND-X>")
+    Do While InStr(svg_code, "<EIND-X>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(X + 2 * r, "0.0"), ",", ".") + Mid(svg_code, nPos + 8)
+        nPos = InStr(svg_code, "<EIND-X>")
+    Loop
+    nPos = InStr(svg_code, "<EIND-Y>")
+    Do While InStr(svg_code, "<EIND-Y>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(Y, "0.0"), ",", ".") + Mid(svg_code, nPos + 8)
+        nPos = InStr(svg_code, "<EIND-Y>")
+    Loop
+    Print #nfile, svg_code;
+End Sub
+Sub print_rtf_boog(nfile As Long, ByVal srtf_code As String, ByVal X As Long, ByVal Y As Long, ByVal r As Long, ByVal FlipH As Long, FlipV As Long)
 Dim nPos As Long
     nShplId = nShplId + 1
-    x = x - schuif
-    y = y + schuif
+    X = X - schuif
+    Y = Y + schuif
     nPos = InStr(srtf_code, "<LEFT>")
     Do While InStr(srtf_code, "<LEFT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x - r, "0") + Mid(srtf_code, nPos + 6)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X - r, "0") + Mid(srtf_code, nPos + 6)
         nPos = InStr(srtf_code, "<LEFT>")
     Loop
     nPos = InStr(srtf_code, "<TOP>")
     Do While InStr(srtf_code, "<TOP>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y - r, "0") + Mid(srtf_code, nPos + 5)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y - r, "0") + Mid(srtf_code, nPos + 5)
         nPos = InStr(srtf_code, "<TOP>")
     Loop
     nPos = InStr(srtf_code, "<RIGHT>")
     Do While InStr(srtf_code, "<RIGHT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x + r, "0") + Mid(srtf_code, nPos + 7)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X + r, "0") + Mid(srtf_code, nPos + 7)
         nPos = InStr(srtf_code, "<RIGHT>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM>")
     Do While InStr(srtf_code, "<BOTTOM>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y + r, "0") + Mid(srtf_code, nPos + 8)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y + r, "0") + Mid(srtf_code, nPos + 8)
         nPos = InStr(srtf_code, "<BOTTOM>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM-TOP>")
@@ -1324,7 +1470,7 @@ Dim nPos As Long
     Print #nfile, srtf_code;
 End Sub
     
-Sub print_rtf_lijn(nfile As Long, ByVal srtf_code As String, ByVal x As Long, ByVal y As Long, ByVal x1 As Long, ByVal y1 As Long, Optional ByVal kleur As Long = 0)
+Sub print_rtf_lijn(nfile As Long, ByVal srtf_code As String, ByVal X As Long, ByVal Y As Long, ByVal x1 As Long, ByVal y1 As Long, Optional ByVal kleur As Long = 0)
 Dim nPos As Long
 Dim links As Long, top As Long
 Dim rechts As Long, onder As Long
@@ -1333,11 +1479,11 @@ Dim tx1 As Long, tx2 As Long, ty1 As Long, ty2 As Long
     
 nShplId = nShplId + 1
 
-x = x - schuif
-y = y + schuif
+X = X - schuif
+Y = Y + schuif
 x1 = x1 - schuif
 y1 = y1 + schuif
-If x < x1 Then tx1 = x: ty1 = y: tx2 = x1: ty2 = y1 Else tx2 = x: ty2 = y: tx1 = x1: ty1 = y1
+If X < x1 Then tx1 = X: ty1 = Y: tx2 = x1: ty2 = y1 Else tx2 = X: ty2 = Y: tx1 = x1: ty1 = y1
     links = tx1
     rechts = tx2
     If ty1 < ty2 Then
@@ -1402,34 +1548,76 @@ If x < x1 Then tx1 = x: ty1 = y: tx2 = x1: ty2 = y1 Else tx2 = x: ty2 = y: tx1 =
     Loop
     Print #nfile, srtf_code;
 End Sub
-Sub print_rtf_textbox(nfile As Long, ByVal srtf_code As String, ByVal x As Long, ByVal y As Long, ByVal sText As String)
+Sub print_svg_lijn(nfile As Long, ByVal svg_code As String, ByVal X As Double, ByVal Y As Double, ByVal x1 As Double, ByVal y1 As Double, Optional ByVal kleur As Long = 0, Optional ByVal dikte As Double = 0.6)
+Dim nPos As Long
+Dim links As Long, top As Long
+Dim rechts As Long, onder As Long
+Dim FlipV As Long, FlipH As Long
+Dim tx1 As Long, tx2 As Long, ty1 As Long, ty2 As Long
+    
+X = X - schuif
+Y = Y + schuif / 4
+x1 = x1 - schuif
+y1 = y1 + schuif / 4
+X = X / 10: x1 = x1 / 10
+Y = Y / 10: y1 = y1 / 10
+
+If X < x1 Then tx1 = X: ty1 = Y: tx2 = x1: ty2 = y1 Else tx2 = X: ty2 = Y: tx1 = x1: ty1 = y1
+    nPos = InStr(svg_code, "<LIJN-X1>")
+    Do While InStr(svg_code, "<LIJN-X1>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(X, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<LIJN-X1>")
+    Loop
+    nPos = InStr(svg_code, "<LIJN-Y1>")
+    Do While InStr(svg_code, "<LIJN-Y1>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(Y, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<LIJN-Y1>")
+    Loop
+    nPos = InStr(svg_code, "<LIJN-X2>")
+    Do While InStr(svg_code, "<LIJN-X2>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(x1, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<LIJN-X2>")
+    Loop
+    nPos = InStr(svg_code, "<LIJN-Y2>")
+    Do While InStr(svg_code, "<LIJN-Y2>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(y1, "0.0"), ",", ".") + Mid(svg_code, nPos + 9)
+        nPos = InStr(svg_code, "<LIJN-Y2>")
+    Loop
+    nPos = InStr(svg_code, "<LIJN-D>")
+    Do While InStr(svg_code, "<LIJN-D>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(dikte, "0.0"), ",", ".") + Mid(svg_code, nPos + 8)
+        nPos = InStr(svg_code, "<LIJN-D>")
+    Loop
+    Print #nfile, svg_code;
+End Sub
+
+Sub print_rtf_textbox(nfile As Long, ByVal srtf_code As String, ByVal X As Long, ByVal Y As Long, ByVal sText As String)
 Dim nPos As Long
 Const nGroot As Long = 244
 Dim sBayerPos2 As String
-    
     nShplId = nShplId + 1
-    x = x - schuif - nGroot / 2 + 110: y = y + schuif + nGroot / 2 - 50
+    X = X - schuif - nGroot / 2 + 110: Y = Y + schuif + nGroot / 2 - 50
     If Trim(sText) = vbNullString Then
         Exit Sub
     End If
     nPos = InStr(srtf_code, "<LEFT>")
     Do While InStr(srtf_code, "<LEFT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x, "0") + Mid(srtf_code, nPos + 6)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X, "0") + Mid(srtf_code, nPos + 6)
         nPos = InStr(srtf_code, "<LEFT>")
     Loop
     nPos = InStr(srtf_code, "<TOP>")
     Do While InStr(srtf_code, "<TOP>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y - nGroot, "0") + Mid(srtf_code, nPos + 5)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y - nGroot, "0") + Mid(srtf_code, nPos + 5)
         nPos = InStr(srtf_code, "<TOP>")
     Loop
     nPos = InStr(srtf_code, "<RIGHT>")
     Do While InStr(srtf_code, "<RIGHT>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(x + nGroot, "0") + Mid(srtf_code, nPos + 7)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(X + nGroot, "0") + Mid(srtf_code, nPos + 7)
         nPos = InStr(srtf_code, "<RIGHT>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM>")
     Do While InStr(srtf_code, "<BOTTOM>") > 0
-        srtf_code = Left(srtf_code, nPos - 1) + Format(y, "0") + Mid(srtf_code, nPos + 8)
+        srtf_code = Left(srtf_code, nPos - 1) + Format(Y, "0") + Mid(srtf_code, nPos + 8)
         nPos = InStr(srtf_code, "<BOTTOM>")
     Loop
     nPos = InStr(srtf_code, "<BOTTOM-TOP>")
@@ -1445,6 +1633,7 @@ Dim sBayerPos2 As String
     nPos = InStr(srtf_code, "<SYMBOOL>")
     Do While InStr(srtf_code, "<SYMBOOL>") > 0
         srtf_code = Left(srtf_code, nPos - 1) + Format(97 + Asc(Left(sText, 1)) - Asc("a"), "0") + Mid(srtf_code, nPos + 9)
+        If InStr(totBayers, "," + Format(97 + Asc(Left(sText, 1)) - Asc("a"), "0") + ",") = 0 Then totBayers = totBayers + Format(97 + Asc(Left(sText, 1)) - Asc("a"), "0") + ","
         nPos = InStr(srtf_code, "<SYMBOOL>")
     Loop
     nPos = InStr(srtf_code, "<SHPLID>")
@@ -1458,17 +1647,53 @@ Dim sBayerPos2 As String
     Do While InStr(srtf_code, "<SUPER>") > 0
         srtf_code = Left(srtf_code, nPos - 1) + sBayerPos2 + Mid(srtf_code, nPos + 7)
         If sBayerPos2 <> "" Then
-        x = x
+        X = X
         End If
         nPos = InStr(srtf_code, "<SUPER>")
     Loop
     Print #nfile, srtf_code;
 End Sub
-
+Sub print_svg_textbox(nfile As Long, ByVal svg_code As String, ByVal X As Double, ByVal Y As Double, ByVal magstraal, ByVal sText As String)
+Dim nPos As Long
+Const nGroot As Long = 244
+Dim sBayerPos2 As String
+    X = X - schuif: Y = Y + schuif / 4
+    X = X / 10: Y = Y / 10
+    If Trim(sText) = vbNullString Then
+        Exit Sub
+    End If
+    nPos = InStr(svg_code, "<POS-X>")
+    Do While InStr(svg_code, "<POS-X>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(X, "0.0"), ",", ".") + Mid(svg_code, nPos + 7)
+        nPos = InStr(svg_code, "<POS-X>")
+    Loop
+    nPos = InStr(svg_code, "<POS-Y>")
+    Do While InStr(svg_code, "<POS-Y>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Replace(Format(Y, "0.0"), ",", ".") + Mid(svg_code, nPos + 7)
+        nPos = InStr(svg_code, "<POS-Y>")
+    Loop
+    nPos = InStr(svg_code, "<LETTERNR>")
+    Do While InStr(svg_code, "<LETTERNR>") > 0
+        svg_code = Left(svg_code, nPos - 1) + Format(25 + Asc(Left(sText, 1)) - Asc("a"), "0") + Mid(svg_code, nPos + 10)
+        If InStr(totBayers, "," + Format(97 + Asc(Left(sText, 1)) - Asc("a"), "0") + ",") = 0 Then totBayers = totBayers + Format(97 + Asc(Left(sText, 1)) - Asc("a"), "0") + ","
+        nPos = InStr(svg_code, "<LETTERNR>")
+    Loop
+    sBayerPos2 = Mid(sText, 2, 1)
+    If sBayerPos2 = "0" Then sBayerPos2 = vbNullString
+    nPos = InStr(svg_code, "<SUPER>")
+    Do While InStr(svg_code, "<SUPER>") > 0
+        svg_code = Left(svg_code, nPos - 1) + sBayerPos2 + Mid(svg_code, nPos + 7)
+        If sBayerPos2 <> "" Then
+        X = X
+        End If
+        nPos = InStr(svg_code, "<SUPER>")
+    Loop
+    Print #nfile, svg_code;
+End Sub
 Sub sterlijn(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal Mag As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim x1 As Long, y1 As Long, x2 As Long, y2 As Long
 Dim Q As Double, shg As Double
 Dim lijn As tlijn
@@ -1525,6 +1750,7 @@ Dim aantal_lijnen As Long
                    (x2 > 0) And (y2 > 0) And (x2 < 2 * midx) And (y2 < 2 * midy) Then
  '                  picCanvas.Line (x1, y1)-(x2, y2)
                    Call print_rtf_lijn(2, rtf_code(6), x1, y1, x2, y2)
+                   Call print_svg_lijn(12, svg_code(6), x1, y1, x2, y2)
                 End If
             End If
         End If
@@ -1538,7 +1764,7 @@ Dim aantal_lijnen As Long
 Sub sterlijnHorizon(ByVal LST As Double, ByVal nb As Double, ByVal Az0 As Double, ByVal Mag As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim x1 As Long, y1 As Long, x2 As Long, y2 As Long
 Dim Q As Double, shg As Double
 Dim lijn As tlijn
@@ -1587,6 +1813,7 @@ Dim aantal_lijnen As Long
                    (x2 > 0) And (y2 > 0) And (x2 < 2 * midx) And (y2 < 2 * midy) Then
  '                  picCanvas.Line (x1, y1)-(x2, y2)
                    Call print_rtf_lijn(2, rtf_code(6), x1, y1, x2, y2)
+                   Call print_svg_lijn(12, svg_code(6), x1, y1, x2, y2)
                 End If
             End If
         End If
@@ -1689,7 +1916,7 @@ Call PlanetPosHi(0, T - sSun.r * LightTimeConst, sAarde, True)
 Call HelioToGeo(sHelio, sAarde, sSun)
 Call MoonPhysEphemeris(T, sGeo, sSun, obl, NutLon, NutObl, moonPhysData)
 parAngle = ParallacticAngle(RA, Decl, ObsLat, LAST)
-PosAngle = moonPhysData.x
+PosAngle = moonPhysData.X
 fase = moonPhysData.k
 End Sub
 
@@ -1775,6 +2002,7 @@ optMerkPerMaand = True
     lstPlaneten.AddItem "Uranus"
     lstPlaneten.AddItem "Neptune"
     lstPlaneten.AddItem "Pluton"
+    lstPlaneten.AddItem "Lune"
     lstPlaneten.ItemData(0) = 1
     lstPlaneten.ItemData(1) = 2
     lstPlaneten.ItemData(2) = 4
@@ -1783,6 +2011,7 @@ optMerkPerMaand = True
     lstPlaneten.ItemData(5) = 7
     lstPlaneten.ItemData(6) = 8
     lstPlaneten.ItemData(7) = 9
+    lstPlaneten.ItemData(7) = 10
 #End If
 lstPlaneten.Selected(8) = True
 lstPlaneten.ListIndex = -1
@@ -1875,6 +2104,7 @@ For plNr = Dpb To Dpe
                 Call CalcXY(RK2, delta, radius, rkp1, decp1, blnHorizon, posX2, posY2)
                 If Not (posX1 = -1 Or posY1 = -1 Or posX2 = -1 Or posY2 = -1) Then
                    Call print_rtf_lijn(2, rtf_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid)
+                   Call print_svg_lijn(12, svg_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid)
                 End If
             End If
            If (MerkDagen) Then
@@ -2036,13 +2266,13 @@ Dim nAantal As Long
         k = k + 1
     Loop
 End Sub
-Function Min(x, y)
-If x < y Then Min = x Else Min = y
+Function Min(X, Y)
+If X < Y Then Min = X Else Min = Y
 End Function
 Sub tekMaanSchijf(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal rkp As Double, ByVal decp As Double, ByVal Mag As Double, ByVal r_maan As Double, ByVal blnHorizon As Boolean, ByVal PosAngle As Double, ByVal parAngle As Double, fase As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -2070,13 +2300,13 @@ If Not blnHorizon Then
     
           hg = PI_2 - hg
           If (r > hg) Then
-              x = Int(midx + midy * Sin(Az) * hg / r)
-              y = Int(midy + midy * Cos(Az) * hg / r)
-              If (x > 0) And (y > 0) And (x < 2 * midx) And (y < 2 * midy) Then
+              X = Int(midx + midy * Sin(Az) * hg / r)
+              Y = Int(midy + midy * Cos(Az) * hg / r)
+              If (X > 0) And (Y > 0) And (X < 2 * midx) And (Y < 2 * midy) Then
                 If radius = 90 Then
-                    Call print_rtf_maanschijf(2, rtf_code(15), x, y, r_maan, PosAngle, parAngle, fase, RGB(255, 0, 0))
+                    Call print_rtf_maanschijf(2, rtf_code(15), X, Y, r_maan, PosAngle, parAngle, fase, RGB(255, 0, 0))
                 Else
-                    Call print_rtf_maanschijf(2, rtf_code(15), x, y, r_maan, PosAngle, parAngle, fase, RGB(255, 0, 0))
+                    Call print_rtf_maanschijf(2, rtf_code(15), X, Y, r_maan, PosAngle, parAngle, fase, RGB(255, 0, 0))
                 End If
                   'Call print_rtf_circle(2, rtf_code(8), x, Y, 5, RGB(255, 0, 0))
               End If
@@ -2089,10 +2319,10 @@ Else
     If Azt < -Pi Then Azt = Azt + 2 * Pi
     
     If (hg > 0) And (Abs(Azt) < PI_2) Then
-        x = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
-        y = Int(midy - midy * hg / PI_2)
+        X = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
+        Y = Int(midy - midy * hg / PI_2)
     '                   Teken_ster x, Y, Straal(0.1 * ster.M, mag)
-        Call print_rtf_maanschijf(2, rtf_code(15), x, y, r_maan, PosAngle + Az, parAngle, fase, RGB(255, 0, 0))
+        Call print_rtf_maanschijf(2, rtf_code(15), X, Y, r_maan, PosAngle + Az, parAngle, fase, RGB(255, 0, 0))
 '        Call print_rtf_maanschijf(2, rtf_code(15), x, Y, r_maan, PosAngle + Az, parAngle, fase, RGB(255, 0, 0))
         'Call print_rtf_circle(2, rtf_code(8), x, Y, 5, RGB(255, 0, 0))
     End If
@@ -2102,7 +2332,7 @@ End If
 Sub tekpunt(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal rkp As Double, ByVal decp As Double, ByVal Mag As Double, ByVal r_planeet As Double, ByVal blnHorizon As Boolean)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -2129,10 +2359,10 @@ If Not blnHorizon Then
     
           hg = PI_2 - hg
           If (r > hg) Then
-              x = Int(midx + midy * Sin(Az) * hg / r)
-              y = Int(midy + midy * Cos(Az) * hg / r)
-              If (x > 0) And (y > 0) And (x < 2 * midx) And (y < 2 * midy) Then
-                  Call print_rtf_circle(2, rtf_code(8), x, y, r_planeet, RGB(255, 0, 0))
+              X = Int(midx + midy * Sin(Az) * hg / r)
+              Y = Int(midy + midy * Cos(Az) * hg / r)
+              If (X > 0) And (Y > 0) And (X < 2 * midx) And (Y < 2 * midy) Then
+                  Call print_rtf_circle(2, rtf_code(8), X, Y, r_planeet, RGB(255, 0, 0))
               End If
           End If
     End If
@@ -2143,10 +2373,10 @@ Else
     If Azt < -Pi Then Azt = Azt + 2 * Pi
     
     If (hg > 0) And (Abs(Azt) < PI_2) Then
-        x = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
-        y = Int(midy - midy * hg / PI_2)
+        X = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
+        Y = Int(midy - midy * hg / PI_2)
     '                   Teken_ster x, Y, Straal(0.1 * ster.M, mag)
-        Call print_rtf_circle(2, rtf_code(8), x, y, r_planeet, RGB(255, 0, 0))
+        Call print_rtf_circle(2, rtf_code(8), X, Y, r_planeet, RGB(255, 0, 0))
     End If
 End If
   DoEvents
@@ -2154,7 +2384,7 @@ End If
 Sub CalcXY(ByVal RK As Double, ByVal Dec As Double, ByVal r As Double, ByVal rkp As Double, ByVal decp As Double, ByVal blnHorizon As Boolean, ByRef PosX As Double, ByRef PosY As Double)
 
 Dim PI_2 As Double, PI_180 As Double, sxdec As Double, cxdec As Double
-Dim Az As Double, hg As Double, x As Long, y As Long, midx As Long, midy As Long
+Dim Az As Double, hg As Double, X As Long, Y As Long, midx As Long, midy As Long
 Dim Q As Double
 Dim ster As tSter
 Dim sRegel As String
@@ -2182,10 +2412,10 @@ If Not blnHorizon Then
     
           hg = PI_2 - hg
           If (r >= hg) Then
-              x = Int(midx + midy * Sin(Az) * hg / r)
-              y = Int(midy + midy * Cos(Az) * hg / r)
-              If (x >= 0) And (y >= 0) And (x <= 2 * midx) And (y <= 2 * midy) Then
-                PosX = x: PosY = y
+              X = Int(midx + midy * Sin(Az) * hg / r)
+              Y = Int(midy + midy * Cos(Az) * hg / r)
+              If (X >= 0) And (Y >= 0) And (X <= 2 * midx) And (Y <= 2 * midy) Then
+                PosX = X: PosY = Y
 '                  Call print_rtf_circle(2, rtf_code(8), x, Y, r_planeet, RGB(255, 0, 0))
               End If
           End If
@@ -2197,10 +2427,10 @@ Else
     If Azt < -Pi Then Azt = Azt + 2 * Pi
     
     If (hg >= 0) And (Abs(Azt) <= PI_2) Then
-        x = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
-        y = Int(midy - midy * hg / PI_2)
+        X = Int(midx + midy * Azt * Sqr(1 - hg / PI_2 * hg / PI_2) / PI_2)
+        Y = Int(midy - midy * hg / PI_2)
     '                   Teken_ster x, Y, Straal(0.1 * ster.M, mag)
-        PosX = x: PosY = y
+        PosX = X: PosY = Y
         'Call print_rtf_circle(2, rtf_code(8), x, Y, r_planeet, RGB(255, 0, 0))
     End If
 End If
@@ -2285,8 +2515,8 @@ Dim fr_wid As Long
 Dim fr_hgt As Long
 Dim to_wid As Long
 Dim to_hgt As Long
-Dim x As Integer
-Dim y As Integer
+Dim X As Integer
+Dim Y As Integer
 Dim a As Double, r As Double
 Dim p1x As Long, p1y As Long
 Dim x1 As Integer, y1 As Integer
@@ -2322,9 +2552,9 @@ Const Pi = 3.1415926536
     
     ' Copy the rotated pixels.
     ReDim to_pixels(0 To to_wid - 1, 0 To to_hgt - 1)
-    For x = 0 To fr_wid - 1
-        For y = 0 To fr_hgt - 1
-            to_pixels(x, y) = fr_pixels(1, 1)
+    For X = 0 To fr_wid - 1
+        For Y = 0 To fr_hgt - 1
+            to_pixels(X, Y) = fr_pixels(1, 1)
         Next
     Next
 
@@ -2446,7 +2676,7 @@ If u2 < u1 Then
 End If
 End Sub
 
-Public Sub BepaalGrenzen(ByVal x As Double, ByVal dx As Double, ByRef g1 As Double, ByRef g2 As Double)
+Public Sub BepaalGrenzen(ByVal X As Double, ByVal dx As Double, ByRef g1 As Double, ByRef g2 As Double)
 
 '   IF (x-dx>=g1) AND (x+dx<=g2) THEN
 '    BEGIN
@@ -2457,8 +2687,8 @@ Public Sub BepaalGrenzen(ByVal x As Double, ByVal dx As Double, ByRef g1 As Doub
 '        g2 = x + dx
 '    Else
 '        g1=x-dx}
-    g1 = x - dx
-    g2 = x + dx
+    g1 = X - dx
+    g2 = X + dx
 End Sub
 
 Public Sub TekenenGrid(ByVal GSTL As Double, ByVal nb As Double, ByVal r As Double, ByVal maxmag As Double)
@@ -2536,6 +2766,7 @@ g2b = 80
             Call CalcXY(GSTL * 12 / Pi, delta, r, GSTL - (I + GridRKstap) / 60 * Pi / 12, j * Pi / 180, False, posX2, posY2)
             If Not (posX1 = -1 Or posY1 = -1 Or posX2 = -1 Or posY2 = -1) Then
                 Call print_rtf_lijn(2, rtf_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid)
+                Call print_svg_lijn(12, svg_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid, 0.2)
             End If
     
         ' Else
@@ -2575,6 +2806,7 @@ g2b = 80
                 Call CalcXY(GSTL * 12 / Pi, delta, r, I / 60 * Pi / 12, (j1) * Pi / 180, False, posX2, posY2)
                 If Not (posX1 = -1 Or posY1 = -1 Or posX2 = -1 Or posY2 = -1) Then
                     Call print_rtf_lijn(2, rtf_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid)
+                    Call print_svg_lijn(12, svg_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid, 0.2)
                 End If
              j = j + stapb
           Loop
@@ -2584,6 +2816,7 @@ g2b = 80
           Call CalcXY(GSTL * 12 / Pi, delta, r, I / 60 * Pi / 12, d2 * Pi / 180, False, posX2, posY2)
           If Not (posX1 = -1 Or posY1 = -1 Or posX2 = -1 Or posY2 = -1) Then
             Call print_rtf_lijn(2, rtf_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid)
+            Call print_svg_lijn(12, svg_code(6), posX1, posY1, posX2, posY2, g_lijnkleur_grid, 0.2)
           End If
           I = I + stapA
     Loop

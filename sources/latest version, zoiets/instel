@@ -116,7 +116,7 @@ b0 1 1 5 g k90
 l0 1 1 5 g k90
 a_equ2000 3 1 2 h
 d_equ2000 3 0 3 g k90
-r_geoc n 06 4 
+r_geoc n 06 4
 sterrenbeeld 1 20
 
 [MERCURIUS]
@@ -291,3 +291,4 @@ term 1 1 5 g k90
 l_tlib 1 1 4 g k90
 b_tlib 1 1 4 g k90
 sterrenbeeld 1 20
+afstand n 10 1

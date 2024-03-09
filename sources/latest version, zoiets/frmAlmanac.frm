@@ -82,11 +82,11 @@ Dim PlanetName '(0 To 8) As String * 10
 Dim Description '(1 To 28) As String * 60
 
 Sub FindEvents(JDStart As Double, JDEnd As Double)
-Dim i As Long, j As Long, Planet As Long, nEvent As Long, k0 As Long
+Dim i As Long, j As Long, planet As Long, nEvent As Long, k0 As Long
 Dim k As Long
-Dim t, JD As Double
+Dim T, JD As Double
 Dim ddate As tDatum
-Dim x   As Double, Dummy As Double, k1 As Double, Par As Double, mDec As Double
+Dim X   As Double, Dummy As Double, k1 As Double, Par As Double, mDec As Double
 Dim s As String * 60
 Dim plPhenom As New clsPlPhenom
 Dim perApg As New clsPerApg
@@ -151,7 +151,7 @@ Do Until JD > JDEnd
       If (nEvent <> PARTIAL) Then
         EventList(NoEvents).Description = Description(14 + nEvent)
       Else
-        s = Format(.Maxmag, "0.000")
+        s = Format(.maxmag, "0.000")
         EventList(NoEvents).Description = Description(14 + nEvent) + s + " (Maximum)"
       End If
     End If
@@ -240,25 +240,25 @@ Loop
 
 '{ Next, find planetary oppositions and conjunctions }
 'txtAlmanac.Text = txtAlmanac.Text + "Looking for planetary conjunctions and oppositions..." + vbCrLf
-For Planet = 1 To 8
-  If Planet <> 3 Then
+For planet = 1 To 8
+  If planet <> 3 Then
     For nEvent = OPPOSITION To CONJUNCTION
-      k = plPhenom.FirstkOfYear(Jaar, Planet, nEvent) - 1
-      JD = plPhenom.ConjunctionOpposition(Planet, nEvent, k)
+      k = plPhenom.FirstkOfYear(Jaar, planet, nEvent) - 1
+      JD = plPhenom.ConjunctionOpposition(planet, nEvent, k)
       Do Until (JD > JDEnd)
           If ((JD > JDStart) And (JD < JDEnd)) Then
             NoEvents = NoEvents + 1
             EventList(NoEvents).JD = JD
-            If Planet > 3 Then
+            If planet > 3 Then
               j = 7 + nEvent
             Else
               j = 5 + nEvent
             End If
-            EventList(NoEvents).Description = PlanetName(Planet) + Description(j)
+            EventList(NoEvents).Description = PlanetName(planet) + Description(j)
             EventList(NoEvents).Precision = 1
           End If
           k = k + 1
-         JD = plPhenom.ConjunctionOpposition(Planet, nEvent, k)
+         JD = plPhenom.ConjunctionOpposition(planet, nEvent, k)
       Loop
     Next
   End If
@@ -266,24 +266,24 @@ Next
 
 '{ Now, find times of extreme elongations of Mercury and Venus }
 'txtAlmanac.Text = txtAlmanac.Text + "Looking for extreme elongations of Mercury and Venus..." + vbCrLf
-For Planet = 1 To 2
-  k0 = plPhenom.FirstkOfYear(Jaar, Planet, INFCONJ) - 1
+For planet = 1 To 2
+  k0 = plPhenom.FirstkOfYear(Jaar, planet, INFCONJ) - 1
   For nEvent = EASTELONGATION To WESTELONGATION
     k = k0
-    JD = plPhenom.GreatestElongation(Planet, nEvent, k, x)
+    JD = plPhenom.GreatestElongation(planet, nEvent, k, X)
     Do Until (JD > JDEnd)
       If ((JD > JDStart) And (JD < JDEnd)) Then
         NoEvents = NoEvents + 1
         EventList(NoEvents).JD = JD
         j = 9 + nEvent
-        EventList(NoEvents).Description = PlanetName(Planet) + Description(j)
-        s = Format(x, "00.0")
+        EventList(NoEvents).Description = PlanetName(planet) + Description(j)
+        s = Format(X, "00.0")
         EventList(NoEvents).Description = Trim(EventList(NoEvents).Description) + " " + s
         EventList(NoEvents).Description = Trim(EventList(NoEvents).Description) + "ø"
         EventList(NoEvents).Precision = 1
       End If
       k = k + 1
-    JD = plPhenom.GreatestElongation(Planet, nEvent, k, x)
+    JD = plPhenom.GreatestElongation(planet, nEvent, k, X)
     Loop
     Next
 Next
@@ -440,11 +440,11 @@ End Sub
 
 
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
-Dim stext As String
+Dim sText As String
     If KeyCode = 67 And Shift = 2 Then
-       stext = Me.txtAlmanac
+       sText = Me.txtAlmanac
        Clipboard.Clear
-       Clipboard.SetText (stext)
+       Clipboard.SetText (sText)
     End If
 End Sub
 

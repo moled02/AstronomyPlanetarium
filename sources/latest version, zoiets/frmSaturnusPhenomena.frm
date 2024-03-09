@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "richtx32.Ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
 Begin VB.Form frmSaturnusPhenomena 
    Caption         =   "Elongation Saturnmoons"
    ClientHeight    =   6195
@@ -22,6 +22,7 @@ Begin VB.Form frmSaturnusPhenomena
       _ExtentX        =   15690
       _ExtentY        =   9763
       _Version        =   393217
+      Enabled         =   -1  'True
       ScrollBars      =   2
       TextRTF         =   $"frmSaturnusPhenomena.frx":030A
       BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
@@ -67,11 +68,11 @@ Elongaties_berekenen
 End Sub
 
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
-Dim stext As String
+Dim sText As String
     If KeyCode = 17 And Shift = 0 Then
-       stext = Me.txtVerschijnselen.Text
+       sText = Me.txtVerschijnselen.Text
        Clipboard.Clear
-       Clipboard.SetText (stext)
+       Clipboard.SetText (sText)
     End If
 End Sub
 
@@ -83,12 +84,12 @@ Call modSaturnMoon.SaturnMoonInit
 End Sub
 
 
-Private Sub ov(ByVal Planet As Long, ByRef ddate As tDatum, _
-             ByVal ObsLon As Double, ByVal ObsLat As Double, ByVal TimeZone As Double, ByVal Height As Double, ByVal StartHeight As Double, _
+Private Sub ov(ByVal planet As Long, ByRef ddate As tDatum, _
+             ByVal ObsLon As Double, ByVal ObsLat As Double, ByVal TimeZone As Double, ByVal height As Double, ByVal StartHeight As Double, _
              ByRef Opk As Double, ByRef Ond As Double)
 
-Dim sAarde As TSVECTOR, SHelio As TSVECTOR, SGeo As TSVECTOR
-Dim Obl As Double
+Dim sAarde As TSVECTOR, sHelio As TSVECTOR, sGeo As TSVECTOR
+Dim obl As Double
 Dim T0 As Double, RA As Double, Decl As Double, RA1 As Double, Decl1 As Double, RA2 As Double, Decl2 As Double
 Dim deltaT As Double
 Dim RTS As tRiseSetTran
@@ -96,44 +97,44 @@ Dim sLatitude As String, sLongitude As String
 
     
 T0 = JDToT(KalenderNaarJD(ddate))
-Obl = Obliquity(T0)
-If Planet = 0 Then 'Zon
+obl = Obliquity(T0)
+If planet = 0 Then 'Zon
     Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
     
     Call PlanetPosHi(0, T0, sAarde, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
     
     Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
     
-    Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, Height, ObsLon, ObsLat, RTS)
+    Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, height, ObsLon, ObsLat, RTS)
 Else 'Saturnus
     Call PlanetPosHi(0, T0 - 1 / 36525, sAarde, True)
-    Call PlanetPosHi(6, T0 - 1 / 36525, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call PlanetPosHi(6, T0 - 1 / 36525 - SGeo.r * LightTimeConst, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA1, Decl1)
+    Call PlanetPosHi(6, T0 - 1 / 36525, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call PlanetPosHi(6, T0 - 1 / 36525 - sGeo.r * LightTimeConst, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA1, Decl1)
     
     Call PlanetPosHi(0, T0, sAarde, True)
-    Call PlanetPosHi(6, T0, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call PlanetPosHi(5, T0 - SGeo.r * LightTimeConst, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA, Decl)
+    Call PlanetPosHi(6, T0, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call PlanetPosHi(5, T0 - sGeo.r * LightTimeConst, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA, Decl)
     
     Call PlanetPosHi(0, T0 + 1 / 36525, sAarde, True)
-    Call PlanetPosHi(6, T0 + 1 / 36525, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call PlanetPosHi(6, T0 + 1 / 36525 - SGeo.r * LightTimeConst, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call EclToEqu(SGeo.l, SGeo.B, Obl, RA2, Decl2)
+    Call PlanetPosHi(6, T0 + 1 / 36525, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call PlanetPosHi(6, T0 + 1 / 36525 - sGeo.r * LightTimeConst, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call EclToEqu(sGeo.L, sGeo.B, obl, RA2, Decl2)
     
-    Call RiseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, Height, ObsLon, ObsLat, RTS)
+    Call riseSet(T0, deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, height, ObsLon, ObsLat, RTS)
     
 End If
 Opk = RTS.Rise * 12 / Pi
@@ -146,14 +147,14 @@ Dim ddate As tDatum
 Dim Opk As Double, Ond As Double
 Dim tijd As Double
 Dim bTmp As Boolean
-Dim hoogte As Double
+Dim Hoogte As Double
 
     tijd = Frac(JD + 0.5) * 24
     ddate = JDNaarKalender(JD)
     ddate.DD = Int(ddate.DD)
-    hoogte = 0
+    Hoogte = 0
     
-    Call ov(0, ddate, ObsLon, ObsLat, 0, hoogte, -6 * DToR, Opk, Ond)
+    Call ov(0, ddate, ObsLon, ObsLat, 0, Hoogte, -6 * DToR, Opk, Ond)
     If Opk <= 0 Then
         Opk = 0
     End If
@@ -161,7 +162,7 @@ Dim hoogte As Double
         Ond = 24
     End If
     bTmp = (tijd < Opk) Or (tijd > Ond)
-    Call ov(6, ddate, ObsLon, ObsLat, 0, hoogte, 5 * DToR, Opk, Ond)
+    Call ov(6, ddate, ObsLon, ObsLat, 0, Hoogte, 5 * DToR, Opk, Ond)
     If Ond > Opk Then
       bTmp = (bTmp) And (tijd >= Opk) And (tijd <= Ond)
     Else
@@ -174,36 +175,36 @@ Private Sub Bepaal_Elongatie(ByVal JD0 As Double, ByRef maangeg As tMaanGeg, ByV
                            ByVal hoek As Double, ByRef JD As Double)
 
 Dim u_U As Double, Time_interval As Double, ElongatieHoek As Double
-Dim I As Long
+Dim i As Long
 Dim ddate As tDatum
 Dim doorgaan As Boolean
 Dim SaturnB As Double
-Dim Dist As Double
-Dim SHelio As TSVECTOR, SGeo As TSVECTOR, Obl As Double, NutLon As Double, NutObl As Double
+Dim dist As Double
+Dim sHelio As TSVECTOR, sGeo As TSVECTOR, obl As Double, NutLon As Double, NutObl As Double
 Dim sAarde As TSVECTOR
 Dim AltSaturnRingData As TALTSATURNRINGDATA
 Dim T0 As Double
 Dim sLatitude As String, sLongitude As String
 
   JD = JD0
-  Obl = Obliquity(T0)
+  obl = Obliquity(T0)
   Call NutationConst(T0, NutLon, NutObl)
   doorgaan = True
   Do While doorgaan
     T0 = JDToT(JD)
     Call PlanetPosHi(0, T0, sAarde, True)
-    Call PlanetPosHi(6, T0, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
-    Call PlanetPosHi(6, T0 - SGeo.r * LightTimeConst, SHelio, True)
-    Call HelioToGeo(SHelio, sAarde, SGeo)
+    Call PlanetPosHi(6, T0, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
+    Call PlanetPosHi(6, T0 - sGeo.r * LightTimeConst, sHelio, True)
+    Call HelioToGeo(sHelio, sAarde, sGeo)
     
-    Call modSaturnMoon.BasisGegevens(JD, SaturnB, Dist)
+    Call modSaturnMoon.BasisGegevens(JD, SaturnB, dist)
      'Call modSaturnMoon.BasisGegevens(JD, SaturnB, Dist)
-     Call modSatRing.AltSaturnRing(JDToT(JD), SHelio, SGeo, Obl, NutLon, NutObl, AltSaturnRingData)
+     Call modSatRing.AltSaturnRing(JDToT(JD), sHelio, sGeo, obl, NutLon, NutObl, AltSaturnRingData)
      Call modSaturnMoon.sat_manen(JD, maannr, maangeg)
 
      If maannr < 6 Then
-       u_U = maangeg.Manen(maannr).u - AltSaturnRingData.u * 180 / Pi
+       u_U = maangeg.manen(maannr).u - AltSaturnRingData.u * 180 / Pi
      Else
        u_U = maangeg.Titan.u - AltSaturnRingData.u * 180 / Pi
      End If
@@ -213,10 +214,10 @@ Dim sLatitude As String, sLongitude As String
      If ElongatieHoek < -180 Then ElongatieHoek = ElongatieHoek + 360
      If ElongatieHoek > 180 Then ElongatieHoek = ElongatieHoek - 360
 '{ time interval in uren }
-     If maannr < 6 Then Time_interval = ElongatieHoek / maangeg.Manen(maannr).n * 24 _
+     If maannr < 6 Then Time_interval = ElongatieHoek / maangeg.manen(maannr).n * 24 _
      Else Time_interval = ElongatieHoek / maangeg.Titan.n * 24
 
-     Time_interval = Time_interval + SGeo.r * LightTimeConst * 876600
+     Time_interval = Time_interval + sGeo.r * LightTimeConst * 876600
                                                         '{ * 36525 * 24 }
      JD = JD + Time_interval / 24
      doorgaan = Abs(Time_interval) > 0.05
@@ -229,7 +230,7 @@ Dim JD_ZT As Double
 Dim JD_WT As Double
 Dim JD As Double
 Dim JD0 As Double
-Dim JDE As Double
+Dim jde As Double
 Dim hJaar As Long
 Dim maangeg As tMaanGeg
 Dim ddate As tDatum
@@ -241,7 +242,7 @@ Call WeekDate(ddate.jj * 100 + 1, ddate)
 JD0 = KalenderNaarJD(ddate)
 ddate.jj = frmPlanets.Year + 1
 Call WeekDate(ddate.jj * 100 + 1, ddate)
-JDE = KalenderNaarJD(ddate)
+jde = KalenderNaarJD(ddate)
 Call Zomertijd_Wintertijd(frmPlanets.Year, JD_ZT, JD_WT)
 '{JD_ZT/JD_WT zijn berekend voor 0h UT}
 JD_ZT = JD_ZT + 2 / 24 '{= 3h WT}
@@ -253,11 +254,11 @@ For maannr = 1 To 6
     Call Zomertijd_Wintertijd(hJaar, JD_ZT, JD_WT)
     JD = JD0 - (360 / MaanBewPerDag(maannr))
     H = 0
-    Do While JD < JDE And blnDoorgaan
-        Me.PBVoortgang = Max(Int(100 * ((JD - JD0) / (JDE - JD0))), 0)
+    Do While JD < jde And blnDoorgaan
+        Me.PBVoortgang = Max(Int(100 * ((JD - JD0) / (jde - JD0))), 0)
         DoEvents
         Call Bepaal_Elongatie(JD, maangeg, maannr, H, JD)
-        If (JD > JD0) And (JD < JDE + 1) Then
+        If (JD > JD0) And (JD < jde + 1) Then
              ddate = JDNaarKalender(JD)
              bZichtAlle = False
              If Zichtbaar(JD) Or bZichtAlle Then
@@ -294,9 +295,9 @@ For maannr = 1 To 6
     Loop
 Next
 End Sub
-Function Max(x, Y)
-If x > Y Then
-    Max = x
+Function Max(X, Y)
+If X > Y Then
+    Max = X
 Else
     Max = Y
 End If

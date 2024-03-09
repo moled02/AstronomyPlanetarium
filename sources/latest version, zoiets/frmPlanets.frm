@@ -50,7 +50,7 @@ Begin VB.Form frmPlanets
       _ExtentY        =   13785
       _Version        =   393216
       Tabs            =   10
-      Tab             =   6
+      Tab             =   4
       TabsPerRow      =   10
       TabHeight       =   520
       TabCaption(0)   =   "Maan"
@@ -79,26 +79,24 @@ Begin VB.Form frmPlanets
       Tab(3).ControlCount=   1
       TabCaption(4)   =   "Mars"
       TabPicture(4)   =   "frmPlanets.frx":037A
-      Tab(4).ControlEnabled=   0   'False
+      Tab(4).ControlEnabled=   -1  'True
       Tab(4).Control(0)=   "listInfo(4)"
       Tab(4).Control(0).Enabled=   0   'False
       Tab(4).ControlCount=   1
       TabCaption(5)   =   "Jupiter"
       TabPicture(5)   =   "frmPlanets.frx":0396
       Tab(5).ControlEnabled=   0   'False
-      Tab(5).Control(0)=   "picHidden"
+      Tab(5).Control(0)=   "listInfo(5)"
+      Tab(5).Control(0).Enabled=   0   'False
       Tab(5).Control(1)=   "lstMoonsJup"
-      Tab(5).Control(2)=   "listInfo(5)"
-      Tab(5).Control(2).Enabled=   0   'False
+      Tab(5).Control(2)=   "picHidden"
       Tab(5).ControlCount=   3
       TabCaption(6)   =   "Saturnus"
       TabPicture(6)   =   "frmPlanets.frx":03B2
-      Tab(6).ControlEnabled=   -1  'True
-      Tab(6).Control(0)=   "listInfo(6)"
-      Tab(6).Control(0).Enabled=   0   'False
+      Tab(6).ControlEnabled=   0   'False
+      Tab(6).Control(0)=   "picHiddenSat"
       Tab(6).Control(1)=   "lstMoonsSat"
-      Tab(6).Control(1).Enabled=   0   'False
-      Tab(6).Control(2)=   "picHiddenSat"
+      Tab(6).Control(2)=   "listInfo(6)"
       Tab(6).Control(2).Enabled=   0   'False
       Tab(6).ControlCount=   3
       TabCaption(7)   =   "Uranus"
@@ -123,7 +121,7 @@ Begin VB.Form frmPlanets
          AutoRedraw      =   -1  'True
          BackColor       =   &H80000005&
          Height          =   1335
-         Left            =   6960
+         Left            =   -68040
          ScaleHeight     =   1275
          ScaleWidth      =   6435
          TabIndex        =   41
@@ -152,7 +150,7 @@ Begin VB.Form frmPlanets
             Strikethrough   =   0   'False
          EndProperty
          Height          =   4050
-         Left            =   6960
+         Left            =   -68040
          TabIndex        =   38
          Top             =   720
          Width           =   6495
@@ -263,7 +261,7 @@ Begin VB.Form frmPlanets
          Height          =   6810
          Index           =   6
          ItemData        =   "frmPlanets.frx":0461
-         Left            =   600
+         Left            =   -74400
          List            =   "frmPlanets.frx":0468
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -313,7 +311,7 @@ Begin VB.Form frmPlanets
          Height          =   4785
          Index           =   4
          ItemData        =   "frmPlanets.frx":048B
-         Left            =   -74400
+         Left            =   600
          List            =   "frmPlanets.frx":0492
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -800,7 +798,7 @@ Begin VB.Form frmPlanets
             AutoSize        =   2
             Object.Width           =   1614
             MinWidth        =   1605
-            TextSave        =   "29/02/2024"
+            TextSave        =   "01/03/2024"
          EndProperty
          BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Alignment       =   2
@@ -1995,8 +1993,13 @@ Set g_word = Nothing
 Exit Sub
 
 word_einde:
+If Err.Number = 462 Then
+    Resume Next
+Else
     g_word.Quit
     Resume Next
+End If
+Fout:
 End Sub
 
 Private Sub Hrs_GotFocus()
@@ -2027,14 +2030,14 @@ sAppInfo = ShowFileInfo(App.Path & "\" & App.EXEName & ".exe")
         , "About " & App.Title
 End Sub
 Function ShowFileInfo(filespec As String) As String
-On Error GoTo fout:
+On Error GoTo Fout:
     Dim fs, F, s
     Set fs = CreateObject("Scripting.FileSystemObject")
     Set F = fs.GetFile(filespec)
     s = F.DateCreated
     ShowFileInfo = Format(s, "dd-mm-yyyy")
     Exit Function
-fout:
+Fout:
     ShowFileInfo = ""
 End Function
 

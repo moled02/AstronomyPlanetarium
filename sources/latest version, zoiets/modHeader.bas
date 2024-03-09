@@ -3,16 +3,16 @@ Public Sub EARTH_LBR_FOR(ByVal T As Double, ByRef tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Earth.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Earth_L01(T) + Earth_L02(T) _
+  l = Earth_L01(T) + Earth_L02(T) _
     + Earth_L11(T) + Earth_L21(T) + Earth_L31(T) _
     + Earth_L41(T) + Earth_L51(T)
     
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
 ' Compute heliocentric, ecliptical Latitude B in radians
   B = Earth_B01(T) _
@@ -24,7 +24,7 @@ Dim L, B, r
     + Earth_R11(T) + Earth_R21(T) + Earth_R31(T) _
     + Earth_R41(T) + Earth_R51(T)
 
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
   '= "L = " & l & "; B = " & b & "; R = " & r
@@ -34,16 +34,16 @@ Public Function MERCURY_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for MERCURY.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Mercury_L01(T) + Mercury_L02(T) + Mercury_L03(T) + Mercury_L11(T) _
+  l = Mercury_L01(T) + Mercury_L02(T) + Mercury_L03(T) + Mercury_L11(T) _
     + Mercury_L12(T) + Mercury_L21(T) + Mercury_L31(T) + Mercury_L41(T) _
     + Mercury_L51(T)
 
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
   B = Mercury_B01(T) + Mercury_B02(T) + Mercury_B11(T) + Mercury_B21(T) _
     + Mercury_B31(T) + Mercury_B41(T) + Mercury_B51(T)
@@ -53,7 +53,7 @@ Dim L, B, r
     + Mercury_R51(T)
   
 
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
 
@@ -64,15 +64,15 @@ Public Function VENUS_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Venus.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Venus_L01(T) + Venus_L11(T) + Venus_L21(T) + Venus_L31(T) _
+  l = Venus_L01(T) + Venus_L11(T) + Venus_L21(T) + Venus_L31(T) _
     + Venus_L41(T) + Venus_L51(T)
 
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
   B = Venus_B01(T) + Venus_B11(T) + Venus_B21(T) + Venus_B31(T) _
     + Venus_B41(T) + Venus_B51(T)
@@ -81,7 +81,7 @@ Dim L, B, r
     + Venus_R41(T) + Venus_R51(T)
   
 
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
   'VENUS_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
@@ -93,16 +93,16 @@ Public Function MARS_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Mars.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric longitude L in radians
-  L = Mars_L01(T) + Mars_L02(T) + Mars_L03(T) _
+  l = Mars_L01(T) + Mars_L02(T) + Mars_L03(T) _
     + Mars_L11(T) + Mars_L12(T) _
     + Mars_L21(T) + Mars_L31(T) + Mars_L41(T) + Mars_L51(T)
     
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
     
 ' Compute heliocentric latitude B in radians
   B = Mars_B01(T) + Mars_B11(T) + Mars_B21(T) + Mars_B31(T) _
@@ -114,7 +114,7 @@ Dim L, B, r
     + Mars_R21(T) + Mars_R31(T) + Mars_R41(T) + Mars_R51(T)
   
 
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
   'MARS_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
@@ -126,16 +126,16 @@ Public Function Jupiter_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Jupiter.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Jupiter_L01(T) + Jupiter_L02(T)
-  L = L + Jupiter_L11(T) + Jupiter_L21(T) + Jupiter_L31(T) _
+  l = Jupiter_L01(T) + Jupiter_L02(T)
+  l = l + Jupiter_L11(T) + Jupiter_L21(T) + Jupiter_L31(T) _
     + Jupiter_L41(T) + Jupiter_L51(T)
     
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
 ' Compute heliocentric, ecliptical Latitude B in radians
   B = Jupiter_B01(T) _
@@ -152,7 +152,7 @@ Dim L, B, r
 
   
 ' Return LBR values within a labeled and delimited string.
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
   'Jupiter_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
@@ -164,17 +164,17 @@ Public Function SATURN_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Saturn.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Saturn_L01(T) + Saturn_L02(T) + Saturn_L03(T) _
+  l = Saturn_L01(T) + Saturn_L02(T) + Saturn_L03(T) _
     + Saturn_L11(T) + Saturn_L12(T) _
     + Saturn_L21(T) + Saturn_L31(T) + Saturn_L41(T) _
     + Saturn_L51(T)
 
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
 ' Compute heliocentric, ecliptical Latitude B in radians
   B = Saturn_B01(T) + Saturn_B02(T) _
@@ -187,7 +187,7 @@ Dim L, B, r
     + Saturn_R31(T) + Saturn_R41(T) + Saturn_R51(T)
   
 ' Return LBR values within a labeled and delimited string.
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
   'SATURN_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
@@ -200,16 +200,16 @@ Public Function URANUS_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' for Uranus.
 
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Uranus_L01(T) + Uranus_L02(T) _
+  l = Uranus_L01(T) + Uranus_L02(T) _
     + Uranus_L11(T) + Uranus_L21(T) + Uranus_L31(T) _
     + Uranus_L41(T) + Uranus_L51(T)
 
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
 ' Compute heliocentric, ecliptical Latitude B in radians
   B = Uranus_B01(T) _
@@ -223,7 +223,7 @@ Dim L, B, r
   
 ' Return LBR values within a labeled and delimited string.
   'URANUS_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
 End Function
@@ -233,19 +233,19 @@ Public Function NEPTUNE_LBR_FOR(ByVal T As Double, tsRes As TSVECTOR)
 ' Compute heliocentric, spherical coordinates, LBR
 ' for Neptune.
 
-Dim L, B, r
+Dim l, B, r
   T = T / 10
 
 ' Compute heliocentric, ecliptical Longitude L in radians
-  L = Neptune_L01(T)
-  L = L + Neptune_L11(T)
-  L = L + Neptune_L21(T)
-  L = L + Neptune_L31(T)
-  L = L + Neptune_L41(T)
-  L = L + Neptune_L51(T)
+  l = Neptune_L01(T)
+  l = l + Neptune_L11(T)
+  l = l + Neptune_L21(T)
+  l = l + Neptune_L31(T)
+  l = l + Neptune_L41(T)
+  l = l + Neptune_L51(T)
 
 ' Modulate L value between 0 and 2*Pi
-  If Abs(L) > (2 * Pi) Then L = L - 2 * Pi * Int(L / 2 / Pi)
+  If Abs(l) > (2 * PI) Then l = l - 2 * PI * Int(l / 2 / PI)
 
 ' Compute heliocentric, ecliptical Latitude B in radians
   B = Neptune_B01(T)
@@ -264,7 +264,7 @@ Dim L, B, r
     
 ' Return LBR values within a labeled and delimited string.
   'NEPTUNE_LBR_FOR = "L = " & l & "; B = " & b & "; R = " & r
-  tsRes.L = L
+  tsRes.l = l
   tsRes.B = B
   tsRes.r = r
 End Function

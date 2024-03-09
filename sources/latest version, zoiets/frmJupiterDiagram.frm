@@ -141,7 +141,7 @@ End Type
 Private Sub JupiterPhysEphLo(ByVal JD As Double, ByRef DD As Double, ByRef B As Double, ByRef Psi As Double, ByRef DeclS As Double, ByRef DeclE As Double)
 
 Dim D As Double
-Dim v As Double, M As Double, n As Double, j As Double, A As Double, k As Double, lambda As Double
+Dim v As Double, M As Double, n As Double, j As Double, a As Double, k As Double, lambda As Double
 Dim Re As Double, Rj     As Double '{Radius vector of Earth, Jupiter}
 Dim Rej     As Double ' {distance Earth-Jupiter}
   
@@ -150,9 +150,9 @@ Dim Rej     As Double ' {distance Earth-Jupiter}
   M = (357.529 + 0.9856003 * D) * DToR
   n = (20.02 + 0.0830853 * D + 0.329 * Sin(v)) * DToR
   j = (66.115 + 0.9025179 * D - 0.329 * Sin(v)) * DToR
-  A = (1.915 * Sin(M) + 0.02 * Sin(2 * M)) * DToR
+  a = (1.915 * Sin(M) + 0.02 * Sin(2 * M)) * DToR
   B = (5.555 * Sin(n) - 0.168 * Sin(2 * n)) * DToR
-  k = j + A - B
+  k = j + a - B
   Re = 1.00014 - 0.1671 * Cos(M) - 0.00014 * Cos(2 * M)
   Rj = 5.20872 - 0.25208 * Cos(M) - 0.00611 * Cos(2 * n)
   Rej = Sqr(Re * Re + Rj * Rj - 2 * Re * Rj * Cos(k))
