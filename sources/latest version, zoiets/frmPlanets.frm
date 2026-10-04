@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TabCtl32.Ocx"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "mscomctl.OCX"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmPlanets 
    BackColor       =   &H00C0C0C0&
    BorderStyle     =   1  'Fixed Single
@@ -26,6 +26,14 @@ Begin VB.Form frmPlanets
    ScaleHeight     =   9405
    ScaleWidth      =   14295
    StartUpPosition =   2  'CenterScreen
+   Begin VB.CheckBox chkTDT 
+      Caption         =   "TDT"
+      Height          =   375
+      Left            =   9180
+      TabIndex        =   42
+      Top             =   300
+      Width           =   555
+   End
    Begin VB.Timer TimerAnimate 
       Enabled         =   0   'False
       Left            =   10920
@@ -50,7 +58,7 @@ Begin VB.Form frmPlanets
       _ExtentY        =   13785
       _Version        =   393216
       Tabs            =   10
-      Tab             =   6
+      Tab             =   4
       TabsPerRow      =   10
       TabHeight       =   520
       TabCaption(0)   =   "Maan"
@@ -79,7 +87,7 @@ Begin VB.Form frmPlanets
       Tab(3).ControlCount=   1
       TabCaption(4)   =   "Mars"
       TabPicture(4)   =   "frmPlanets.frx":037A
-      Tab(4).ControlEnabled=   0   'False
+      Tab(4).ControlEnabled=   -1  'True
       Tab(4).Control(0)=   "listInfo(4)"
       Tab(4).Control(0).Enabled=   0   'False
       Tab(4).ControlCount=   1
@@ -93,13 +101,11 @@ Begin VB.Form frmPlanets
       Tab(5).ControlCount=   3
       TabCaption(6)   =   "Saturnus"
       TabPicture(6)   =   "frmPlanets.frx":03B2
-      Tab(6).ControlEnabled=   -1  'True
+      Tab(6).ControlEnabled=   0   'False
       Tab(6).Control(0)=   "listInfo(6)"
       Tab(6).Control(0).Enabled=   0   'False
       Tab(6).Control(1)=   "lstMoonsSat"
-      Tab(6).Control(1).Enabled=   0   'False
       Tab(6).Control(2)=   "picHiddenSat"
-      Tab(6).Control(2).Enabled=   0   'False
       Tab(6).ControlCount=   3
       TabCaption(7)   =   "Uranus"
       TabPicture(7)   =   "frmPlanets.frx":03CE
@@ -123,7 +129,7 @@ Begin VB.Form frmPlanets
          AutoRedraw      =   -1  'True
          BackColor       =   &H80000005&
          Height          =   1335
-         Left            =   6960
+         Left            =   -68040
          ScaleHeight     =   1275
          ScaleWidth      =   6435
          TabIndex        =   41
@@ -152,7 +158,7 @@ Begin VB.Form frmPlanets
             Strikethrough   =   0   'False
          EndProperty
          Height          =   4050
-         Left            =   6960
+         Left            =   -68040
          TabIndex        =   38
          Top             =   720
          Width           =   6495
@@ -263,7 +269,7 @@ Begin VB.Form frmPlanets
          Height          =   6810
          Index           =   6
          ItemData        =   "frmPlanets.frx":0461
-         Left            =   600
+         Left            =   -74400
          List            =   "frmPlanets.frx":0468
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -313,7 +319,7 @@ Begin VB.Form frmPlanets
          Height          =   4785
          Index           =   4
          ItemData        =   "frmPlanets.frx":048B
-         Left            =   -74400
+         Left            =   600
          List            =   "frmPlanets.frx":0492
          MultiSelect     =   2  'Extended
          OLEDragMode     =   1  'Automatic
@@ -784,29 +790,42 @@ Begin VB.Form frmPlanets
       _ExtentY        =   476
       _Version        =   393216
       BeginProperty Panels {8E3867A5-8586-11D1-B16A-00C0F0283628} 
-         NumPanels       =   4
+         NumPanels       =   6
          BeginProperty Panel1 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             AutoSize        =   1
-            Object.Width           =   20628
+            Object.Width           =   2981
             MinWidth        =   176
             Text            =   "Local Star Time"
             TextSave        =   "Local Star Time"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Object.Width           =   14111
+            MinWidth        =   14111
          EndProperty
          BeginProperty Panel3 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Style           =   6
             Alignment       =   2
             AutoSize        =   2
-            Object.Width           =   1614
-            MinWidth        =   1605
-            TextSave        =   "29/02/2024"
+            Object.Width           =   1588
+            MinWidth        =   1587
+            TextSave        =   "04/10/2026"
          EndProperty
          BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
-            Alignment       =   2
             AutoSize        =   2
-            Object.Width           =   291
-            MinWidth        =   282
+            Object.Width           =   1402
+            MinWidth        =   1411
+         EndProperty
+         BeginProperty Panel5 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Object.Width           =   3175
+            MinWidth        =   3175
+            Text            =   "JD"
+            TextSave        =   "JD"
+         EndProperty
+         BeginProperty Panel6 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
+            Object.Width           =   1764
+            MinWidth        =   1764
+            Text            =   "dT"
+            TextSave        =   "dT"
          EndProperty
       EndProperty
    End
@@ -907,6 +926,7 @@ Private Const SRCCOPY = &HCC0020
 Private schaalJup As Double
 Private Sub schrijfMaan(ByRef pl As tPlaneet_Maan)
 Dim nPlaneet As Long
+listInfo(nPlaneet).AddItem "Maan 2000     : " + StrHMS_DMS(pl.RA_2000 * 180 / Pi, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(pl.Decl_2000 * 180 / Pi, 7, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Maan appearent: " + StrHMS_DMS(pl.RA_app * 180 / Pi, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(pl.Decl_app * 180 / Pi, 7, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Position Angle: " + StrHMS_DMS(pl.moonPhysData.x * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
@@ -915,7 +935,7 @@ listInfo(nPlaneet).AddItem "Bright Limb   : " + StrHMS_DMS(pl.moonPhysData.x * 1
 listInfo(nPlaneet).AddItem "Terminator    : " + StrHMS_DMS(pl.moonPhysData.T * 180 / Pi, 1, 1, True, False, "g", 5)
 listInfo(nPlaneet).AddItem "Libration in l: " + StrHMS_DMS(-pl.moonPhysData.L * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Libration in b: " + StrHMS_DMS(pl.moonPhysData.B * 180 / Pi, 1, 1, True, False, "g", 4)
-listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "000000.00 km")
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "000000.000 km")
 listInfo(nPlaneet).AddItem "Sterrenbeeld  : " + pl.sterbeeld
 If pl.riseSet.Rise < 0 Then
     listInfo(nPlaneet).AddItem "Opkomst       : ------"
@@ -981,6 +1001,7 @@ Dim nPlaneet As Long
     listInfo(nPlaneet).AddItem "p             : " + StrHMS_DMS(pl.SunPhysData.P * 180 / Pi, 1, 1, True, False, "g", 4)
     listInfo(nPlaneet).AddItem "b0            : " + StrHMS_DMS(pl.SunPhysData.b0 * 180 / Pi, 1, 1, True, False, "g", 4)
     listInfo(nPlaneet).AddItem "l0            : " + StrHMS_DMS(pl.SunPhysData.L0 * 180 / Pi, 1, 1, False, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 End Sub
 Private Sub schrijfVenus(ByRef pl As tPlaneet_Venus)
 Dim nPlaneet As Long
@@ -1000,6 +1021,7 @@ listInfo(nPlaneet).AddItem "Phase         : " + Format(pl.phase, "0.000")
 listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 
 End Sub
 Private Sub schrijfMercurius(ByRef pl As tPlaneet_Mercurius)
@@ -1020,6 +1042,7 @@ listInfo(nPlaneet).AddItem "Phase         : " + Format(pl.phase, "0.000")
 listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 
 End Sub
 Private Sub schrijfMars(ByRef pl As tPlaneet_Mars)
@@ -1046,6 +1069,7 @@ listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.MarsPhysData.P * 1
 listInfo(nPlaneet).AddItem "q             : " + StrHMS_DMS(pl.MarsPhysData.qq / 3600, 4, 2, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Q             : " + StrHMS_DMS(pl.MarsPhysData.Q * 180 / Pi, 1, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Om            : " + StrHMS_DMS(pl.MarsPhysData.Om * 180 / Pi, 1, 2, False, False, "g", 3)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 
 End Sub
 Private Sub tekenJupiter(ByRef pl As tPlaneet_Jupiter)
@@ -1123,6 +1147,7 @@ listInfo(nPlaneet).AddItem "DE            : " + StrHMS_DMS(pl.JupiterPhysData.DE
 listInfo(nPlaneet).AddItem "Om1           : " + StrHMS_DMS(pl.JupiterPhysData.Om1 * 180 / Pi, 1, 2, False, False, "g", 3)
 listInfo(nPlaneet).AddItem "Om2           : " + StrHMS_DMS(pl.JupiterPhysData.Om2 * 180 / Pi, 1, 2, False, False, "g", 3)
 listInfo(nPlaneet).AddItem "P             : " + StrHMS_DMS(pl.JupiterPhysData.P * 180 / Pi, 1, 2, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 Dim MoonName
 Dim sText As String
 Dim ii As Long
@@ -1166,6 +1191,7 @@ listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 /
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Polardiameter : " + StrHMS_DMS(2 * pl.PolarSemiDiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
       
 listInfo(nPlaneet).AddItem "B             : " + StrHMS_DMS(pl.SaturnRingData.B * 180 / Pi, 1, 3, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Bd            : " + StrHMS_DMS(pl.SaturnRingData.Bd * 180 / Pi, 1, 3, True, False, "g", 4)
@@ -1222,6 +1248,7 @@ listInfo(nPlaneet).AddItem "Phase         : " + Format(pl.phase, "0.000")
 listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 End Sub
 Private Sub schrijfNeptunus(ByRef pl As tPlaneet_Neptunus)
 Dim nPlaneet As Long
@@ -1240,13 +1267,14 @@ listInfo(nPlaneet).AddItem "Phase         : " + Format(pl.phase, "0.000")
 listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 End Sub
 
 Private Sub schrijfPluto(ByRef pl As tPlaneet_Pluto)
 Dim nPlaneet As Long
 nPlaneet = 9
 listInfo(nPlaneet).AddItem "------------------------------------------------------------------"
-listInfo(nPlaneet).AddItem "Neptunus      : " + StrHMS_DMS(180 / Pi * pl.RA2000, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(180 / Pi * pl.Decl2000, 7, 2, True, False, "g", 3)
+listInfo(nPlaneet).AddItem "Pluto         : " + StrHMS_DMS(180 / Pi * pl.RA2000, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(180 / Pi * pl.Decl2000, 7, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Appearent     : " + StrHMS_DMS(180 / Pi * pl.RA_app, 7, 3, False, False, "h", 2) + vbTab + StrHMS_DMS(180 / Pi * pl.Decl_app, 7, 2, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Azimuth/hoogte: " + StrHMS_DMS(180 / Pi * pl.Azimuth, 3, 0, False, False, "g", 3) + vbTab + StrHMS_DMS(180 / Pi * pl.Hoogte, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Magnitude     : " + Format(pl.Magnitude, "0.0")
@@ -1259,12 +1287,13 @@ listInfo(nPlaneet).AddItem "Phase         : " + Format(pl.phase, "0.000")
 listInfo(nPlaneet).AddItem "PhaseAngle    : " + StrHMS_DMS(pl.PhaseAngle * 180 / Pi, 1, 1, True, False, "g", 4)
 listInfo(nPlaneet).AddItem "Parall. Angle : " + StrHMS_DMS(pl.parAngle * 180 / Pi, 3, 0, True, False, "g", 3)
 listInfo(nPlaneet).AddItem "Diameter      : " + StrHMS_DMS(2 * pl.Semidiameter * SToR * RToD, 4, 1, True, False, "g", 4)
+listInfo(nPlaneet).AddItem "Distance      : " + Format(pl.sGeo.r, "0.00000") + " AE"
 End Sub
 
 Private Sub calcu_Obl(T As Double, ByRef obl As tPlaneet_Obl)
 Dim sLatitude As String, sLongitude As String
 With obl
-    .deltaT = ApproxDeltaT(T)
+    .deltat = ApproxDeltaT(T)
     Call NutationConst(T, .NutLon, .NutObl)
     .obl = Obliquity(T)
     
@@ -1331,7 +1360,7 @@ Else
     Call Aberration(T0, alg.obl, FK5System, RA, Decl)
 End If
    
-    Call riseSet(T0, alg.deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, height, alg.ObsLon, alg.ObsLat, RTS)
+    Call riseSet(T0, alg.deltat, RA1, Decl1, RA, Decl, RA2, Decl2, height, alg.ObsLon, alg.ObsLat, RTS)
     If RTS.flags > 0 Then
        RTS.Rise = -1
        RTS.Setting = -1
@@ -1351,10 +1380,19 @@ With alg
     tt = (Hrs + Min / 60 + Sec / 3600) / 24
     dat.DD = dat.DD + tt
     .T = JDToT(KalenderNaarJD(dat))
-    .deltaT = ApproxDeltaT(.T)
-    .T0 = (floor(.T * 36525 + 0.50001) - 0.5) / 36525 + TijdCorrectie(KalenderNaarJD(dat) + 0.2, .JD_ZT, .JD_WT) / 36525#
-    .DtofUT = .T0 + secToT * .deltaT
-    .T = .T + TijdCorrectie(KalenderNaarJD(dat) + 0.2, .JD_ZT, .JD_WT) / 36525# + .deltaT * secToT
+    statusBar2.Panels(5).text = "JD: " + Format(KalenderNaarJD(dat), "0.0000000")
+
+    .deltat = ApproxDeltaT(.T)
+    statusBar2.Panels(6).text = "dT: " + Format(.deltat, "0.00")
+    .T0 = (floor(.T * 36525 + 0.50001) - 0.5) / 36525
+    If Not (Me.chkTDT.value = 1) Then
+        .T0 = .T0 + TijdCorrectie(KalenderNaarJD(dat) + 0.2, .JD_ZT, .JD_WT) / 36525#
+        .DtofUT = .T0 + secToT * .deltat
+        .T = .T + TijdCorrectie(KalenderNaarJD(dat) + 0.2, .JD_ZT, .JD_WT) / 36525# + .deltat * secToT
+    Else
+        .DtofUT = .T0
+    End If
+    statusBar2.Panels(5).text = "JD: " + Format(TToJD(.T - .deltat * secToT), "0.00000000")
     Call NutationConst(.T, .NutLon, .NutObl)
     .obl = Obliquity(.T)
     
@@ -1379,12 +1417,12 @@ With zon
     .sHelio.L = 0: .sHelio.B = 0: .sHelio.r = 0
     Call PlanetPosHi(0, alg.T, .sAarde, chkGrootstePrecisie.value = 0)
     Call HelioToGeo(.sHelio, .sAarde, .sGeo)
-    Call PlanetPosHi(0, alg.T - .sGeo.r * LightTimeConst, .sAarde, chkGrootstePrecisie.value = 0)
-    Call HelioToGeo(.sHelio, .sAarde, .sGeo)
+'    Call PlanetPosHi(0, alg.T - .sGeo.r * LightTimeConst, .sAarde, chkGrootstePrecisie.value = 0)
+'    Call HelioToGeo(.sHelio, .sAarde, .sGeo)
     Call EclToEqu(.sGeo.L, .sGeo.B, alg.obl, .RA2000, .Decl2000)
     Call SunPhysEphemeris(alg.T, .sGeo.L, alg.obl, alg.NutLon, .SunPhysData)
-    .C = CarringtonRotation(TToJD(alg.T))
-    .JDOfCarr = JDOfCarringtonRotation(.C)
+    .c = CarringtonRotation(TToJD(alg.T))
+    .JDOfCarr = JDOfCarringtonRotation(.c)
     .parAngle = ParallacticAngle(.RA2000, .Decl2000, alg.ObsLat, alg.LAST)
     Call SterBld(.RA2000, .Decl2000, 0#, .sterbeeld)
 
@@ -1413,6 +1451,8 @@ With maan
     
         RA = RA * Pi / 12
         Decl = Decl * Pi / 180
+            .RA_2000 = RA
+    .Decl_2000 = Decl
         'coordinaten zijn voor J2000. Omzetten naar huidige dag, en daarna appearent berekenen
         Call PrecessFK5(0, alg.T, RA, Decl)
     End If
@@ -1449,6 +1489,8 @@ Else
     Call Lune(TToJD(alg.T0 - dist * LightTimeConst), RA, Decl, dist, dkm, diam, phase, illum)
     RA = RA * Pi / 12
     Decl = Decl * Pi / 180
+
+
     'coordinaten zijn voor J2000. Omzetten naar huidige dag, en daarna appearent berekenen
     Call PrecessFK5(0, alg.T0, RA, Decl)
 End If
@@ -1482,7 +1524,7 @@ End If
 
 Call Nutation(alg.NutLon, alg.NutObl, alg.obl, RA2, Decl2)
 
-Call riseSet(alg.T0, alg.deltaT, RA1, Decl1, RA, Decl, RA2, Decl2, .moonHeight, alg.ObsLon, alg.ObsLat, .riseSet)
+Call riseSet(alg.T0, alg.deltat, RA1, Decl1, RA, Decl, RA2, Decl2, .moonHeight, alg.ObsLon, alg.ObsLat, .riseSet)
 End With
 End Sub
 Private Sub calcu_mercurius(ByRef alg As tPlaneet_algemeen, ByRef mercurius As tPlaneet_Mercurius)
@@ -1612,7 +1654,7 @@ With jupiter
     Call EquToHor(.RA_app, .Decl_app, alg.LAST, alg.ObsLat, .Azimuth, .Hoogte)
     Call SterBld(.RA2000, .Decl2000, 0#, .sterbeeld)
     
-    Call JupiterPhysEphemeris(alg.T + alg.deltaT / 36525 / 86400, .sHelio, .sAarde, .sGeo, _
+    Call JupiterPhysEphemeris(alg.T + alg.deltat / 36525 / 86400, .sHelio, .sAarde, .sGeo, _
                                    alg.obl, alg.NutLon, alg.NutObl, _
                                   .JupiterPhysData)
               
@@ -1781,9 +1823,11 @@ With pluto
     Call PlutoPos(alg.T, .sHelio)
     Call EclToRect(.sHelio, Obliquity(0), TPluto)
     dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.y + TPluto.y) * (TAarde.y + TPluto.y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+    
     Call PlutoPos(alg.T - dist * LightTimeConst, .sHelio)
     Call EclToRect(.sHelio, Obliquity(0), TPluto)
     dist = Sqr((TAarde.x + TPluto.x) * (TAarde.x + TPluto.x) + (TAarde.y + TPluto.y) * (TAarde.y + TPluto.y) + (TAarde.Z + TPluto.Z) * (TAarde.Z + TPluto.Z))
+  '   dist = Sqr((TPluto.x) * (TPluto.x) + (TPluto.y) * (TPluto.y) + (TPluto.Z) * (TPluto.Z))
     .RA2000 = atan2(TPluto.y + TAarde.y, TPluto.x + TAarde.x)
     If .RA2000 < 0 Then
         .RA2000 = .RA2000 + Pi2
@@ -1794,14 +1838,16 @@ With pluto
     .Magnitude = PlanetMagnitude(9, .sHelio.r, dist, .PhaseAngle, SaturnRingData.DeltaU, SaturnRingData.B)
     .Semidiameter = PlanetSemiDiameter(9, dist, PolarSemiDiameter)
     .parAngle = ParallacticAngle(.RA2000, .Decl2000, alg.ObsLat, alg.LAST)
+    
     Call SterBld(.RA2000, .Decl2000, 0#, .sterbeeld)
     Call EquToEcl(.RA2000, .Decl2000, alg.obl, .sGeo.L, .sGeo.B)
     Call ConvertVSOP_FK5(alg.T, .sGeo.L, .sGeo.B)
     Call EclToEqu(.sGeo.L + alg.NutLon, .sGeo.B, alg.obl + alg.NutObl, .RA_app, .Decl_app)
+    .sGeo.r = dist
     Call Aberration(alg.T, alg.obl, FK5System, .RA_app, .Decl_app)
     Call EquToHor(.RA_app, .Decl_app, alg.LAST, alg.ObsLat, .Azimuth, .Hoogte)
     
-    Call riseSet(alg.T0, alg.deltaT, .RA_app, .Decl_app, .RA_app, .Decl_app, .RA_app, .Decl_app, h0Planet, alg.ObsLon, alg.ObsLat, .RTS)
+    Call riseSet(alg.T0, alg.deltat, .RA_app, .Decl_app, .RA_app, .Decl_app, .RA_app, .Decl_app, h0Planet, alg.ObsLon, alg.ObsLat, .RTS)
     'DMO, 03-07-2008 indien flags aangaf dat
     If .RTS.flags > 0 Then
        .RTS.Rise = -1
@@ -1809,6 +1855,7 @@ With pluto
     End If
 End With
 End Sub
+
 Private Sub cmdAnimate_Click()
     If TimerAnimate.Enabled Then
         Me.TimerAnimate.Interval = 0
@@ -1825,6 +1872,8 @@ Private Sub cmdAnimate_Click()
         End If
     End If
 End Sub
+
+
 
 Private Sub ComputeButton_Click()
     Call calcu
@@ -1953,15 +2002,15 @@ Set g_word = CreateObject("Word.Application")
     Me.Frame3.Caption = "Changer temps"
     Me.SetNowButton.Caption = "à présent"
     Me.ComputeButton.Caption = "Calculer"
-    Me.statusBar2.Panels(1).Text = "Local sidérale temps"
+    Me.statusBar2.Panels(1).text = "Local sidérale temps"
 #End If
-Dim Q, D, M, Date0
+Dim Q, d, M, Date0
 
 'PI = 4 * Atn(1)
 
-For D = 1 To 31
-    DaySelect.AddItem Right("  " & Trim(D) & " ", 4)
-Next D
+For d = 1 To 31
+    DaySelect.AddItem Right("  " & Trim(d) & " ", 4)
+Next d
     DaySelect.ListIndex = 0
 
     Q = "JanFebMarAprMayJunJulAugSepOctNovDec"
@@ -1970,7 +2019,7 @@ For M = 1 To 12
 Next M
     MonthSelect.ListIndex = 0
 
-   Q = Trim(DaySelect.Text) & " " & Trim(MonthSelect.Text) & " " & Year.Text
+   Q = Trim(DaySelect.text) & " " & Trim(MonthSelect.text) & " " & Year.text
 'If BCOption.Value = True Then Q = Q & " BC" Else Q = Q & " AD"
 
 ' Set initial default startup date
@@ -1995,26 +2044,31 @@ Set g_word = Nothing
 Exit Sub
 
 word_einde:
+If Err.Number = 462 Then
+    Resume Next
+Else
     g_word.Quit
     Resume Next
+End If
+Fout:
 End Sub
 
 Private Sub Hrs_GotFocus()
     Hrs.SelStart = 0
-    Hrs.SelLength = Len(Hrs.Text)
+    Hrs.SelLength = Len(Hrs.text)
 End Sub
 
 Private Sub Hrs_LostFocus()
-Hrs.Text = Format(Val(Hrs.Text), "0#")
+Hrs.text = Format(Val(Hrs.text), "0#")
 End Sub
 
 Private Sub Min_GotFocus()
     Min.SelStart = 0
-    Min.SelLength = Len(Min.Text)
+    Min.SelLength = Len(Min.text)
 End Sub
 
 Private Sub Min_LostFocus()
-Min.Text = Format(Val(Min.Text), "0#")
+Min.text = Format(Val(Min.text), "0#")
 End Sub
 
 Private Sub mnuAbout_Click()
@@ -2027,14 +2081,14 @@ sAppInfo = ShowFileInfo(App.Path & "\" & App.EXEName & ".exe")
         , "About " & App.Title
 End Sub
 Function ShowFileInfo(filespec As String) As String
-On Error GoTo fout:
+On Error GoTo Fout:
     Dim fs, F, s
     Set fs = CreateObject("Scripting.FileSystemObject")
     Set F = fs.GetFile(filespec)
     s = F.DateCreated
     ShowFileInfo = Format(s, "dd-mm-yyyy")
     Exit Function
-fout:
+Fout:
     ShowFileInfo = ""
 End Function
 
@@ -2115,11 +2169,11 @@ End Sub
 
 Private Sub Sec_GotFocus()
     Sec.SelStart = 0
-    Sec.SelLength = Len(Sec.Text)
+    Sec.SelLength = Len(Sec.text)
 End Sub
 
 Private Sub Sec_LostFocus()
-Sec.Text = Format(Sec.Text, "#0.00")
+Sec.text = Format(Sec.text, "#0.00")
 End Sub
 
 Private Sub TimerAnimate_Timer()
@@ -2169,12 +2223,12 @@ End Sub
 
 Private Sub Set00HrButton_Click()
 ' Set interface clock time setting to 00:00
-  Hrs.Text = "00": Min.Text = "00": Sec.Text = "00"
+  Hrs.text = "00": Min.text = "00": Sec.text = "00"
 End Sub
 
 Private Sub SetNoonButton_Click()
 ' Set interface clock time setting to 12:00
-  Hrs.Text = "12": Min.Text = "00": Sec.Text = "00"
+  Hrs.text = "12": Min.text = "00": Sec.text = "00"
 End Sub
 
 Private Sub ADJUST_MONTH_LENGTH()
@@ -2204,7 +2258,7 @@ Dim Q, QD, QT, MMM, DD, YYYY, HH, MM, ss
   HH = Left(QT, 2)
   MM = Mid(QT, InStr(1, QT, ":") + 1, 2)
   ss = Mid(QT, InStr(InStr(1, QT, ":") + 1, QT, ":") + 1, 2)
-  Hrs.Text = HH: Min.Text = MM: Sec.Text = ss
+  Hrs.text = HH: Min.text = MM: Sec.text = ss
 
 ' Set interface date setting to match system clock date.
   MMM = Mid(QD, InStr(1, QD, " ") + 1, 3)
@@ -2213,7 +2267,7 @@ Dim Q, QD, QT, MMM, DD, YYYY, HH, MM, ss
   MonthSelect.ListIndex = MMM - 1
   ADJUST_MONTH_LENGTH
   DaySelect.ListIndex = DD - 1
-  Year.Text = Trim(YYYY)
+  Year.text = Trim(YYYY)
 '  ADOption.Value = True
   
 End Sub
@@ -2222,15 +2276,15 @@ Private Function INTERFACE_DATE() As String
 ' Return the current interface date setting as a date string
 ' in the standard format such as "20 MAY 1977 BC|AD"
 
-  Dim Q, M, D, y
+  Dim Q, M, d, y
   
-   D = Right(" " & Trim(DaySelect.Text) & " ", 3)
-   M = Trim(MonthSelect.Text) & " "
-   y = Year.Text
+   d = Right(" " & Trim(DaySelect.text) & " ", 3)
+   M = Trim(MonthSelect.text) & " "
+   y = Year.text
 'If BCOption.Value = True Then y = y & " BC" Else y = y & " AD"
    y = Right("      " & y, 7)
   
-   INTERFACE_DATE = D & M & y
+   INTERFACE_DATE = d & M & y
   
 End Function
 
@@ -2238,7 +2292,7 @@ Private Function INTERFACE_TIME() As String
 ' Return the current interface time setting as a time string
 ' in the standard format such as "01:23:45"
 
-  INTERFACE_TIME = Hrs.Text & ":" & Min.Text & ":" & Sec.Text
+  INTERFACE_TIME = Hrs.text & ":" & Min.text & ":" & Sec.text
   
 End Function
 
@@ -2269,19 +2323,19 @@ Dim dat As tDatum
     dat.jj = Val(Mid(sdat, 7, 4))
     dat.MM = Val(Mid(sdat, 4, 2))
     dat.DD = Val(Mid(sdat, 1, 2)) + Val(Mid(sdat, 12, 2)) / 24# + Val(Mid(sdat, 15, 2)) / 1440# + Val(Mid(sdat, 18, 2)) / 86400#
-    statusBar2.Panels(2).Text = Format(PlaatselijkeSterrentijd(dat), "hh:mm:ss")
-    statusBar2.Panels(4).Text = Format(sdat, "hh:mm:ss")
+    statusBar2.Panels(2).text = Format(PlaatselijkeSterrentijd(dat), "hh:mm:ss")
+    statusBar2.Panels(4).text = Format(sdat, "hh:mm:ss")
 End Sub
 
 Private Sub Year_GotFocus()
     Year.SelStart = 0
-    Year.SelLength = Len(Year.Text)
+    Year.SelLength = Len(Year.text)
 End Sub
 
 Private Sub BerekenPositieMaan(maan As Long, JD As Double, bShadow As Boolean, _
                              ByRef vMaan As TVECTOR, ByRef rJup As Double)
 
-Dim T As Double, deltaT As Double, DtofUT As Double, obl As Double
+Dim T As Double, deltat As Double, DtofUT As Double, obl As Double
 Dim NutLon As Double, NutObl As Double, TimeZone As Double
 Dim sHelio As TSVECTOR, ShelioJ As TSVECTOR, SNiks As TSVECTOR, SEarth As TSVECTOR, sGeo As TSVECTOR
 Dim I As Long
@@ -2289,8 +2343,8 @@ Dim vDummy As TVECTOR, vdummy2 As TVECTOR
 Dim nArg As Double
 
 T = JDToT(JD)
-deltaT = ApproxDeltaT(T)
-DtofUT = T + deltaT * secToT
+deltat = ApproxDeltaT(T)
+DtofUT = T + deltat * secToT
 
 obl = Obliquity(T)
 

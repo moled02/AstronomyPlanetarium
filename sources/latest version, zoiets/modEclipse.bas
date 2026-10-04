@@ -18,16 +18,42 @@ Option Explicit
 '(*   Md : mean anomaly of the Moon, only needed for lunar eclipses           *)
 '(*****************************************************************************)
 
+Type tInterpol5
+    c0 As Double
+    c1 As Double
+    c2 As Double
+    c3 As Double
+    c4 As Double
+End Type
+Function Interpol5(y1 As Double, y2 As Double, y3 As Double, y4 As Double, y5 As Double) As tInterpol5
+Dim a As Double, B As Double, c As Double, d As Double, E As Double, F As Double, g As Double, H As Double, j As Double, k As Double
+a = y2 - y1: B = y3 - y2: c = y4 - y3: d = y5 - y4
+E = B - a: F = c - B: g = d - c
+H = F - E: j = g - F
+k = j - H
+Dim interpol As tInterpol5
+With interpol
+    .c0 = y3
+    .c4 = k / 24
+    .c3 = (H + j) / 12
+    .c1 = (B + c) / 2 - .c3
+    .c2 = F / 2 - .c4
+End With
+Interpol5 = interpol
+End Function
+Function Interpolate5(interpol As tInterpol5, n As Double) As Double
+Interpolate5 = interpol.c0 + n * (interpol.c1 + n * (interpol.c2 + n * interpol.c3 + n * n * interpol.c4))
+End Function
 Sub GeneralEclipseData(ByVal k As Double, ByRef JD As Double, ByRef u As Double, ByRef Gamma As Double, ByRef Md As Double)
 Dim T As Double
-Dim Om As Double, D As Double, M As Double, F As Double, E   As Double
+Dim Om As Double, d As Double, M As Double, F As Double, E   As Double
 Dim F1 As Double, a1 As Double, sum As Double, P As Double, Q As Double, W   As Double
 
 T = k / 1236.85
 JD = 2451550.09765 + 29.530588853 * k
 JD = JD + T * T * (0.0001337 + T * (-0.00000015 + T * 0.00000000073))
 T = JDToT(JD)
-Call CalcMoonAngles(T, Om, D, M, Md, F, E)
+Call CalcMoonAngles(T, Om, d, M, Md, F, E)
 If (Abs(Sin(F)) < 0.36) Then
   '{ Possible eclipse }
   F1 = F - 0.02665 * DToR * Sin(Om)
@@ -133,8 +159,9 @@ Do Until Max > 0
 Loop
 SolarEclipse.Gamma = Gamma
 SolarEclipse.JD = JD
-SolarEclipse.Maxmag = Max
+SolarEclipse.maxmag = Max
 SolarEclipse.EclipseType = EclipseType
+Debug.Print SolarEclipse.JD
 End Sub
 Sub LastSolarEclipse(ByVal JD As Double, ByRef SolarEclipse As SOLARECLIPSEDATA)
 Dim k As Double, u As Double, Gamma As Double, Dummy As Double, Max As Double
@@ -174,7 +201,7 @@ Do Until Max > 0
 Loop
 SolarEclipse.Gamma = Gamma
 SolarEclipse.JD = JD
-SolarEclipse.Maxmag = Max
+SolarEclipse.maxmag = Max
 SolarEclipse.EclipseType = EclipseType
 End Sub
 '(*****************************************************************************)
@@ -300,8 +327,8 @@ Sub Bess_elmts(RkM As Double, DecM As Double, ParM As Double, RkZ As Double, Dec
 Dim sRkM As Double, cRkM As Double, sDecM As Double, cDecM As Double, sRkZ As Double, cRkZ As Double, sDecZ As Double, cDecz As Double, _
    sParZ0 As Double, ParZ0 As Double, sParM As Double, RsParM As Double, RM As Double, B As Double, _
    cDecZcRkZ As Double, cDecZsRkZ As Double, BcDecMcRkM As Double, BcDecMsRkM As Double, _
-   GcDcA As Double, GcDsA As Double, GsD As Double, tA As Double, A As Double, g As Double, GR As Double, sF1 As Double, sF2 As Double, _
-   k As Double, KcsF1 As Double, KcsF2 As Double, C1 As Double, C2  As Double, _
+   GcDcA As Double, GcDsA As Double, GsD As Double, tA As Double, a As Double, g As Double, GR As Double, sF1 As Double, sF2 As Double, _
+   k As Double, KcsF1 As Double, KcsF2 As Double, c1 As Double, c2  As Double, _
    Z As Double
 Dim k1 As Double, k2 As Double
 
@@ -325,14 +352,15 @@ Dim k1 As Double, k2 As Double
    GsD = sDecZ - B * sDecM
 
    tA = GcDsA / GcDcA
-   A = atan2(GcDsA, GcDcA)
+   a = atan2(GcDsA, GcDcA)
    g = Sqr(GcDcA * GcDcA + GcDsA * GcDsA + GsD * GsD)
    .SD = GsD / g
-   .cD = GcDsA / (g * Sin(A))
+   .cD = GcDsA / (g * Sin(a))
+   .d = atan2(.SD, .cD)
 
-   .x = RM * (cDecM * Sin(RkM - A))
-   .Y = RM * (sDecM * BessElmt.cD - cDecM * BessElmt.SD * Cos(RkM - A))
-   Z = RM * (sDecM * BessElmt.SD + cDecM * BessElmt.cD * Cos(RkM - A))
+   .x = RM * (cDecM * Sin(RkM - a))
+   .y = RM * (sDecM * BessElmt.cD - cDecM * BessElmt.SD * Cos(RkM - a))
+   Z = RM * (sDecM * BessElmt.SD + cDecM * BessElmt.cD * Cos(RkM - a))
 
    GR = g * RZ
    'constanten bepaald op: pi0 = 8.794143; afst zon = 696000km, 1 ea =1.495978...
@@ -344,16 +372,16 @@ Dim k1 As Double, k2 As Double
    KcsF1 = k1 / sF1
    KcsF2 = k2 / sF2
 
-   C1 = Z + KcsF1
-   C2 = Z - KcsF2
+   c1 = Z + KcsF1
+   c2 = Z - KcsF2
 
    .tF1 = tan(asin(sF1))
    .tF2 = tan(asin(sF2))
 
-   .l1 = C1 * BessElmt.tF1
-   .l2 = C2 * BessElmt.tF2
+   .l1 = c1 * BessElmt.tF1
+   .l2 = c2 * BessElmt.tF2
 
-   .mu = EphTime - A
+   .mu = EphTime - a
    If .mu < 0 Then
       .mu = .mu + Pi2
    End If
@@ -379,14 +407,14 @@ Dim e2c2d As Double, e2s2d As Double, e2sdcd As Double, rho12 As Double, rho22 A
    DiffBess.a11 = -DiffBess.l11 - DiffBess.mu1 * BessElmt.x * BessElmt.tF1 * BessElmt.cD
    DiffBess.a21 = -DiffBess.l21 - DiffBess.mu1 * BessElmt.x * BessElmt.tF2 * BessElmt.cD
    DiffBess.b1 = -DiffBess.y1 + DiffBess.mu1 * BessElmt.x * BessElmt.SD
-   DiffBess.c11 = DiffBess.x1 + DiffBess.mu1 * BessElmt.Y * BessElmt.SD + DiffBess.mu1 * BessElmt.l1 * BessElmt.tF1 * BessElmt.cD
-   DiffBess.c21 = DiffBess.x1 + DiffBess.mu1 * BessElmt.Y * BessElmt.SD + DiffBess.mu1 * BessElmt.l2 * BessElmt.tF2 * BessElmt.cD
+   DiffBess.c11 = DiffBess.x1 + DiffBess.mu1 * BessElmt.y * BessElmt.SD + DiffBess.mu1 * BessElmt.l1 * BessElmt.tF1 * BessElmt.cD
+   DiffBess.c21 = DiffBess.x1 + DiffBess.mu1 * BessElmt.y * BessElmt.SD + DiffBess.mu1 * BessElmt.l2 * BessElmt.tF2 * BessElmt.cD
 End Sub
 
 Sub DiffBess(Bess0 As tBessElmt, Bess1 As tBessElmt, ByRef dBess As tDiffBess)
     dBess.mu1 = modpi(Bess1.mu - Bess0.mu)
     dBess.x1 = Bess1.x - Bess0.x
-    dBess.y1 = Bess1.Y - Bess0.Y
+    dBess.y1 = Bess1.y - Bess0.y
     dBess.l11 = modpi(Bess1.l1 - Bess0.l1)
     dBess.l21 = modpi(Bess1.l2 - Bess0.l2)
     dBess.d1 = asin(Bess1.SD) - asin(Bess0.SD)
@@ -397,7 +425,7 @@ Dim cPhi1sDel As Double, cPhi1cDel As Double, x1_Xi1 As Double, y1_nu1 As Double
 Dim sPhi1 As Double, tPhi1 As Double
 
 On Error GoTo fout_PredDataSolarEcl
-    PredData.nu1 = BessElmt.Y / AuxElmt.rho1
+    PredData.nu1 = BessElmt.y / AuxElmt.rho1
     PredData.Xi = BessElmt.x
     PredData.Psi1 = Sqr(1 - PredData.Xi * PredData.Xi - PredData.nu1 * PredData.nu1)
 
@@ -450,7 +478,7 @@ On Error GoTo fout_LimitsUmbraN
        lXi = BessElmt.x - l2sQ
 
        L2cQqRho1 = limits.l2 * cQ / AuxElmt.rho1
-       lNu1 = BessElmt.Y / AuxElmt.rho1 - L2cQqRho1
+       lNu1 = BessElmt.y / AuxElmt.rho1 - L2cQqRho1
        If Abs(lNu1) <= 1 Then
             lPsi12 = 1 - lXi * lXi - lNu1 * lNu1
             lPsi1 = Sqr(lPsi12)
@@ -460,7 +488,7 @@ On Error GoTo fout_LimitsUmbraN
             cQ = sQ / tQ
             cQqRho1 = cQ / AuxElmt.rho1
        End If
-       If Abs(oPsi - nPsi) <= 0.0002 Then Exit For
+       If Abs(oPsi - nPsi) <= 0.000002 Then Exit For
     Next
     If Abs(lNu1) <= 1 Then 'And Abs(oPsi - nPsi) <= 0.0002 Then
          cPhi1sDel = lXi
@@ -512,7 +540,7 @@ On Error GoTo fout_LimitsUmbraZ
        lXi = BessElmt.x - l2sQ
 
        L2cQqRho1 = limits.l2 * cQ / AuxElmt.rho1
-       lNu1 = BessElmt.Y / AuxElmt.rho1 - L2cQqRho1
+       lNu1 = BessElmt.y / AuxElmt.rho1 - L2cQqRho1
        If Abs(lNu1) <= 1 Then
             lPsi12 = 1 - lXi * lXi - lNu1 * lNu1
             lPsi1 = Sqr(lPsi12)
@@ -523,7 +551,7 @@ On Error GoTo fout_LimitsUmbraZ
             cQqRho1 = cQ / AuxElmt.rho1
        End If
 '    Loop
-        If Abs(oPsi - nPsi) <= 0.0002 Then Exit For
+        If Abs(oPsi - nPsi) <= 0.000002 Then Exit For
     Next
     If Abs(lNu1) <= 1 And Abs(oPsi - nPsi) <= 0.0002 Then
          cPhi1sDel = lXi
@@ -573,7 +601,7 @@ On Error GoTo fout_LimitsPenumbraN
        lXi = BessElmt.x - l1sQ
 
        L1cQqRho1 = limits.l1 * cQ / AuxElmt.rho1
-       lNu1 = BessElmt.Y / AuxElmt.rho1 - L1cQqRho1
+       lNu1 = BessElmt.y / AuxElmt.rho1 - L1cQqRho1
        If Abs(lNu1) <= 1 Then
           lPsi12 = 1 - lXi * lXi - lNu1 * lNu1
           lPsi1 = Sqr(lPsi12)
@@ -584,7 +612,7 @@ On Error GoTo fout_LimitsPenumbraN
           cQqRho1 = cQ / AuxElmt.rho1
           cPhi1sDel = lXi
        End If
-       If Abs(oPsi - nPsi) <= 0.0002 Then Exit For
+       If Abs(oPsi - nPsi) <= 0.000002 Then Exit For
     Next
     If Abs(lNu1) <= 1 Then
          cPhi1cDel = -lNu1 * AuxElmt.sd1 + lPsi1 * AuxElmt.cd1
@@ -633,7 +661,7 @@ On Error GoTo fout_LimitsPenumbraZ
        lXi = BessElmt.x - l1sQ
 
        L1cQqRho1 = limits.l1 * cQ
-       lNu1 = BessElmt.Y - L1cQqRho1
+       lNu1 = BessElmt.y - L1cQqRho1
 
        If Abs(lNu1) <= 1 Then
             lPsi12 = 1 - lXi * lXi - lNu1 * lNu1
@@ -644,7 +672,7 @@ On Error GoTo fout_LimitsPenumbraZ
             cQ = sQ / tQ
             cQqRho1 = cQ / AuxElmt.rho1
        End If
-       If Abs(oPsi - nPsi) <= 0.0002 Then Exit For
+       If Abs(oPsi - nPsi) <= 0.000002 Then Exit For
     Next
     If Abs(lNu1) <= 1 Then
          cPhi1sDel = lXi
@@ -724,8 +752,8 @@ Dim hM As Double, Q_M1 As Double, Q_M2 As Double, Q1 As Double, Q2 As Double, te
 
 On Error GoTo fout_Outline1Curve
 
-Tm = BessElmt.x / BessElmt.Y
-hM = atan2(BessElmt.x, BessElmt.Y)
+Tm = BessElmt.x / BessElmt.y
+hM = atan2(BessElmt.x, BessElmt.y)
 M = BessElmt.x / Sin(hM)
 cQ_M = (M * M + BessElmt.l1 * BessElmt.l1 - 1) / (2 * BessElmt.l1 * M)
 If Abs(cQ_M) > 1 Then
@@ -744,7 +772,7 @@ Else
     End If
     '1 =  (x - l1*sin(Q))^2 + (y-l1*cos(Q))^2 + phi^2
     'indien geldig bij Q = 0, dan zit Q=0 dus in het bereik, dan moet van Q2 2pi afgetrokken worden en wordt bovenwaarde
-    If 1 - BessElmt.x * BessElmt.x - (BessElmt.Y - BessElmt.l1) * (BessElmt.Y - BessElmt.l1) > 0 Then
+    If 1 - BessElmt.x * BessElmt.x - (BessElmt.y - BessElmt.l1) * (BessElmt.y - BessElmt.l1) > 0 Then
         OutCurve.eQ = Q1
         OutCurve.bQ = Q2 - Pi2
     Else
@@ -773,7 +801,7 @@ On Error GoTo fout_Outline2Curve
     lcQ = Cos(HoekQ)
 
     lXi = BessElmt.x - BessElmt.l1 * lsQ
-    lNu = BessElmt.Y - BessElmt.l1 * lcQ
+    lNu = BessElmt.y - BessElmt.l1 * lcQ
 
     lPsi2 = 1 - lXi * lXi - lNu * lNu
     lPsi = Sqr(lPsi2)
@@ -820,7 +848,7 @@ On Error GoTo fout_MaxEclipseCurveU
      l1sQ = Sin(l1Q): l2sQ = Sin(l2Q)
      l1cQ = Cos(l1Q): l2cQ = Cos(l2Q)
 
-     l1xcQ_ysQ = BessElmt.x * l1cQ - BessElmt.Y * l1sQ: l2xcQ_ysQ = BessElmt.x * l2cQ - BessElmt.Y * l2sQ
+     l1xcQ_ysQ = BessElmt.x * l1cQ - BessElmt.y * l1sQ: l2xcQ_ysQ = BessElmt.x * l2cQ - BessElmt.y * l2sQ
      l1sg_Q = l1xcQ_ysQ / lC: l2sg_Q = l2xcQ_ysQ / lC
      l1g_Q = asin(l1sg_Q): l2g_Q = asin(l2sg_Q)
      l1g = l1g_Q + l1Q: l2g = l2g_Q + l2Q
@@ -831,7 +859,7 @@ On Error GoTo fout_MaxEclipseCurveU
      l1Nu = lC * l1cg: l2Nu = lC * l2cg
 
      l1x_Xi = BessElmt.x - l1Xi: l2x_Xi = BessElmt.x - l2Xi
-     l1y_Nu = BessElmt.Y - l1Nu: l2y_Nu = BessElmt.Y - l2Nu
+     l1y_Nu = BessElmt.y - l1Nu: l2y_Nu = BessElmt.y - l2Nu
      l1Delta2 = l1x_Xi * l1x_Xi + l1y_Nu * l1y_Nu
      l2Delta2 = l2x_Xi * l2x_Xi + l2y_Nu * l2y_Nu
      If l1Delta2 <= lL12 Then
@@ -895,7 +923,7 @@ On Error GoTo fout_MaxEclipseCurveP
      l1sQ = Sin(l1Q): l2sQ = Sin(l2Q)
      l1cQ = Cos(l1Q): l2cQ = Cos(l2Q)
 
-     l1xcQ_ysQ = BessElmt.x * l1cQ - BessElmt.Y * l1sQ: l2xcQ_ysQ = BessElmt.x * l2cQ - BessElmt.Y * l2sQ
+     l1xcQ_ysQ = BessElmt.x * l1cQ - BessElmt.y * l1sQ: l2xcQ_ysQ = BessElmt.x * l2cQ - BessElmt.y * l2sQ
      l1sg_Q = l1xcQ_ysQ / lC: l2sg_Q = l2xcQ_ysQ / lC
      l1g_Q = asin(l1sg_Q): l2g_Q = asin(l2sg_Q)
      l1g = l1g_Q + l1Q: l2g = l2g_Q + l2Q
@@ -906,7 +934,7 @@ On Error GoTo fout_MaxEclipseCurveP
      l1Nu = lC * l1cg: l2Nu = lC * l2cg
 
      l1x_Xi = BessElmt.x - l1Xi: l2x_Xi = BessElmt.x - l2Xi
-     l1y_Nu = BessElmt.Y - l1Nu: l2y_Nu = BessElmt.Y - l2Nu
+     l1y_Nu = BessElmt.y - l1Nu: l2y_Nu = BessElmt.y - l2Nu
      l1Delta2 = l1x_Xi * l1x_Xi + l1y_Nu * l1y_Nu
      l2Delta2 = l2x_Xi * l2x_Xi + l2y_Nu * l2y_Nu
 
@@ -956,7 +984,7 @@ If MaxEclipseCurveP(BessElmt, AuxElmt, DiffBess, PredData, pPsi, MaxEclCurve) Th
 End If
 End Function
 Function RiseCurve(BessElmt As tBessElmt, AuxElmt As tAuxElmt, DiffBess As tDiffBess, PredData As tPredData, _
-                          ByRef RiseSet As tRiseSetCurve) As Boolean
+                          ByRef riseSet As tRiseSetCurve) As Boolean
 
 
 Dim lm  As Double, Tm As Double, l2m As Double, lcg_M As Double, hM As Double, l1g As Double, l2g As Double, l1Xi As Double, l1Nu As Double, l2Xi As Double, l2Nu As Double, _
@@ -966,8 +994,8 @@ Dim l1cPhisd As Double, l2cPhisd As Double, l1cPhicd As Double, l2cPhicd As Doub
 
 On Error GoTo fout_RiseCurve
 ' WITH BessElmt, AuxElmt, DiffBess, PredData, RiseSet DO
-     Tm = BessElmt.x / BessElmt.Y
-     hM = atan2(BessElmt.x, BessElmt.Y)
+     Tm = BessElmt.x / BessElmt.y
+     hM = atan2(BessElmt.x, BessElmt.y)
      lm = BessElmt.x / Sin(hM)
      lcg_M = (lm * lm + 1 - BessElmt.l1 * BessElmt.l1) / (2 * lm)
      l1g_M = acos(lcg_M): l2g_M = -l1g_M
@@ -982,8 +1010,8 @@ On Error GoTo fout_RiseCurve
      l1Lambda = BessElmt.mu - l1Del
      l1sPhi = l1Nu * BessElmt.cD
      l1Phi = asin(l1sPhi)
-     RiseSet.pos1.lng = l1Lambda
-     RiseSet.pos1.nb = l1Phi
+     riseSet.pos1.lng = l1Lambda
+     riseSet.pos1.nb = l1Phi
      RiseCurve = True
      Exit Function
 
@@ -993,7 +1021,7 @@ End Function
 
 
 Function SetCurve(BessElmt As tBessElmt, AuxElmt As tAuxElmt, DiffBess As tDiffBess, PredData As tPredData, _
-                          ByRef RiseSet As tRiseSetCurve) As Boolean
+                          ByRef riseSet As tRiseSetCurve) As Boolean
 
 Dim lm  As Double, Tm As Double, l2m As Double, lcg_M As Double, hM As Double, l1g As Double, l2g As Double, l1Xi As Double, l1Nu As Double, l2Xi As Double, l2Nu As Double, _
     l1g_M As Double, l2g_M  As Double
@@ -1002,8 +1030,8 @@ Dim l1cPhisd As Double, l2cPhisd As Double, l1cPhicd As Double, l2cPhicd As Doub
 
 On Error GoTo fout_SetCurve
 ' WITH BessElmt, AuxElmt, DiffBess, PredData, RiseSet DO
-     Tm = BessElmt.x / BessElmt.Y
-     hM = atan2(BessElmt.x, BessElmt.Y)
+     Tm = BessElmt.x / BessElmt.y
+     hM = atan2(BessElmt.x, BessElmt.y)
      lm = BessElmt.x / Sin(hM)
      lcg_M = (lm * lm + 1 - BessElmt.l1 * BessElmt.l1) / (2 * lm)
      l1g_M = acos(lcg_M): l2g_M = -l1g_M
@@ -1018,8 +1046,8 @@ On Error GoTo fout_SetCurve
      l2Lambda = BessElmt.mu - l2del
      l2sPhi = l2Nu * BessElmt.cD
      l2Phi = asin(l2sPhi)
-     RiseSet.pos2.lng = l2Lambda
-     RiseSet.pos2.nb = l2Phi
+     riseSet.pos2.lng = l2Lambda
+     riseSet.pos2.nb = l2Phi
      SetCurve = True
      Exit Function
      
@@ -1028,12 +1056,12 @@ fout_SetCurve:
 End Function
 
 Function RiseSetCurve(BessElmt As tBessElmt, AuxElmt As tAuxElmt, DiffBess As tDiffBess, PredData As tPredData, _
-                          ByRef RiseSet As tRiseSetCurve) As Long
+                          ByRef riseSet As tRiseSetCurve) As Long
 RiseSetCurve = 0
-If RiseCurve(BessElmt, AuxElmt, DiffBess, PredData, RiseSet) Then
+If RiseCurve(BessElmt, AuxElmt, DiffBess, PredData, riseSet) Then
     RiseSetCurve = 1
 End If
-If SetCurve(BessElmt, AuxElmt, DiffBess, PredData, RiseSet) Then
+If SetCurve(BessElmt, AuxElmt, DiffBess, PredData, riseSet) Then
     RiseSetCurve = RiseSetCurve + 2
 End If
 End Function
@@ -1060,7 +1088,7 @@ On Error GoTo fout_RMaxCurve
 
      l1sQ = Sin(l1Q)
      l1cQ = Cos(l1Q)
-     l1sg_Q = BessElmt.x * l1cQ - BessElmt.Y * l1sQ
+     l1sg_Q = BessElmt.x * l1cQ - BessElmt.y * l1sQ
      l1g_Q = asin(l1sg_Q)
      l1g = l1g_Q + l1Q
      l1sg = Sin(l1g)
@@ -1070,7 +1098,7 @@ On Error GoTo fout_RMaxCurve
      l1Nu = l1cg
 
      l1x_Xi = BessElmt.x - l1Xi
-     l1y_Nu = BessElmt.Y - l1Nu
+     l1y_Nu = BessElmt.y - l1Nu
      l1Delta2 = l1x_Xi * l1x_Xi + l1y_Nu * l1y_Nu
      
      If l1Delta2 <= lL12 Then
@@ -1112,7 +1140,7 @@ On Error GoTo fout_SMaxCurve
      If l2Q < Pi Then l2Q = l2Q + Pi
      l2sQ = Sin(l2Q)
      l2cQ = Cos(l2Q)
-     l2sg_Q = BessElmt.x * l2cQ - BessElmt.Y * l2sQ
+     l2sg_Q = BessElmt.x * l2cQ - BessElmt.y * l2sQ
      l2g_Q = asin(l2sg_Q)
      l2g = l2g_Q + l2Q
      l2sg = Sin(l2g)
@@ -1122,7 +1150,7 @@ On Error GoTo fout_SMaxCurve
      l2Nu = l2cg
 
      l2x_Xi = BessElmt.x - l2Xi
-     l2y_Nu = BessElmt.Y - l2Nu
+     l2y_Nu = BessElmt.y - l2Nu
      l2Delta2 = l2x_Xi * l2x_Xi + l2y_Nu * l2y_Nu
 
      If l2Delta2 <= lL12 Then
@@ -1157,47 +1185,48 @@ End If
 End Function
 
 Sub PositieZonMaan(T As Double, ByRef RkM As Double, DecM As Double, ParM As Double, RkZ As Double, DecZ As Double, ParZ As Double, RZ As Double, EphTime As Double)
-Dim Obl As Double, NutLon As Double, NutObl As Double, deltaT  As Double
-Dim SHelio   As TSVECTOR, SEarth As TSVECTOR, SGeo As TSVECTOR, s As TSVECTOR
-Dim l As Double, B As Double, dRkM As Double, dDecM As Double
-Obl = Obliquity(T)
+Dim obl As Double, NutLon As Double, NutObl As Double, deltat  As Double
+Dim sHelio   As TSVECTOR, SEarth As TSVECTOR, sGeo As TSVECTOR, s As TSVECTOR
+Dim L As Double, B As Double, dRkM As Double, dDecM As Double
+obl = Obliquity(T)
 Call NutationConst(T, NutLon, NutObl)
-EphTime = SiderealTime(T) + NutLon * Cos(Obl)
+EphTime = SiderealTime(T) + NutLon * Cos(obl)
 
 '{ Main Calculations }
 '{ Allereerst de Zon-gegevens }
-SHelio.l = 0: SHelio.B = 0: SHelio.r = 0
+sHelio.L = 0: sHelio.B = 0: sHelio.r = 0
 Call PlanetPosHi(0, T, SEarth)
-Call HelioToGeo(SHelio, SEarth, SGeo)
-Call PlanetPosHi(0, T - SGeo.r * LightTimeConst, SEarth)
-Call HelioToGeo(SHelio, SEarth, SGeo)
-Call EclToEqu(SGeo.l, SGeo.B, Obl, RkZ, DecZ)
-Call ConvertVSOP_FK5(T, SGeo.l, SGeo.B)
-Call EclToEqu(SGeo.l + NutLon, SGeo.B, Obl + NutObl, RkZ, DecZ)
-
-ParZ = SolarParallax / SGeo.r
-RZ = SGeo.r
+Call HelioToGeo(sHelio, SEarth, sGeo)
+'Call PlanetPosHi(0, T - sGeo.r * LightTimeConst, SEarth)
+'Call HelioToGeo(sHelio, SEarth, sGeo)
+Call EclToEqu(sGeo.L, sGeo.B, obl, RkZ, DecZ)
+Call ConvertVSOP_FK5(T, sGeo.L, sGeo.B)
+Call EclToEqu(sGeo.L + NutLon, sGeo.B, obl + NutObl, RkZ, DecZ)
+Call Aberration(T, obl, FK5System, RkZ, DecZ)
+ParZ = SolarParallax / sGeo.r
+RZ = sGeo.r
 
 '{ en nu de gegevens van de Maan }
 
-Dim Dist As Double, dkm As Double, illum As Double, phase As Double, diam As Double
-Call Lune(TToJD(T), RkM, DecM, Dist, dkm, diam, phase, illum)
-Call Lune(TToJD(T - Dist * LightTimeConst), RkM, DecM, Dist, dkm, diam, phase, illum)
+Dim dist As Double, dkm As Double, illum As Double, phase As Double, diam As Double
+Call Lune(TToJD(T), RkM, DecM, dist, dkm, diam, phase, illum)
+Call Lune(TToJD(T - dist * LightTimeConst), RkM, DecM, dist, dkm, diam, phase, illum)
 RkM = RkM * Pi / 12
 DecM = DecM * Pi / 180
 'coordinaten zijn voor J2000. Omzetten naar huidige dag, en daarna appearent berekenen
 Call PrecessFK5(0, T, RkM, DecM)
-Call Nutation(NutLon, NutObl, Obl, RkM, DecM)
+Call Nutation(NutLon, NutObl, obl, RkM, DecM)
 
 ParM = asin(6378.14 / dkm)
 
 'In verband met de verduistering moet het centrum van de Maan gebruikt worden en niet het centrum van de massa
 'dit verschilt lichtelijk. Correcties hieronder:
-Call EquToEcl(RkM, DecM, Obl, l, B)
-dRkM = -Sin(Obl) * Cos(l) / (Cos(DecM) * Cos(DecM)) * -0.3 / 3600 * Pi / 180
-dDecM = (Cos(Obl) * Cos(l) * Cos(RkM) + Sin(l) * Sin(RkM)) * -0.3 / 3600 * Pi / 180
-' RkM = RkM + dRkM
-'DecM = DecM + dDecM
+Call EquToEcl(RkM, DecM, obl, L, B)
+dRkM = -Sin(obl) * Cos(L) / (Cos(DecM) * Cos(DecM)) * -0.6 / 3600 * Pi / 180
+dDecM = (Cos(obl) * Cos(L) * Cos(RkM) + Sin(L) * Sin(RkM)) * -0.6 / 3600 * Pi / 180 '
+ RkM = RkM + dRkM
+ DecM = DecM + dDecM
+
 '  SHelio.l = 0
 '  SHelio.B = 0
 '  SHelio.r = 0
@@ -1235,13 +1264,13 @@ On Error GoTo fout_ExtremesN
   lt = 1
     Do Until Abs(lt) < 0.0000001
        Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
        Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
        Call DiffBess(BessElmt1, BessElmt2, dBess)
        Call Aux_elmts(BessElmt1, AuxElmt, dBess)
        lx0 = BessElmt1.x
-       ly0 = BessElmt1.Y
+       ly0 = BessElmt1.y
        lm2 = lx0 * lx0 + ly0 * ly0
        ly10 = ly0 / AuxElmt.rho1
        lm12 = lx0 * lx0 + ly10 * ly10
@@ -1263,13 +1292,13 @@ On Error GoTo fout_ExtremesN
     Loop
     
     Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     lx0 = BessElmt1.x
-    ly0 = BessElmt1.Y
+    ly0 = BessElmt1.y
     lm2 = lx0 * lx0 + ly0 * ly0
     ly1 = ly0 / AuxElmt.rho1
     lm12 = lx0 * lx0 + ly1 * ly1
@@ -1318,13 +1347,13 @@ On Error GoTo fout_ExtremesZ
     lt = 1
     Do Until Abs(lt) < 0.0000001
        Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
        Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+       Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
        Call DiffBess(BessElmt1, BessElmt2, dBess)
        Call Aux_elmts(BessElmt1, AuxElmt, dBess)
        lx0 = BessElmt1.x
-       ly0 = BessElmt1.Y
+       ly0 = BessElmt1.y
        lm2 = lx0 * lx0 + ly0 * ly0
        ly10 = ly0 / AuxElmt.rho1
        lm12 = lx0 * lx0 + ly10 * ly10
@@ -1344,13 +1373,13 @@ On Error GoTo fout_ExtremesZ
     Loop
 
     Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     lx0 = BessElmt1.x
-    ly0 = BessElmt1.Y
+    ly0 = BessElmt1.y
     lm2 = lx0 * lx0 + ly0 * ly0
     ly1 = ly0 / AuxElmt.rho1
     lm12 = lx0 * lx0 + ly1 * ly1
@@ -1416,21 +1445,21 @@ Dim lsPhi1 As Double, lPhi1     As Double
 
 On Error GoTo fout_CentralEclipseLocalAppNoon
 
-    lx0x1py0y1 = BessElmt.x * DiffBess1.x1 + BessElmt.Y * DiffBess1.y1
+    lx0x1py0y1 = BessElmt.x * DiffBess1.x1 + BessElmt.y * DiffBess1.y1
     ln12 = DiffBess1.x1 * DiffBess1.x1 + DiffBess1.y1 * DiffBess1.y1
     lt = -lx0x1py0y1 / ln12
     T = T + lt / 876600
     GreatestEclipse.T = T
     
     Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     
     lx0 = BessElmt1.x
-    ly0 = BessElmt1.Y
+    ly0 = BessElmt1.y
     lm2 = lx0 * lx0 + ly0 * ly0
     lm = Sqr(lm2)
     ly10 = ly0 / AuxElmt.rho1
@@ -1484,13 +1513,13 @@ On Error GoTo fout_Greatest_Eclipse
 lt = 1
 Do While Abs(lt) > 0.000001
     Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     
-    lx0x1py0y1 = BessElmt1.x * dBess.x1 + BessElmt1.Y * dBess.y1
+    lx0x1py0y1 = BessElmt1.x * dBess.x1 + BessElmt1.y * dBess.y1
     ln12 = dBess.x1 * dBess.x1 + dBess.y1 * dBess.y1
     lt = -lx0x1py0y1 / ln12
     T = T + lt / 876600
@@ -1498,14 +1527,14 @@ Loop
     
     GreatestEclipse.T = T
     Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     
     lx0 = BessElmt1.x
-    ly0 = BessElmt1.Y
+    ly0 = BessElmt1.y
     lm2 = lx0 * lx0 + ly0 * ly0
     lm = Sqr(lm2)
     ly10 = ly0 / AuxElmt.rho1
@@ -1551,7 +1580,7 @@ Function Local_Eclipse(ByVal T As Double, ByVal Latitude As Double, ByVal Longit
 
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse
 Dim EphTime        As Double
 Dim RkM As Double, DecM As Double, ParM As Double, RkZ As Double, DecZ As Double, ParZ As Double, RZ     As Double
 Dim BessElmt1 As tBessElmt, BessElmt2 As tBessElmt
@@ -1582,7 +1611,7 @@ Dim I As Long
 On Error GoTo fout_Local_Eclipse
 
     ltv = 9999
-    
+    EphTime = 60 * 15 / 3600 * Pi / 180
     Phi = Latitude * Pi / 180
     lambda = Longitude * Pi / 180
     lH = Altitude * 0.000000156785
@@ -1601,9 +1630,9 @@ On Error GoTo fout_Local_Eclipse
         I = I + 1
         With localeclipse
             Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-            Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+            Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
             Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-            Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+            Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
             Call DiffBess(BessElmt1, BessElmt2, dBess)
             Call Aux_elmts(BessElmt1, AuxElmt, dBess)
         
@@ -1617,7 +1646,7 @@ On Error GoTo fout_Local_Eclipse
             lXi = lrhocphi1 * lsDelta
             lu = lx - lXi
             
-            ly = BessElmt1.Y
+            ly = BessElmt1.y
             lNu = lA * lcd - lB * lsd
             lv = ly - lNu
             
@@ -1699,7 +1728,7 @@ On Error GoTo fout_Local_Eclipse
             localeclipse.Tm = T - ApproxDeltaT(T) / 86400 / 36525
             lm2 = lu * lu + lv * lv
             lm = Sqr(lm2)
-            localeclipse.mag = (lL1 - lm) / (lL1 + lL2) '/(2 * lL1 - 0.5459)
+            localeclipse.Mag = (lL1 - lm) / (lL1 + lL2) '/(2 * lL1 - 0.5459)
         Case "T"
             lcFi = (Abs(Cos(asin(lsFi)))) * sign(lL2)
             'lSign: indien L2 > 0 dan totale verduistering
@@ -1736,16 +1765,34 @@ On Error GoTo fout_Local_Eclipse
 fout_Local_Eclipse:
     Local_Eclipse = False
 End Function
+Private Function MaakDatumstringT(ByVal T As Double, Optional alleentijd As Boolean = False)
+Dim JD As Double
+Dim dat As tDatum
+Dim JD_ZT As Double, JD_WT As Double
 
+JD = TToJD(T)
+dat = JDNaarKalender(JD)
+Call Zomertijd_Wintertijd(dat.jj, JD_ZT, JD_WT)
+dat = JDNaarKalender(JD - TijdCorrectie(JD, JD_ZT, JD_WT))
+MaakDatumstringT = MaakDatumstring(dat, alleentijd)
+End Function
+Private Function MaakDatumstring(dat As tDatum, alleentijd As Boolean)
+If alleentijd Then
+    MaakDatumstring = StrHMS_DMS(Frac(dat.DD) * 360, 7, 1, False, False, "h", 2)
+Else
+    MaakDatumstring = Format(Int(dat.DD), "00") & "-" & Format(dat.MM, "00") & "-" & Format(dat.jj) & ":" & StrHMS_DMS(Frac(dat.DD) * 360, 7, 1, False, False, "h", 2)
+End If
+End Function
 Sub TestEclipse(T As Double)
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim EphTime        As Double
 Dim RkM As Double, DecM As Double, ParM As Double, RkZ As Double, DecZ As Double, ParZ As Double, RZ     As Double
 Dim BessElmt1 As tBessElmt, BessElmt2 As tBessElmt
+Dim BessElmt_t0__2 As tBessElmt, BessElmt_t0__1 As tBessElmt, BessElmt_t0 As tBessElmt, BessElmt_t0_1 As tBessElmt, BessElmt_t0_2 As tBessElmt
 Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double, lrho2 As Double, lrho As Double, lx1 As Double, ly1     As Double
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, T0 As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
@@ -1754,11 +1801,19 @@ Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim sLatitude As String, sLongitude As String, sAltitude As String
+Dim deltat As Double
 
-T0 = T - 0.5 / 876600
+Dim dat As tDatum
+Dim JD As Double
+dat = JDNaarKalender(TToJD(T))
+dat.DD = Int(dat.DD * 24) / 24
+JD = KalenderNaarJD(dat)
+T = JDToT(JD)
+deltat = ApproxDeltaT(T) / 86400 / 36525
+T0 = T - 2 / 876600
 
 'Debug.Print "Predicted data, point on central line, duration of eclipse"
-While T0 < T + 0.5 / 876600
+While T0 < T + 2 / 876600
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
     Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
@@ -1767,11 +1822,75 @@ While T0 < T + 0.5 / 876600
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes = PredDataSolarEcl(BessElmt1, AuxElmt, dBess, PredData)
     If nRes = True Then
-        Debug.Print T0 & vbTab & StrHMS_DMS(PredData.lambda * 180 / Pi, 7, 1, False, True, "g", 3) _
+        Call PositieZonMaan(T0 - 2 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt_t0__2)
+        Call PositieZonMaan(T0 - 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt_t0__1)
+        Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt_t0)
+        Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt_t0_1)
+        Call PositieZonMaan(T0 + 2 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt_t0_2)
+
+        Debug.Print MaakDatumstringT(T0) & vbTab & StrHMS_DMS(PredData.lambda * 180 / Pi, 7, 1, False, True, "g", 3) _
         & vbTab & StrHMS_DMS(PredData.Phi * 180 / Pi, 7, 1, True, False, "g", 3) _
         & vbTab & StrHMS_DMS(2 * PredData.s * 15, 4, 1, True, False, "h", 5)
+        Debug.Print "x" & vbTab & BessElmt_t0__2.x & vbTab & BessElmt_t0__1.x & vbTab & BessElmt_t0.x & vbTab & BessElmt_t0_1.x & vbTab & BessElmt_t0_2.x
+        Dim xInterpol5 As tInterpol5, yInterpol5 As tInterpol5, muInterpol5 As tInterpol5, l1Interpol5 As tInterpol5, l2Interpol5 As tInterpol5, dInterpol5 As tInterpol5
+        xInterpol5 = Interpol5(BessElmt_t0__2.x, BessElmt_t0__1.x, BessElmt_t0.x, BessElmt_t0_1.x, BessElmt_t0_2.x)
+        Debug.Print "x" & vbTab & xInterpol5.c0 & vbTab; xInterpol5.c1 & vbTab & xInterpol5.c2 & vbTab & xInterpol5.c3 & vbTab & xInterpol5.c4
+        Debug.Print "interpol x " & vbTab & Interpolate5(xInterpol5, -0.5333333)
+        Debug.Print "y" & vbTab & BessElmt_t0__2.y & vbTab & BessElmt_t0__1.y & vbTab & BessElmt_t0.y & vbTab & BessElmt_t0_1.y & vbTab & BessElmt_t0_2.y
+        yInterpol5 = Interpol5(BessElmt_t0__2.y, BessElmt_t0__1.y, BessElmt_t0.y, BessElmt_t0_1.y, BessElmt_t0_2.y)
+        Debug.Print "y" & vbTab & yInterpol5.c0 & vbTab; yInterpol5.c1 & vbTab & yInterpol5.c2 & vbTab & yInterpol5.c3 & vbTab & yInterpol5.c4
+        Debug.Print "interpol y " & vbTab & Interpolate5(xInterpol5, -0.5333333)
+        Debug.Print "mu" & vbTab & BessElmt_t0__2.mu & vbTab & BessElmt_t0__1.mu & vbTab & BessElmt_t0.mu & vbTab & BessElmt_t0_1.mu & vbTab & BessElmt_t0_2.mu
+        muInterpol5 = Interpol5(BessElmt_t0__2.mu, BessElmt_t0__1.mu, BessElmt_t0.mu, BessElmt_t0_1.mu, BessElmt_t0_2.mu)
+        Debug.Print "mu" & vbTab & xInterpol5.c0 & vbTab; xInterpol5.c1 & vbTab & xInterpol5.c2 & vbTab & xInterpol5.c3 & vbTab & xInterpol5.c4
+        Debug.Print "l1" & vbTab & BessElmt_t0__2.l1 & vbTab & BessElmt_t0__1.l1 & vbTab & BessElmt_t0.l1 & vbTab & BessElmt_t0_1.l1 & vbTab & BessElmt_t0_2.l1
+        l1Interpol5 = Interpol5(BessElmt_t0__2.l1, BessElmt_t0__1.l1, BessElmt_t0.l1, BessElmt_t0_1.l1, BessElmt_t0_2.l1)
+        Debug.Print "l1" & vbTab & xInterpol5.c0 & vbTab; xInterpol5.c1 & vbTab & xInterpol5.c2 & vbTab & xInterpol5.c3 & vbTab & xInterpol5.c4
+        Debug.Print "l2" & vbTab & BessElmt_t0__2.l2 & vbTab & BessElmt_t0__1.l2 & vbTab & BessElmt_t0.l2 & vbTab & BessElmt_t0_1.l2 & vbTab & BessElmt_t0_2.l2
+        l1Interpol5 = Interpol5(BessElmt_t0__2.l2, BessElmt_t0__1.l2, BessElmt_t0.l2, BessElmt_t0_1.l2, BessElmt_t0_2.l2)
+        Debug.Print "l2" & vbTab & xInterpol5.c0 & vbTab; xInterpol5.c1 & vbTab & xInterpol5.c2 & vbTab & xInterpol5.c3 & vbTab & xInterpol5.c4
+        Debug.Print "d" & vbTab & BessElmt_t0__2.d & vbTab & BessElmt_t0__1.d & vbTab & BessElmt_t0.d & vbTab & BessElmt_t0_1.d & vbTab & BessElmt_t0_2.d
+        dInterpol5 = Interpol5(BessElmt_t0__2.d, BessElmt_t0__1.d, BessElmt_t0.d, BessElmt_t0_1.d, BessElmt_t0_2.d)
+        Debug.Print "d" & vbTab & xInterpol5.c0 & vbTab; xInterpol5.c1 & vbTab & xInterpol5.c2 & vbTab & xInterpol5.c3 & vbTab & xInterpol5.c4
+        Debug.Print "tf1/2" & vbTab & BessElmt_t0.tF1 & vbTab & BessElmt_t0.tF2
+        Dim ix As Double, iy As Double, imu As Double, il1 As Double, il2 As Double, isd As Double, n As Double
+        n = -0.5333333
+        ix = Interpolate5(xInterpol5, n)
+        iy = Interpolate5(yInterpol5, n)
+        imu = Interpolate5(muInterpol5, n)
+        il1 = Interpolate5(l1Interpol5, n)
+        il2 = Interpolate5(l2Interpol5, n)
+        isd = Interpolate5(dInterpol5, n)
+        
+        Dim x11 As Double, y11 As Double, W As Double, P As Double, B As Double, c As Double
+        x11 = xInterpol5.c1 + xInterpol5.c2 * n * 2 + xInterpol5.c3 * n * n * 3
+        y11 = yInterpol5.c1 + yInterpol5.c2 * n * 2 + yInterpol5.c3 * n * n * 3
+        W = 1 / Sqr((1 - 0.006694385 * Cos(isd) * Cos(isd)))
+        P = muInterpol5.c1 '/ 57.2957795
+        B = y11 - P * ix * Sin(isd)
+        c = x11 + P * iy * Sin(isd)
+        
+        Dim y1 As Double, b1 As Double, b2 As Double, dB As Double
+        Dim phi1 As Double, H As Double, Phi As Double, lambda As Double
+        y1 = W * iy
+        b1 = W * Sin(isd)
+        b2 = 0.99664719 * W * Cos(isd)
+        dB = 1 - ix * ix - y1 * y1
+        Debug.Print y1, b1, b2, dB, dB * b1 + y1 * b2
+        If dB > 0 Then
+            dB = Sqr(dB)
+            phi1 = asin(dB * b1 + y1 * b2)
+            H = atan2(ix / Cos(phi1), (dB * b2 - y1 * b1) / Cos(phi1))
+            Phi = Atn(1.00336409 * tan(phi1))
+            lambda = imu - H - 0.00416667 * Pi / 180 * ApproxDeltaT(T)
+        End If
     End If
-    T0 = T0 + 0.05 / 876600
+    T0 = T0 + 1 / 876600
 Wend
 '--------------------------------------------------------------------------------
 T0 = T - 0.5 / 876600
@@ -1779,9 +1898,9 @@ T0 = T - 0.5 / 876600
 Debug.Print "Northern and southern limits of the penumbra"
 While T0 < T + 0.5 / 876600
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes2 = LimitsUmbraPenumbra(BessElmt1, AuxElmt, dBess, PredData, limits)
@@ -1811,9 +1930,9 @@ T0 = T - 0.5 / 876600
 Debug.Print "Outline curves of an eclipse"
 While T0 < T + 0.5 / 876600
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes = Outline1Curve(BessElmt1, AuxElmt, dBess, PredData, OutCurve)
@@ -1839,9 +1958,9 @@ T0 = T
 Debug.Print "Curves of max and middle eclipse, semi-dur and equal magn."
 While T0 < T + 0.5 / 876600
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     pPsi = 0.2: nRes2 = MaxEclipseCurve(BessElmt1, AuxElmt, dBess, PredData, pPsi, MaxEclCurve)
@@ -1870,21 +1989,21 @@ T0 = T - 0.5 / 876600
 Debug.Print "Points on the rising and setting curves"
 While T0 < T + 0.5 / 876600
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
-    nRes2 = RiseSetCurve(BessElmt1, AuxElmt, dBess, PredData, RiseSet)
+    nRes2 = RiseSetCurve(BessElmt1, AuxElmt, dBess, PredData, riseSet)
     If nRes2 <> 0 Then
         Debug.Print T0;
         If nRes2 And 1 Then
-            Debug.Print vbTab & "R: " & StrHMS_DMS(RiseSet.pos1.lng * 180 / Pi, 7, 1, False, False, "g", 3) _
-            & vbTab & StrHMS_DMS(RiseSet.pos1.nb * 180 / Pi, 7, 1, False, False, "g", 3);
+            Debug.Print vbTab & "R: " & StrHMS_DMS(riseSet.pos1.lng * 180 / Pi, 7, 1, False, False, "g", 3) _
+            & vbTab & StrHMS_DMS(riseSet.pos1.nb * 180 / Pi, 7, 1, False, False, "g", 3);
         End If
         If nRes2 And 2 Then
-            Debug.Print vbTab & "S: " & StrHMS_DMS(RiseSet.pos2.lng * 180 / Pi, 7, 1, False, True, "g", 3) _
-            & vbTab & StrHMS_DMS(RiseSet.pos2.nb * 180 / Pi, 7, 1, True, False, "g", 3);
+            Debug.Print vbTab & "S: " & StrHMS_DMS(riseSet.pos2.lng * 180 / Pi, 7, 1, False, True, "g", 3) _
+            & vbTab & StrHMS_DMS(riseSet.pos2.nb * 180 / Pi, 7, 1, True, False, "g", 3);
         End If
         Debug.Print
     End If
@@ -1898,9 +2017,9 @@ T0 = T - 0.5 / 876600
 Debug.Print "Points on the curve of maximum eclipse at sunrise and sunset"
 While T0 < T + 0.5 / 876600
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes2 = RSMaxCurve(BessElmt1, AuxElmt, dBess, PredData, RSMax)
@@ -1924,9 +2043,9 @@ T0 = T
 Debug.Print "Time and position of first/last contact of the umbra/penumbra"
 
 Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt1)
+Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
 Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime)
-Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime, BessElmt2)
+Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, EphTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
 Call DiffBess(BessElmt1, BessElmt2, dBess)
 Call Aux_elmts(BessElmt1, AuxElmt, dBess)
 nRes2 = Extremes(T0, BessElmt1, AuxElmt, dBess, PredData, Extr)

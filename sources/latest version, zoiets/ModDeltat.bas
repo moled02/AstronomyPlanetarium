@@ -20,7 +20,7 @@ Private DeltaTable As Variant
 
 Function ApproxDeltaT(ByVal T As Double) As Double
 
-Dim Y As Double
+Dim y As Double
 Dim Index As Long
 
   
@@ -46,30 +46,33 @@ DeltaTTable = Array _
    331, 340, 350, 365, 383, 402, 422, 445, 465, 485, _
    505, 522, 538, 549, 558, 569, 580)
 
-Y = 2000 + T * 100
-If Int(Y) >= 2005 Then
-    Y = Y - 2000
-    ApproxDeltaT = 62.92 + 0.23217 * Y + 0.005589 * Y ^ 2
-ElseIf Y >= 1986 Then
-    Y = Y - 2000
-    ApproxDeltaT = 63.86 + 0.3345 * Y - 0.060374 * Y ^ 2 + 0.0017275 * Y ^ 3 + 0.000651814 * Y ^ 4 + 0.00002373599 * Y ^ 5
-ElseIf Y >= 1961 Then
-    Y = Y - 1975
-    ApproxDeltaT = 45.45 + 1.067 * Y - Y ^ 2 / 260 - Y ^ 3 / 718
+y = 2000 + T * 100
+If Int(y) >= 2005 Then
+    y = y - 2000
+    ApproxDeltaT = 62.92 + 0.32217 * y + 0.005589 * y ^ 2
+ElseIf y >= 1986 Then
+    y = y - 2000
+    ApproxDeltaT = 63.86 + 0.3345 * y - 0.060374 * y ^ 2 + 0.0017275 * y ^ 3 + 0.000651814 * y ^ 4 + 0.00002373599 * y ^ 5
+ElseIf y >= 1961 Then
+    y = y - 1975
+    ApproxDeltaT = 45.45 + 1.067 * y - y ^ 2 / 260 - y ^ 3 / 718
 Else
-  If (Y < 1620) Then
-    If (Y < 948) Then
+  If (y < 1620) Then
+    If (y < 948) Then
       ApproxDeltaT = 2715.6 + T * (573.36 + T * 46.5)
     Else
       ApproxDeltaT = 50.6 + T * (67.5 + T * 22.5)
     End If
   Else '{ Interpolate from the above table }
-    Index = Int((Y - 1620) / 2)
+    Index = Int((y - 1620) / 2)
     If Index > 184 Then Index = 184
-    Y = Y / 2 - Index - 810
-    ApproxDeltaT = (DeltaTTable(Index) + (DeltaTTable(Index + 1) - DeltaTTable(Index)) * Y) / 10
+    y = y / 2 - Index - 810
+    ApproxDeltaT = (DeltaTTable(Index) + (DeltaTTable(Index + 1) - DeltaTTable(Index)) * y) / 10
   End If
 End If
-If 2000 + T * 100 >= 1961 Then ApproxDeltaT = ApproxDeltaT - (0.000012932 * (2000 + T * 100 - 1955) ^ 2)
+If Not (2000 + T * 100 > 1995 And 2000 + T * 100 < 2005) Then
+ ' 2000 + T * 100 >= 1961 Then
+ ApproxDeltaT = ApproxDeltaT - (0.000012932 * (2000 + T * 100 - 1955) ^ 2)
+End If
 End Function
 

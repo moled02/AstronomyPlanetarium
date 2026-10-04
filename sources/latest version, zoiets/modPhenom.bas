@@ -38,7 +38,7 @@ Public Const e2 = 6.70562132949496E-03
   
 Type SOLARECLIPSEDATA
     JD    As Double      '{JD, at maximal eclipse}
-    Maxmag As Double     '{maximum magnitude of eclipse}
+    maxmag As Double     '{maximum magnitude of eclipse}
     Gamma As Double      '{Gamma}
     EclipseType As Long  '{What sort of an eclipse}
 End Type
@@ -57,7 +57,7 @@ End Type
 
 Type tBessElmt
     x As Double
-    Y As Double
+    y As Double
     SD As Double
     cD As Double
     mu As Double
@@ -65,6 +65,7 @@ Type tBessElmt
     tF2 As Double
     l1 As Double
     l2 As Double
+    d As Double
 End Type
 
 Type tAuxElmt
@@ -96,7 +97,7 @@ Type tPredData
     Xi As Double
     nu1 As Double
     Phi As Double
-    Lambda As Double
+    lambda As Double
     tPhi As Double
     tPhi1 As Double
     n As Double

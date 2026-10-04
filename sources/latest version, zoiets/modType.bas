@@ -30,6 +30,8 @@ Public Type tPlaneet_Maan
     sHelio As TSVECTOR
     sGeo As TSVECTOR
     sSun As TSVECTOR
+    RA_2000 As Double
+    Decl_2000 As Double
     RA_app As Double
     Decl_app As Double
     moonPhysData As TMOONPHYSDATA
@@ -47,7 +49,7 @@ Public Type tPlaneet_Zon
     RA2000 As Double
     Decl2000 As Double
     SunPhysData As TSUNPHYSDATA
-    C As Long
+    c As Long
     JDOfCarr As Double
     parAngle As Double
     sterbeeld As String

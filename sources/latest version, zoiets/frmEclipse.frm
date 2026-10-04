@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.1#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmEclipse 
    Caption         =   "Zonsverduistering"
    ClientHeight    =   10710
@@ -175,10 +175,10 @@ Private SolarEclipse As SOLARECLIPSEDATA
 Private LunarEclipse As LUNARECLIPSEDATA
 Private SolarMoonJD As Double
 Private nInitHeight As Long
-Private blndoorgaan As Boolean
+Private blnDoorgaan As Boolean
 Private nWidthVoortgang As Long
 Private Sub cmdBereken_Click()
-blndoorgaan = True
+blnDoorgaan = True
 Select Case TabStripEclipse.SelectedItem.Caption
 Case Is = "Local"
     Bereken_plaatselijk
@@ -199,50 +199,51 @@ Case Is = "General information"
 End Select
 End Sub
 Private Sub Maanberekening()
-Dim i As Long
+Dim I As Long
 Dim JD As Double
 'LunarEclipse geeft een eerste en goede benadering voor de tijdstippen en de magnitude
 'Deze kunnen echter nog nauwkeuriger bepaald worden
 
-rtfBerekening.Text = ""
+rtfBerekening.text = ""
 With LunarEclipse
     Select Case .EclipseType
         Case PENUMBRAL
-            i = 3
+            I = 3
         Case PARTIAL
-            i = 2
+            I = 2
         Case TOTAL
-            i = 1
+            I = 1
     End Select
     
     sMax = Trim(s) + " (Maximum)"
-    If i <= 3 Then
+    If I <= 3 Then
+    JD = NauwkeurigerTijdstipMaansverduistering(.JD, "PB")
         JD = NauwkeurigerTijdstipMaansverduistering(.JD - .SpartPenumbra, "PB")
-        rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "    First contact with penumbra" & vbCrLf
-        If i <= 2 Then
+rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "    First contact with penumbra" & vbCrLf
+        If I <= 2 Then
             JD = NauwkeurigerTijdstipMaansverduistering(.JD - .SpartUmbra, "UB")
-            rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "        First contact withe umbra" & vbCrLf
-            If i = 1 Then
+            rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "        First contact withe umbra" & vbCrLf
+            If I = 1 Then
                 JD = NauwkeurigerTijdstipMaansverduistering(.JD - .StotUmbra, "TB")
-                rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "            Begin total eclipse" & vbCrLf
+                rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "            Begin total eclipse" & vbCrLf
                 JD = NauwkeurigerTijdstipMaansverduistering(.JD, "T")
-                rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "                Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TT"), "0.000") & vbCrLf
+                rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "                Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TT"), "0.000") & vbCrLf
                 JD = NauwkeurigerTijdstipMaansverduistering(.JD + .StotUmbra, "TE")
-                rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "            End total eclipse" & vbCrLf
+                rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "            End total eclipse" & vbCrLf
             End If
-            If i = 2 Then
+            If I = 2 Then
                 JD = NauwkeurigerTijdstipMaansverduistering(.JD, "T")
-                rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "            Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TU"), "0.000") & vbCrLf
+                rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "            Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TU"), "0.000") & vbCrLf
             End If
             JD = NauwkeurigerTijdstipMaansverduistering(.JD + .SpartUmbra, "UE")
-            rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "        Last contact with umbra" & vbCrLf
+            rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "        Last contact with umbra" & vbCrLf
         End If
-        If i = 3 Then
+        If I = 3 Then
             JD = NauwkeurigerTijdstipMaansverduistering(.JD, "T")
-            rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "        Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TP"), "0.000") & vbCrLf
+            rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "        Maximum eclipse, magn. " & Format(MoonEclipseMagnitude(JD, "TP"), "0.000") & vbCrLf
         End If
         JD = NauwkeurigerTijdstipMaansverduistering(.JD + .SpartPenumbra, "PE")
-        rtfBerekening.Text = rtfBerekening.Text + MaakDatumstringT(JDToT(JD)) & "    Last contact with penumbra" & vbCrLf
+        rtfBerekening.text = rtfBerekening.text + MaakDatumstringT(JDToT(JD)) & "    Last contact with penumbra" & vbCrLf
     End If
 End With
 End Sub
@@ -250,22 +251,22 @@ Private Function NauwkeurigerTijdstipMaansverduistering(ByVal JD As Double, ByVa
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 Dim AppTime        As Double
 Dim RkM As Double, DecM As Double, ParM As Double, RkZ As Double, DecZ As Double, ParZ As Double, RZ     As Double
 Dim BessElmt1 As tBessElmt, BessElmt2 As tBessElmt, sParZ0 As Double
 Dim j
 Dim eps As Double
-Dim dRkmM As Double, dDecM As Double, Lambda As Double, b As Double
-Dim Obl As Double
+Dim dRkmM As Double, dDecM As Double, lambda As Double, B As Double
+Dim obl As Double
 
 T = JDToT(JD)
-Obl = Obliquity(T + 1 / 876600)
+obl = Obliquity(T + 1 / 876600)
 Call PositieZonMaan(T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-Call EquToEcl(RkM, DecM, Obl, Lambda, b)
-dRkM = -Sin(Obl) * Cos(Lambda) / Cos(DecM) / Cos(DecM) * -0.6 / 3600 * Pi / 180
-dDecM = (Cos(Obl) * Cos(Lambda) * Cos(RkM) + Sin(Lambda) * Sin(RkM)) * -0.6 / 3600 * Pi / 180
+Call EquToEcl(RkM, DecM, obl, lambda, B)
+dRkM = -Sin(obl) * Cos(lambda) / Cos(DecM) / Cos(DecM) * -0.6 / 3600 * Pi / 180
+dDecM = (Cos(obl) * Cos(lambda) * Cos(RkM) + Sin(lambda) * Sin(RkM)) * -0.6 / 3600 * Pi / 180
 RkM = RkM + dRkM
 DecM = DecM + dDecM
 BessElmt2.x = modpi((RkM - (RkZ + Pi))) * Cos(DecM)
@@ -274,11 +275,11 @@ BessElmt2.y = modpi(DecM + DecZ + eps)
 'Call Bess_elmts(RkM, DecM, ParM, RkZ + Pi, -DecZ, ParZ, RZ, AppTime, BessElmt2)
 BessElmt2.x = BessElmt2.x * 180 / Pi * 3600: BessElmt2.y = BessElmt2.y * 180 / Pi * 3600
 
-Obl = Obliquity(T)
+obl = Obliquity(T)
 Call PositieZonMaan(T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-Call EquToEcl(RkM, DecM, Obl, Lambda, b)
-dRkM = -Sin(Obl) * Cos(Lambda) / Cos(DecM) / Cos(DecM) * -0.6 / 3600 * Pi / 180
-dDecM = (Cos(Obl) * Cos(Lambda) * Cos(RkM) + Sin(Lambda) * Sin(RkM)) * -0.6 / 3600 * Pi / 180
+Call EquToEcl(RkM, DecM, obl, lambda, B)
+dRkM = -Sin(obl) * Cos(lambda) / Cos(DecM) / Cos(DecM) * -0.6 / 3600 * Pi / 180
+dDecM = (Cos(obl) * Cos(lambda) * Cos(RkM) + Sin(lambda) * Sin(RkM)) * -0.6 / 3600 * Pi / 180
 RkM = RkM + dRkM
 DecM = DecM + dDecM
 sParZ0 = asin(0.272274 * Sin(ParM))
@@ -321,7 +322,7 @@ Private Function MoonEclipseMagnitude(ByVal JD As Double, stype As String) As Do
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 Dim AppTime        As Double
 Dim RkM As Double, DecM As Double, ParM As Double, RkZ As Double, DecZ As Double, ParZ As Double, RZ     As Double
@@ -347,7 +348,7 @@ Private Sub GrootsteEclips()
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim AppTime        As Double
@@ -358,7 +359,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -367,7 +368,7 @@ dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
 JD = KalenderNaarJD(dat)
 T = JDToT(JD)
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
 T0 = T
 rtfBerekening = ""
 
@@ -376,24 +377,24 @@ rtfBerekening = ""
 'Greatest eclipse berekent gegevens voor gedeeltelijke zonsverduistering
 'voor totale verduisteringen is dit niet geschikt
 If Greatest_Eclipse(T0, GreatestEclipse) Then
-    rtfBerekening.Text = rtfBerekening.Text & MaakDatumstringT(GreatestEclipse.T - deltaT)
+    rtfBerekening.text = rtfBerekening.text & MaakDatumstringT(GreatestEclipse.T - deltat)
     Call PositieZonMaan(GreatestEclipse.T, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(GreatestEclipse.T + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     
     nRes = PredDataSolarEcl(BessElmt1, AuxElmt, dBess, PredData)
     'onderzoeken of totale verduistering
-    If Local_Eclipse(GreatestEclipse.T, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "T") Then
-        rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(PredData.Lambda * 180 / Pi, 7, 1, False, True, "g", 4) _
+    If Local_Eclipse(GreatestEclipse.T, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "T") Then
+        rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(PredData.lambda * 180 / Pi, 7, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(PredData.Phi * 180 / Pi, 7, 1, False, False, "g", 3)
-        rtfBerekening.Text = rtfBerekening.Text & "  " & Format(localeclipse.MagTotaal, "0.00000")
+        rtfBerekening.text = rtfBerekening.text & "  " & Format(localeclipse.MagTotaal, "0.00000")
     Else
-        rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(GreatestEclipse.pos.lng * 180 / Pi, 7, 1, False, True, "g", 4) _
+        rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(GreatestEclipse.pos.lng * 180 / Pi, 7, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(GreatestEclipse.pos.nb * 180 / Pi, 7, 1, False, False, "g", 3)
-        rtfBerekening.Text = rtfBerekening.Text & "  " & Format(GreatestEclipse.magn, "0.00000")
+        rtfBerekening.text = rtfBerekening.text & "  " & Format(GreatestEclipse.magn, "0.00000")
     End If
 End If
 End Sub
@@ -401,7 +402,7 @@ Private Sub RiseSetCurves()
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim AppTime        As Double
@@ -411,7 +412,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -420,34 +421,34 @@ dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
 JD = KalenderNaarJD(dat)
 T = JDToT(JD)
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
 T0 = T - 6 / 876600 '
 rtfBerekening = ""
-While T0 < T + 6 / 876600 And blndoorgaan
+While T0 < T + 6 / 876600 And blnDoorgaan
     lblVoortgang.Width = nWidthVoortgang * (T0 - T + 6 / 876600) / (12 / 876600)
 'Debug.Print "Points on the curve of maximum eclipse at sunrise and sunset"
-    Call PositieZonMaan(T0 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
-    Call PositieZonMaan(T0 + 1 / 876600 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
+    Call PositieZonMaan(T0 + deltat, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
+    Call PositieZonMaan(T0 + 1 / 876600 + deltat, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes2 = RSMaxCurve(BessElmt1, AuxElmt, dBess, PredData, RSMax)
     If nRes2 <> 0 Then
-        rtfBerekening.Text = rtfBerekening.Text & MaakDatumstringT(T0)
+        rtfBerekening.text = rtfBerekening.text & MaakDatumstringT(T0)
         If nRes2 And 1 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(RSMax.pos1.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(RSMax.pos1.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
             & "  " & StrHMS_DMS(RSMax.pos1.nb * 180 / Pi, 1, 1, False, True, "g", 5)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "     - " & "  " & "    -  "
+            rtfBerekening.text = rtfBerekening.text & "     - " & "  " & "    -  "
         End If
         If nRes2 And 2 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(RSMax.pos2.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(RSMax.pos2.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
             & "  " & StrHMS_DMS(RSMax.pos2.nb * 180 / Pi, 1, 1, False, True, "g", 5)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "     - " & "  " & "    -  "
+            rtfBerekening.text = rtfBerekening.text & "     - " & "  " & "    -  "
         End If
-        rtfBerekening.Text = rtfBerekening.Text & vbCrLf
+        rtfBerekening.text = rtfBerekening.text & vbCrLf
     End If
     DoEvents
     T0 = T0 + 0.05 / 876600 / 3
@@ -459,7 +460,7 @@ Private Sub OutlineCurves()
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim AppTime        As Double
@@ -469,7 +470,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -478,40 +479,40 @@ dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
 JD = KalenderNaarJD(dat)
 T = JDToT(JD)
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
 T0 = T - 6 / 876600 '
 rtfBerekening = ""
-While T0 < T + 6 / 876600 And blndoorgaan
+While T0 < T + 6 / 876600 And blnDoorgaan
     lblVoortgang.Width = nWidthVoortgang * (T0 - T + 6 / 876600) / (12 / 876600)
 'Debug.Print "Outline curves of an eclipse"
     Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes = Outline1Curve(BessElmt1, AuxElmt, dBess, PredData, OutCurve)
     If nRes Then
-        rtfBerekening.Text = rtfBerekening.Text & MaakDatumstringT(T0)
-        rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(OutCurve.bQ * 180 / Pi, 1, 1, False, False, "g", 5) _
+        rtfBerekening.text = rtfBerekening.text & MaakDatumstringT(T0)
+        rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(OutCurve.bQ * 180 / Pi, 1, 1, False, False, "g", 5) _
         & "  " & StrHMS_DMS(OutCurve.eQ * 180 / Pi, 1, 1, False, False, "g", 5) & vbCrLf
-        i = 1
+        I = 1
         While OutCurve.bQ < OutCurve.eQ
             nRes = Outline2Curve(BessElmt1, AuxElmt, dBess, PredData, OutCurve.bQ, OutCurve)
             If nRes Then
-                rtfBerekening.Text = rtfBerekening.Text & "  (" & StrHMS_DMS(OutCurve.pos.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
+                rtfBerekening.text = rtfBerekening.text & "  (" & StrHMS_DMS(OutCurve.pos.lng * 180 / Pi, 1, 1, False, False, "g", 5) _
                 & " " & StrHMS_DMS(OutCurve.pos.nb * 180 / Pi, 1, 1, True, False, "g", 5) & ")"
-                If i = 0 Then
-                    rtfBerekening.Text = rtfBerekening.Text & vbCrLf
+                If I = 0 Then
+                    rtfBerekening.text = rtfBerekening.text & vbCrLf
                 End If
-                i = (i + 1) Mod 7
+                I = (I + 1) Mod 7
 '            Else
 '                rtfBerekening.Text = rtfBerekening.Text & vbCrLf
             End If
             OutCurve.bQ = OutCurve.bQ + Pi / 180 'per graad punt berekenen
             DoEvents
         Wend
-        rtfBerekening.Text = rtfBerekening.Text & vbCrLf
+        rtfBerekening.text = rtfBerekening.text & vbCrLf
     End If
     DoEvents
     T0 = T0 + 0.5 / 876600 / 3
@@ -522,7 +523,7 @@ Private Sub Limieten()
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim AppTime        As Double
@@ -532,7 +533,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -541,14 +542,15 @@ dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
 JD = KalenderNaarJD(dat)
 T = JDToT(JD)
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
+T = T + IIf(frmPlanets.chkTDT = 0, deltat, 0)
 T0 = T - 6 / 876600 '
 rtfBerekening = ""
-While T0 < T + 6 / 876600 And blndoorgaan
+While T0 < T + 6 / 876600 And blnDoorgaan
     lblVoortgang.Width = nWidthVoortgang * (T0 - T + 6 / 876600) / (12 / 876600)
-    Call PositieZonMaan(T0 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
     Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
-    Call PositieZonMaan(T0 + 1 / 876600 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
     Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
@@ -556,36 +558,40 @@ While T0 < T + 6 / 876600 And blndoorgaan
     nRes2 = LimitsUmbraPenumbra(BessElmt1, AuxElmt, dBess, PredData, limits)
     If nRes2 <> 0 Then
 '    Debug.Print MaakDatumstringT(T0)
-        rtfBerekening.Text = rtfBerekening.Text & MaakDatumstringT(T0)
+    limits.ULimN.lng = limits.ULimN.lng - IIf(frmPlanets.chkTDT = 0, 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180, 0)
+    limits.ULimZ.lng = limits.ULimZ.lng - IIf(frmPlanets.chkTDT = 0, 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180, 0)
+    limits.PLimN.lng = limits.PLimN.lng - IIf(frmPlanets.chkTDT = 0, 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180, 0)
+    limits.PLimZ.lng = limits.PLimZ.lng - IIf(frmPlanets.chkTDT = 0, 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180, 0)
+        rtfBerekening.text = rtfBerekening.text & MaakDatumstringT(T0 - IIf(frmPlanets.chkTDT = 0, deltat, 0))
         If nRes2 And 1 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(limits.ULimN.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(limits.ULimN.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(limits.ULimN.nb * 180 / Pi, 3, 1, True, False, "g", 3)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "      -     " _
+            rtfBerekening.text = rtfBerekening.text & "      -     " _
             & "     -     "
         End If
         If nRes2 And 2 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(limits.ULimZ.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(limits.ULimZ.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(limits.ULimZ.nb * 180 / Pi, 3, 1, True, False, "g", 3)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "      -     " _
+            rtfBerekening.text = rtfBerekening.text & "      -     " _
             & "     -     "
         End If
         If nRes2 And 4 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(limits.PLimN.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(limits.PLimN.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(limits.PLimN.nb * 180 / Pi, 3, 1, True, False, "g", 3)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "      -     " _
+            rtfBerekening.text = rtfBerekening.text & "      -     " _
             & "     -     "
         End If
         If nRes2 And 8 Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & StrHMS_DMS(limits.PLimZ.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
+            rtfBerekening.text = rtfBerekening.text & "  " & StrHMS_DMS(limits.PLimZ.lng * 180 / Pi, 3, 1, False, True, "g", 4) _
             & "  " & StrHMS_DMS(limits.PLimZ.nb * 180 / Pi, 3, 1, True, False, "g", 3)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "      -     " _
+            rtfBerekening.text = rtfBerekening.text & "      -     " _
             & "     -    "
         End If
-        rtfBerekening.Text = rtfBerekening.Text & vbCrLf
+        rtfBerekening.text = rtfBerekening.text & vbCrLf
     End If
     DoEvents
     T0 = T0 + 0.05 / 876600 / 3
@@ -596,7 +602,7 @@ Private Sub Centrale_lijn()
 Dim T As Double, T0 As Double
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, dBess As tDiffBess, PredData As tPredData, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse, _
     localeclipse As tLocalEclipse
 
 Dim AppTime        As Double
@@ -606,7 +612,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -614,34 +620,51 @@ Dim JD As Double
 'rtfKoptekst.Text = rtfKoptekst.Text & "===============================================================" & vbCrLf
 dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
+dat.DD = Int(dat.DD * 24) / 24
 JD = KalenderNaarJD(dat)
-T = JDToT(JD) - 6 / 876600
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+T = JDToT(JD) - 3 / 876600
+deltat = ApproxDeltaT(T) / 86400 / 36525
+
+T = T + IIf(frmPlanets.chkTDT = 0, deltat, 0)
 T0 = T
 rtfBerekening = ""
-For i = 0 To 1200
-    lblVoortgang.Width = nWidthVoortgang * i / 1200
+For I = 0 To 600
+    lblVoortgang.Width = nWidthVoortgang * I / 600
 'While T0 < T + 10 / 876600
-    Call PositieZonMaan(T0 + 1 / 876600 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
     Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
-    Call PositieZonMaan(T0 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    If I = 200 Then
+        Call PositieZonMaan(T0 - 2 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+        Call PositieZonMaan(T0 - 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+        Call PositieZonMaan(T0 + IIf(frmPlanets.chkTDT = 0, deltat, 0), RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+        Call PositieZonMaan(T0 + 1 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+        Call PositieZonMaan(T0 + 2 / 876600, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+        Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+    End If
+    Call PositieZonMaan(T0, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    '- 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180
     Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     nRes = PredDataSolarEcl(BessElmt1, AuxElmt, dBess, PredData)
+    PredData.lambda = PredData.lambda - IIf(frmPlanets.chkTDT = 0, 1.002737908 * ApproxDeltaT(T) * 15 / 3600 * Pi / 180, 0)
     If nRes = True Then
 '        Debug.Print MaakDatumstringT(T0)
-        rtfBerekening.Text = rtfBerekening.Text & MaakDatumstringT(T0) & "  " & StrHMS_DMS(PredData.Lambda * 180 / Pi, 3, 1, False, True, "g", 4) _
+        rtfBerekening.text = rtfBerekening.text & MaakDatumstringT(T0 - IIf(frmPlanets.chkTDT = 0, deltat, 0)) & "  " & StrHMS_DMS(PredData.lambda * 180 / Pi, 3, 1, False, True, "g", 4) _
         & "     " & StrHMS_DMS(PredData.Phi * 180 / Pi, 3, 1, True, False, "g", 3) _
         & "   " & StrHMS_DMS(2 * PredData.s * 15, 6, 1, True, False, "h", 2)
-        If Local_Eclipse(T0 + deltaT, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "T") Then
-            rtfBerekening.Text = rtfBerekening.Text & "  " & Format(localeclipse.MagTotaal, "0.00000")
+        If Local_Eclipse(T0 + deltat, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "T") Then
+            rtfBerekening.text = rtfBerekening.text & "  " & Format(localeclipse.MagTotaal, "0.00000")
         End If
-        rtfBerekening.Text = rtfBerekening.Text & vbCrLf
+        rtfBerekening.text = rtfBerekening.text & vbCrLf
 
     End If
-    T0 = T + 1 / 60 * i / 876600
-    If Not blndoorgaan Then Exit For
+    T0 = T + 1 / 60 * I / 876600
+    If Not blnDoorgaan Then Exit For
     DoEvents
 Next
 lblVoortgang.Width = 0
@@ -660,7 +683,7 @@ Call GetKeyValue(HKEY_CURRENT_USER, "Software\Belastingdienst\Astronomie", "Long
         sLongitude)
 Call GetKeyValue(HKEY_CURRENT_USER, "Software\Belastingdienst\Astronomie", "Altitude", _
         sAltitude)
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
 M(1) = "Begin partial solareclipse : "
 M(2) = "End   partial solareclipse : "
 M(3) = "Maximum       solareclipse : "
@@ -670,16 +693,16 @@ M(6) = "Max. magn. total eclipse   : "
 T = JDToT(SolarEclipse.JD)
 rtfBerekening = ""
 rtfKopteks = ""
-If Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "B") Then Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(1) & MaakDatumstringT(localeclipse.Tb) & vbCrLf
+If Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "B") Then Me.rtfBerekening.text = Me.rtfBerekening.text & M(1) & MaakDatumstringT(localeclipse.Tb) & vbCrLf
 If Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "T") Then
-    Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(4) & MaakDatumstringT(localeclipse.Ttotaalb) & vbCrLf
-    Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(3) & MaakDatumstringT(localeclipse.Tm) & ", " & Format(localeclipse.MagTotaal, "0.000") & ", diepte " & Format(2 * (localeclipse.MagTotaal - 1), "0.000") & vbCrLf
-    Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(5) & MaakDatumstringT(localeclipse.Ttotaale) & vbCrLf
+    Me.rtfBerekening.text = Me.rtfBerekening.text & M(4) & MaakDatumstringT(localeclipse.Ttotaalb) & vbCrLf
+    Me.rtfBerekening.text = Me.rtfBerekening.text & M(3) & MaakDatumstringT(localeclipse.Tm) & ", " & Format(localeclipse.MagTotaal, "0.000") & ", diepte " & Format(2 * (localeclipse.MagTotaal - 1), "0.000") & vbCrLf
+    Me.rtfBerekening.text = Me.rtfBerekening.text & M(5) & MaakDatumstringT(localeclipse.Ttotaale) & vbCrLf
     'If Local_Eclipse(T, LocalEclipse, "M") Then Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(3) & MaakDatumstringT(LocalEclipse.Tm - deltaT) & ", " & Format(LocalEclipse.Mag, "0.000") & vbCrLf
 ElseIf Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "M") Then
-    Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(3) & MaakDatumstringT(localeclipse.Tm) & ", " & Format(localeclipse.mag, "0.000") & vbCrLf
+    Me.rtfBerekening.text = Me.rtfBerekening.text & M(3) & MaakDatumstringT(localeclipse.Tm) & ", " & Format(localeclipse.Mag, "0.000") & vbCrLf
 End If
-If Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "E") Then Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(2) & MaakDatumstringT(localeclipse.Te) & vbCrLf
+If Local_Eclipse(T, Val(sLatitude), Val(sLongitude), Val(sAltitude), localeclipse, "E") Then Me.rtfBerekening.text = Me.rtfBerekening.text & M(2) & MaakDatumstringT(localeclipse.Te) & vbCrLf
 End Sub
 Private Sub Contacts()
 Dim AppTime        As Double
@@ -689,7 +712,7 @@ Dim lx0 As Double, ly0 As Double, lm2 As Double, ly10 As Double, lm12 As Double,
 Dim ln1 As Double, ln12 As Double, ll1pRho As Double, ln1ll1pRho As Double, lx0x1py0y1 As Double, lx0y1mx1y0 As Double, lsX1 As Double, lcX1     As Double
 Dim lt As Double, lXi As Double, lNu As Double, lcPhisd As Double, lcPhicd As Double, ltDel As Double, lDel As Double, lLambda As Double, lsPhi As Double, lPhi     As Double
 Dim lsPhi1 As Double, lPhi1     As Double
-Dim i As Long, pPsi As Double
+Dim I As Long, pPsi As Double
 Dim nRes As Boolean
 Dim nRes2 As Long
 Dim JD As Double
@@ -700,7 +723,7 @@ Dim M(6)
 Dim dat As tDatum, PredData As tPredData
 Dim BessElmt As tBessElmt, AuxElmt As tAuxElmt, _
     Extr As tExtremes, limits As tLimits, OutCurve As tOutCurve, MaxEclCurve As tMaxEclCurve, _
-    RiseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse
+    riseSet As tRiseSetCurve, RSMax As tRSMaxCurve, GreatestEclipse As tGreatestEclipse
 
 M(1) = "Begin partial solareclipse : "
 M(2) = "End   partial solareclipse : "
@@ -715,50 +738,50 @@ dat = JDNaarKalender(SolarEclipse.JD)
 dat.DD = Int(dat.DD * 24 * 60) / 24 / 60
 JD = KalenderNaarJD(dat)
 T = JDToT(JD) - 6 / 876600
-deltaT = ApproxDeltaT(T) / 86400 / 36525
+deltat = ApproxDeltaT(T) / 86400 / 36525
 T0 = T
 rtfBerekening = ""
-For i = 0 To 1200
-    lblVoortgang.Width = nWidthVoortgang * i / 1200
+For I = 0 To 1200
+    lblVoortgang.Width = nWidthVoortgang * I / 1200
 'While T0 < T + 10 / 876600
-    Call PositieZonMaan(T0 + 1 / 876600 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt2)
-    Call PositieZonMaan(T0 + deltaT, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
-    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime, BessElmt1)
+    Call PositieZonMaan(T0 + 1 / 876600 + deltat, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt2)
+    Call PositieZonMaan(T0 + deltat, RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime)
+    Call Bess_elmts(RkM, DecM, ParM, RkZ, DecZ, ParZ, RZ, AppTime - ApproxDeltaT(T) * 15 / 3600 * Pi / 180, BessElmt1)
     Call DiffBess(BessElmt1, BessElmt2, dBess)
     Call Aux_elmts(BessElmt1, AuxElmt, dBess)
     If PredDataSolarEcl(BessElmt1, AuxElmt, dBess, PredData) Then
 '        Debug.Print MaakDatumstringT(T0)
-        Me.rtfBerekening.Text = Me.rtfBerekening.Text & MaakDatumstringT(T0)
-        Me.rtfBerekening.Text = Me.rtfBerekening.Text & " " & StrHMS_DMS(2 * PredData.s * 15, 6, 1, True, False, "h", 2) & " "
-        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "B") Then
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Tb, True) & "  "
+        Me.rtfBerekening.text = Me.rtfBerekening.text & MaakDatumstringT(T0)
+        Me.rtfBerekening.text = Me.rtfBerekening.text & " " & StrHMS_DMS(2 * PredData.s * 15, 6, 1, True, False, "h", 2) & " "
+        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "B") Then
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Tb, True) & "  "
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "       -     "
+            rtfBerekening.text = rtfBerekening.text & "       -     "
         End If
-        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "T") Then
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Ttotaalb, True)
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Tm, True) & " " & Format(localeclipse.MagTotaal, "0.000") & "  "
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Ttotaale, True) & "  "
+        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "T") Then
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Ttotaalb, True)
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Tm, True) & " " & Format(localeclipse.MagTotaal, "0.000") & "  "
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Ttotaale, True) & "  "
             'If Local_Eclipse(T, LocalEclipse, "M") Then Me.rtfBerekening.Text = Me.rtfBerekening.Text & M(3) & MaakDatumstringT(LocalEclipse.Tm - deltaT) & ", " & Format(LocalEclipse.Mag, "0.000") & vbCrLf
-        ElseIf Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "M") Then
-            rtfBerekening.Text = rtfBerekening.Text & "       -     "
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Tm, True) & " " & Format(localeclipse.mag, "0.000") & "  "
-            rtfBerekening.Text = rtfBerekening.Text & "       -       "
+        ElseIf Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "M") Then
+            rtfBerekening.text = rtfBerekening.text & "       -     "
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Tm, True) & " " & Format(localeclipse.Mag, "0.000") & "  "
+            rtfBerekening.text = rtfBerekening.text & "       -       "
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "       -     "
-            rtfBerekening.Text = rtfBerekening.Text & "       -             "
-            rtfBerekening.Text = rtfBerekening.Text & "       -       "
+            rtfBerekening.text = rtfBerekening.text & "       -     "
+            rtfBerekening.text = rtfBerekening.text & "       -             "
+            rtfBerekening.text = rtfBerekening.text & "       -       "
         End If
-        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.Lambda * 180 / Pi, 0, localeclipse, "E") Then
-            Me.rtfBerekening.Text = Me.rtfBerekening.Text & "  " & MaakDatumstringT(localeclipse.Te, True)
+        If Local_Eclipse(T, PredData.Phi * 180 / Pi, PredData.lambda * 180 / Pi, 0, localeclipse, "E") Then
+            Me.rtfBerekening.text = Me.rtfBerekening.text & "  " & MaakDatumstringT(localeclipse.Te, True)
         Else
-            rtfBerekening.Text = rtfBerekening.Text & "       -     "
+            rtfBerekening.text = rtfBerekening.text & "       -     "
         End If
-        Me.rtfBerekening.Text = Me.rtfBerekening.Text & vbCrLf
+        Me.rtfBerekening.text = Me.rtfBerekening.text & vbCrLf
     End If
-    If Not blndoorgaan Then Exit For
-    T0 = T + 1 / 60 * i / 876600
+    If Not blnDoorgaan Then Exit For
+    T0 = T + 1 / 60 * I / 876600
     DoEvents
 Next
 lblVoortgang.Width = 0
@@ -806,7 +829,7 @@ End Sub
 Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
 If (KeyCode = 17 And Shift = 0) Or (KeyCode = 67 And Shift = 2) Then
     Clipboard.Clear
-    Clipboard.SetText (Me.rtfKoptekst.Text & vbCrLf & String(InStr(Me.rtfBerekening.Text, vbCrLf), "=") & vbCrLf & Me.rtfBerekening.Text)
+    Clipboard.SetText (Me.rtfKoptekst.text & vbCrLf & String(InStr(Me.rtfBerekening.text, vbCrLf), "=") & vbCrLf & Me.rtfBerekening.text)
 End If
 End Sub
 
@@ -814,7 +837,7 @@ Private Sub Form_Load()
 Dim tt As Double
 Dim JD As Double
 dat.jj = frmPlanets.Year
-dat.mm = frmPlanets.MonthSelect.ListIndex + 1
+dat.MM = frmPlanets.MonthSelect.ListIndex + 1
 dat.DD = frmPlanets.DaySelect
 tt = (Hrs + Min / 60 + Sec / 3600) / 24
 dat.DD = dat.DD + tt
@@ -825,7 +848,7 @@ Call cmdVolgende_Click
 'Call ZetDatum(JD)
 rtfBerekening = ""
 rtfKoptekst = ""
-nInitHeight = rtfBerekening.Height
+nInitHeight = rtfBerekening.height
 nWidthVoortgang = Me.lblVoortgang.Width
 lblVoortgang.Width = 0
 End Sub
@@ -846,7 +869,7 @@ Private Function MaakDatumstring(dat As tDatum, alleentijd As Boolean)
 If alleentijd Then
     MaakDatumstring = StrHMS_DMS(Frac(dat.DD) * 360, 7, 1, False, False, "h", 2)
 Else
-    MaakDatumstring = Format(Int(dat.DD), "00") & "-" & Format(dat.mm, "00") & "-" & Format(dat.jj) & ":" & StrHMS_DMS(Frac(dat.DD) * 360, 7, 1, False, False, "h", 2)
+    MaakDatumstring = Format(Int(dat.DD), "00") & "-" & Format(dat.MM, "00") & "-" & Format(dat.jj) & ":" & StrHMS_DMS(Frac(dat.DD) * 360, 7, 1, False, False, "h", 2)
 End If
 End Function
 
@@ -863,7 +886,7 @@ MaakDatumstringT = MaakDatumstring(dat, alleentijd)
 End Function
 
 Private Sub Form_Unload(Cancel As Integer)
-blndoorgaan = False
+blnDoorgaan = False
 End Sub
 
 Private Sub TabStripEclipse_Click()
@@ -872,29 +895,29 @@ If Me.Caption = "Mooneclipse" And Not TabStripEclipse.Tabs(TabStripEclipse.Tabs.
 ElseIf Me.Caption = "Solareclipse" And TabStripEclipse.Tabs(TabStripEclipse.Tabs.Count).Selected Then
         TabStripEclipse.Tabs(1).Selected = True
 End If
-rtfKoptekst.Text = ""
-Me.rtfBerekening.Text = ""
+rtfKoptekst.text = ""
+Me.rtfBerekening.text = ""
 Select Case TabStripEclipse.SelectedItem.Caption
 Case Is = "Local"
 Case Is = "Central line"
-    rtfKoptekst.Text = vbCrLf & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "Time                   Longitude W. Latitude       Duration   Magn"
+    rtfKoptekst.text = vbCrLf & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "Time                   Longitude W. Latitude       Duration   Magn"
 Case Is = "Limits"
-    rtfKoptekst.Text = "Time                  |             Limits total eclipse            |             Limits partial eclipse" & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "                      |         North                 South         |         North                 South" & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "                      |  Long. W.    Latitude   Long. W.    Latitude|  Long. W.    Latitude   Long. W.    Latitude."
+    rtfKoptekst.text = "Time                  |             Limits total eclipse            |             Limits partial eclipse" & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "                      |         North                 South         |         North                 South" & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "                      |  Long. W.    Latitude   Long. W.    Latitude|  Long. W.    Latitude   Long. W.    Latitude."
 Case Is = "Contacts"
-    rtfKoptekst.Text = vbCrLf & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "Time                   Duration      P1             U1         Maximum    Magn        U4             P4"
+    rtfKoptekst.text = vbCrLf & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "Time                   Duration      P1             U1         Maximum    Magn        U4             P4"
 Case Is = "Outline curves"
-    rtfKoptekst.Text = vbCrLf & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "Time     with (long. w., lat.) as outline of penumbra"
+    rtfKoptekst.text = vbCrLf & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "Time     with (long. w., lat.) as outline of penumbra"
 Case Is = "Rise and Set"
-    rtfKoptekst.Text = "                                 Solareclipse" & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "                           Rising           Set" & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "Time                    WL        Lat   WL        Lat"
+    rtfKoptekst.text = "                                 Solareclipse" & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "                           Rising           Set" & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "Time                    WL        Lat   WL        Lat"
 Case Is = "Greatest eclipse"
-    rtfKoptekst.Text = vbCrLf & vbCrLf
-    rtfKoptekst.Text = rtfKoptekst.Text & "Time                    Longitude W.    Latitude      Magn."
+    rtfKoptekst.text = vbCrLf & vbCrLf
+    rtfKoptekst.text = rtfKoptekst.text & "Time                    Longitude W.    Latitude      Magn."
 End Select
 End Sub
